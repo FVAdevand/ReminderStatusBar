@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_reminder"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/iv_item_icon"
+        android:layout_width="44dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="4dp"
+        android:padding="6dp"
+        android:tint="@color/colorPrimary"
+        tools:src="@drawable/ic_add_24dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/iv_item_icon"
+        android:layout_toStartOf="@id/btn_item_notify"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification.Title"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/tv_item_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification"
+            tools:text="text" />
+
+        <TextView
+            android:id="@+id/tv_item_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification"
+            tools:text="16:00" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_item_notify"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:src="@drawable/ic_upward_24dp" />
+
+</RelativeLayout>

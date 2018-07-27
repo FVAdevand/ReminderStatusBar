@@ -3,6 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.vladimir.reminderstatusbar.ui.RemindersActivity">
     <item
+        android:id="@+id/action_add_all"
+        android:orderInCategory="100"
+        android:title="Add all"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_clear"
+        android:orderInCategory="100"
+        android:title="Clear"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

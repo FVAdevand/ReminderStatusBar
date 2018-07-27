@@ -1,14 +1,23 @@
 package com.example.vladimir.reminderstatusbar.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.example.vladimir.reminderstatusbar.FakeDataUtils;
 import com.example.vladimir.reminderstatusbar.R;
+import com.example.vladimir.reminderstatusbar.data.models.Reminder;
+
+import java.util.List;
 
 public class RemindersActivity extends AppCompatActivity {
+
+    private RemindersViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,25 +27,34 @@ public class RemindersActivity extends AppCompatActivity {
         setupToolbar();
         setupViewFragment();
 
+        mViewModel = ViewModelProviders.of(this).get(RemindersViewModel.class);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.insertReminder(FakeDataUtils.getReminder());
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_add_all:
+                List<Reminder> fakeReminderList = FakeDataUtils.getReminderList();
+                for (Reminder reminder : fakeReminderList) {
+                    mViewModel.insertReminder(reminder);
+                }
+                return true;
+            case R.id.action_clear:
+                mViewModel.clearDb();
         }
 
         return super.onOptionsItemSelected(item);
