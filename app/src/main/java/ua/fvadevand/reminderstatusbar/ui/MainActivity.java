@@ -7,16 +7,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.List;
 
+import ua.fvadevand.reminderstatusbar.Const;
 import ua.fvadevand.reminderstatusbar.FakeDataUtils;
 import ua.fvadevand.reminderstatusbar.R;
 import ua.fvadevand.reminderstatusbar.data.models.Reminder;
+import ua.fvadevand.reminderstatusbar.listeners.FabVisibilityChangeListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements FabVisibilityChangeListener {
 
     private RemindersViewModel mViewModel;
+    private FloatingActionButton mFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +29,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setupToolbar();
-        setupViewFragment();
+        showRemindersFragment();
 
         mViewModel = ViewModelProviders.of(this).get(RemindersViewModel.class);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> mViewModel.insertReminder(FakeDataUtils.getReminder()));
+        mFab = findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showReminderEditFragment(Const.NEW_REMINDER_ID);
+            }
+        });
     }
 
     @Override
@@ -59,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    private void setupViewFragment() {
+    private void showRemindersFragment() {
         RemindersFragment fragment =
                 (RemindersFragment) getSupportFragmentManager().findFragmentByTag(RemindersFragment.TAG);
         if (fragment == null) {
@@ -67,6 +77,22 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, fragment, RemindersFragment.TAG)
                     .commit();
+        }
+    }
+
+    private void showReminderEditFragment(long reminderId) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, ReminderEditFragment.newInstance(reminderId), ReminderEditFragment.TAG)
+                .addToBackStack(ReminderEditFragment.TAG)
+                .commit();
+    }
+
+    @Override
+    public void fabVisibilityChange(boolean isVisible) {
+        if (isVisible) {
+            mFab.show();
+        } else {
+            mFab.hide();
         }
     }
 }

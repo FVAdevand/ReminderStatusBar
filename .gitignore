@@ -2,11 +2,8 @@
 .gradle
 /local.properties
 /.idea
-.idea/*
 .DS_Store
 /build
 /captures
 .externalNativeBuild
-app/build/
-app/src/androidTest
-app/src/test
+/Temp
