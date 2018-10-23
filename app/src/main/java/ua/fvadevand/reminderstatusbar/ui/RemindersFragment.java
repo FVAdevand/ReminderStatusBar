@@ -1,6 +1,5 @@
 package ua.fvadevand.reminderstatusbar.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,13 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.vladimir.reminderstatusbar.R;
+import ua.fvadevand.reminderstatusbar.R;
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter;
-import ua.fvadevand.reminderstatusbar.data.models.Reminder;
-
-import java.util.List;
 
 public class RemindersFragment extends Fragment {
+
+    public static final String TAG = "RemindersFragment";
 
     private OnFragmentInteractionListener mListener;
     private ReminderAdapter mAdapter;
@@ -40,20 +38,16 @@ public class RemindersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         RemindersViewModel viewModel = ViewModelProviders.of(getActivity()).get(RemindersViewModel.class);
+        setupRecyclerView(view);
+        viewModel.getReminderList().observe(this, reminders -> mAdapter.setReminderList(reminders));
+    }
 
+    private void setupRecyclerView(View view) {
         RecyclerView reminderListView = view.findViewById(R.id.reminder_list);
         reminderListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ReminderAdapter(viewModel.getReminderList().getValue());
+        mAdapter = new ReminderAdapter();
         reminderListView.setAdapter(mAdapter);
-
-        viewModel.getReminderList().observe(this, new Observer<List<Reminder>>() {
-            @Override
-            public void onChanged(@Nullable List<Reminder> reminders) {
-                mAdapter.setReminderList(reminders);
-            }
-        });
     }
 
     //    @Override

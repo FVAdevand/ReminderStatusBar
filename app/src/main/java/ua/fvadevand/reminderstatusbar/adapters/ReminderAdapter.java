@@ -9,18 +9,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.vladimir.reminderstatusbar.R;
-import ua.fvadevand.reminderstatusbar.data.models.Reminder;
-
 import java.util.List;
 import java.util.Objects;
+
+import ua.fvadevand.reminderstatusbar.R;
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
 
     private List<Reminder> mReminderList;
 
-    public ReminderAdapter(List<Reminder> reminderList) {
-        mReminderList = reminderList;
+    public ReminderAdapter() {
     }
 
     @NonNull
@@ -38,14 +37,17 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
 
     @Override
     public int getItemCount() {
-        return mReminderList.size();
+        return mReminderList == null ? 0 : mReminderList.size();
     }
 
     public void setReminderList(List<Reminder> newList) {
-        if (mReminderList != null && newList != null) {
+        if (newList == null) return;
+        if (mReminderList == null) {
+            mReminderList = newList;
+            notifyDataSetChanged();
+        } else {
             ReminderDiffUtilCallback diffUtilCallback = new ReminderDiffUtilCallback(mReminderList, newList);
             DiffUtil.DiffResult diffUtilResult = DiffUtil.calculateDiff(diffUtilCallback);
-
             mReminderList.clear();
             mReminderList.addAll(newList);
             diffUtilResult.dispatchUpdatesTo(this);

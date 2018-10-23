@@ -7,22 +7,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import ua.fvadevand.reminderstatusbar.FakeDataUtils;
-import com.example.vladimir.reminderstatusbar.R;
-import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 import java.util.List;
 
-public class RemindersActivity extends AppCompatActivity {
+import ua.fvadevand.reminderstatusbar.FakeDataUtils;
+import ua.fvadevand.reminderstatusbar.R;
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
+
+public class MainActivity extends AppCompatActivity {
 
     private RemindersViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reminders);
+        setContentView(R.layout.activity_main);
 
         setupToolbar();
         setupViewFragment();
@@ -30,12 +29,7 @@ public class RemindersActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this).get(RemindersViewModel.class);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mViewModel.insertReminder(FakeDataUtils.getReminder());
-            }
-        });
+        fab.setOnClickListener(v -> mViewModel.insertReminder(FakeDataUtils.getReminder()));
     }
 
     @Override
@@ -67,11 +61,11 @@ public class RemindersActivity extends AppCompatActivity {
 
     private void setupViewFragment() {
         RemindersFragment fragment =
-                (RemindersFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                (RemindersFragment) getSupportFragmentManager().findFragmentByTag(RemindersFragment.TAG);
         if (fragment == null) {
             fragment = RemindersFragment.newInstance();
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
+                    .replace(R.id.fragment_container, fragment, RemindersFragment.TAG)
                     .commit();
         }
     }

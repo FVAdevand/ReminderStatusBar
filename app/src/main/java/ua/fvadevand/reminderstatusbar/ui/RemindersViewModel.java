@@ -3,21 +3,23 @@ package ua.fvadevand.reminderstatusbar.ui;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
+import java.util.List;
+
 import ua.fvadevand.reminderstatusbar.data.AppRepository;
 import ua.fvadevand.reminderstatusbar.data.models.Reminder;
-
-import java.util.List;
 
 public class RemindersViewModel extends ViewModel {
 
     private AppRepository mRepository;
+    private LiveData<List<Reminder>> mReminderList;
 
     public RemindersViewModel() {
         mRepository = AppRepository.getInstance();
+        mReminderList = mRepository.getReminderList();
     }
 
     public LiveData<List<Reminder>> getReminderList() {
-        return mRepository.getReminderList();
+        return mReminderList;
     }
 
     //    for test
