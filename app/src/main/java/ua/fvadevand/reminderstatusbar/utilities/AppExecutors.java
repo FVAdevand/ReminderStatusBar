@@ -1,4 +1,4 @@
-package com.example.vladimir.reminderstatusbar.utilities;
+package ua.fvadevand.reminderstatusbar.utilities;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

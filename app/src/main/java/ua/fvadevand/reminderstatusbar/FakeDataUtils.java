@@ -1,6 +1,6 @@
-package com.example.vladimir.reminderstatusbar;
+package ua.fvadevand.reminderstatusbar;
 
-import com.example.vladimir.reminderstatusbar.data.models.Reminder;
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 import java.util.ArrayList;
 import java.util.List;

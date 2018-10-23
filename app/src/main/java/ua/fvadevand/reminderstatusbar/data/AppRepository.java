@@ -1,11 +1,11 @@
-package com.example.vladimir.reminderstatusbar.data;
+package ua.fvadevand.reminderstatusbar.data;
 
 import android.arch.lifecycle.LiveData;
 
-import com.example.vladimir.reminderstatusbar.app.ReminderApp;
-import com.example.vladimir.reminderstatusbar.data.database.AppDatabase;
-import com.example.vladimir.reminderstatusbar.data.models.Reminder;
-import com.example.vladimir.reminderstatusbar.utilities.AppExecutors;
+import ua.fvadevand.reminderstatusbar.app.ReminderApp;
+import ua.fvadevand.reminderstatusbar.data.database.AppDatabase;
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
+import ua.fvadevand.reminderstatusbar.utilities.AppExecutors;
 
 import java.util.List;
 

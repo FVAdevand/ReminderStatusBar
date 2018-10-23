@@ -1,4 +1,4 @@
-package com.example.vladimir.reminderstatusbar.data.models;
+package ua.fvadevand.reminderstatusbar.data.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -6,7 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.example.vladimir.reminderstatusbar.Const;
+import ua.fvadevand.reminderstatusbar.Const;
 
 import java.util.Objects;
 

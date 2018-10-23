@@ -1,4 +1,4 @@
-package com.example.vladimir.reminderstatusbar.ui;
+package ua.fvadevand.reminderstatusbar.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -14,8 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.vladimir.reminderstatusbar.R;
-import com.example.vladimir.reminderstatusbar.adapters.ReminderAdapter;
-import com.example.vladimir.reminderstatusbar.data.models.Reminder;
+import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter;
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 import java.util.List;
 

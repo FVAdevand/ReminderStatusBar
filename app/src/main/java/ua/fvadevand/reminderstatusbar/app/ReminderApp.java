@@ -1,10 +1,10 @@
-package com.example.vladimir.reminderstatusbar.app;
+package ua.fvadevand.reminderstatusbar.app;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
 
-import com.example.vladimir.reminderstatusbar.Const;
-import com.example.vladimir.reminderstatusbar.data.database.AppDatabase;
+import ua.fvadevand.reminderstatusbar.Const;
+import ua.fvadevand.reminderstatusbar.data.database.AppDatabase;
 
 public class ReminderApp extends Application {
 

@@ -1,4 +1,4 @@
-package com.example.vladimir.reminderstatusbar.data.database;
+package ua.fvadevand.reminderstatusbar.data.database;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -7,7 +7,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.vladimir.reminderstatusbar.data.models.Reminder;
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 import java.util.List;
 

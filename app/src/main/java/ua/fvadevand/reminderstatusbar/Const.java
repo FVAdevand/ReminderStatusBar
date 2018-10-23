@@ -1,4 +1,4 @@
-package com.example.vladimir.reminderstatusbar;
+package ua.fvadevand.reminderstatusbar;
 
 public class Const {
     public static final String TABLE_NAME_REMINDERS = "reminders";

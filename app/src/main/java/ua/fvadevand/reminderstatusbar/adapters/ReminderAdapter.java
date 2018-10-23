@@ -1,4 +1,4 @@
-package com.example.vladimir.reminderstatusbar.adapters;
+package ua.fvadevand.reminderstatusbar.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.vladimir.reminderstatusbar.R;
-import com.example.vladimir.reminderstatusbar.data.models.Reminder;
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 import java.util.List;
 import java.util.Objects;
