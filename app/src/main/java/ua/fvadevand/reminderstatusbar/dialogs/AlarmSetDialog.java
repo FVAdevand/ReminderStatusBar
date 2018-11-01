@@ -118,6 +118,12 @@ public class AlarmSetDialog extends DialogFragment {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
     public interface OnAlarmSetListener {
         void onAlarmSet(Calendar calendar);
     }

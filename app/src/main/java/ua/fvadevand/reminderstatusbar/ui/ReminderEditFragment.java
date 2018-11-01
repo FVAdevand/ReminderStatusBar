@@ -18,12 +18,16 @@ import java.util.Calendar;
 
 import ua.fvadevand.reminderstatusbar.Const;
 import ua.fvadevand.reminderstatusbar.R;
+import ua.fvadevand.reminderstatusbar.adapters.IconAdapter;
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog;
+import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog.OnAlarmSetListener;
+import ua.fvadevand.reminderstatusbar.dialogs.IconsDialog;
 import ua.fvadevand.reminderstatusbar.listeners.FabVisibilityChangeListener;
 import ua.fvadevand.reminderstatusbar.utilities.ReminderDateUtils;
 
 public class ReminderEditFragment extends Fragment
-        implements View.OnClickListener, AlarmSetDialog.OnAlarmSetListener {
+        implements View.OnClickListener, OnAlarmSetListener,
+        IconAdapter.OnIconClickListener {
 
     public static final String TAG = "ReminderEditFragment";
     private static final String ARG_REMINDER_ID = "reminder_id";
@@ -92,6 +96,7 @@ public class ReminderEditFragment extends Fragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_edit_reminder_icon:
+                showIconsDialog();
                 break;
             case R.id.btn_edit_reminder_time:
                 showSetAlarmDialog();
@@ -101,6 +106,10 @@ public class ReminderEditFragment extends Fragment
 
     private void showSetAlarmDialog() {
         AlarmSetDialog.newInstance(mCalendar).show(getChildFragmentManager(), AlarmSetDialog.TAG);
+    }
+
+    private void showIconsDialog() {
+        new IconsDialog().show(getChildFragmentManager(), IconsDialog.TAG);
     }
 
     @Override
@@ -122,6 +131,11 @@ public class ReminderEditFragment extends Fragment
         }
         mDelayNotificationView.setVisibility(visibility);
         mTimeView.setVisibility(visibility);
+    }
+
+    @Override
+    public void onIconClick(int iconId) {
+        mIconBtn.setImageResource(iconId);
     }
 
     @Override

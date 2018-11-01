@@ -1,71 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_reminder"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:padding="10dp">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="2dp"
+    app:cardCornerRadius="2dp">
 
-    <ImageView
-        android:id="@+id/iv_item_icon"
-        android:layout_width="44dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="4dp"
-        android:padding="6dp"
-        android:tint="@color/colorPrimary"
-        tools:src="@drawable/ic_add_24dp" />
+    <RelativeLayout
+        android:id="@+id/layout_reminder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="80dp"
+        android:padding="8dp">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@id/iv_item_icon"
-        android:layout_toStartOf="@id/btn_item_notify"
-        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/iv_item_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/oval_background"
+            android:backgroundTint="@color/colorAccent"
+            android:padding="6dp"
+            tools:src="@drawable/ic_add_24dp" />
 
-        <TextView
-            android:id="@+id/tv_item_title"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:textAppearance="@android:style/TextAppearance.Material.Notification.Title"
-            tools:text="Title" />
-
-        <TextView
-            android:id="@+id/tv_item_text"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@android:style/TextAppearance.Material.Notification"
-            tools:text="text" />
-
-        <TextView
-            android:id="@+id/tv_item_date"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@android:style/TextAppearance.Material.Notification"
-            tools:text="16:00" />
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/btn_item_notify"
+            android:layout_toEndOf="@id/iv_item_icon"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Notification.Title"
+                tools:text="Title" />
 
-    <ImageButton
-        android:id="@+id/btn_item_notify"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:background="@android:color/transparent"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp"
-        android:src="@drawable/ic_upward_24dp" />
+            <TextView
+                android:id="@+id/tv_item_text"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Notification"
+                tools:text="text" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/tv_item_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Notification"
+                tools:text="16:00" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_item_notify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:src="@drawable/ic_upward_24dp" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
