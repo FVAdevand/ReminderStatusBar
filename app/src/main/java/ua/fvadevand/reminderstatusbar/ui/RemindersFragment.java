@@ -14,12 +14,14 @@ import android.view.ViewGroup;
 
 import ua.fvadevand.reminderstatusbar.R;
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter;
+import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter.OnReminderClickListener;
 import ua.fvadevand.reminderstatusbar.listeners.FabVisibilityChangeListener;
 
 public class RemindersFragment extends Fragment {
 
     public static final String TAG = "RemindersFragment";
     private FabVisibilityChangeListener mFabVisibilityChangeListener;
+    private OnReminderClickListener mOnReminderClickListener;
     private ReminderAdapter mAdapter;
 
     public RemindersFragment() {
@@ -46,18 +48,19 @@ public class RemindersFragment extends Fragment {
     private void setupRecyclerView(View view) {
         RecyclerView reminderListView = view.findViewById(R.id.reminder_list);
         reminderListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ReminderAdapter();
+        mAdapter = new ReminderAdapter(mOnReminderClickListener);
         reminderListView.setAdapter(mAdapter);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof FabVisibilityChangeListener) {
+        try {
             mFabVisibilityChangeListener = (FabVisibilityChangeListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement FabVisibilityChangeListener");
+            mOnReminderClickListener = (OnReminderClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement FabVisibilityChangeListener and OnReminderClickListener");
         }
     }
 
@@ -71,5 +74,6 @@ public class RemindersFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mFabVisibilityChangeListener = null;
+        mOnReminderClickListener = null;
     }
 }

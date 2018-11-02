@@ -1,5 +1,6 @@
 package ua.fvadevand.reminderstatusbar.adapters;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -14,12 +15,15 @@ import java.util.Objects;
 
 import ua.fvadevand.reminderstatusbar.R;
 import ua.fvadevand.reminderstatusbar.data.models.Reminder;
+import ua.fvadevand.reminderstatusbar.utilities.IconUtils;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
 
     private List<Reminder> mReminderList;
+    private OnReminderClickListener mListener;
 
-    public ReminderAdapter() {
+    public ReminderAdapter(OnReminderClickListener listener) {
+        mListener = listener;
     }
 
     @NonNull
@@ -54,27 +58,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         }
     }
 
-    class ReminderViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView mIconView;
-        TextView mTitleView;
-        TextView mTextView;
-        TextView mDateView;
-
-        ReminderViewHolder(View itemView) {
-            super(itemView);
-
-            mIconView = itemView.findViewById(R.id.iv_item_icon);
-            mTitleView = itemView.findViewById(R.id.tv_item_title);
-            mTextView = itemView.findViewById(R.id.tv_item_text);
-            mDateView = itemView.findViewById(R.id.tv_item_date);
-        }
-
-        void bind(Reminder reminder) {
-            mIconView.setImageResource(reminder.getIconId());
-            mTitleView.setText(reminder.getTitle());
-            mTextView.setText(reminder.getText());
-        }
+    public interface OnReminderClickListener {
+        void onReminderClick(long id);
     }
 
     class ReminderDiffUtilCallback extends DiffUtil.Callback {
@@ -105,6 +90,35 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
             return Objects.equals(mOldList.get(oldItemPosition), mNewList.get(newItemPosition));
+        }
+    }
+
+    class ReminderViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView mIconView;
+        TextView mTitleView;
+        TextView mTextView;
+        TextView mDateView;
+
+        ReminderViewHolder(View itemView) {
+            super(itemView);
+            mIconView = itemView.findViewById(R.id.iv_item_icon);
+            mTitleView = itemView.findViewById(R.id.tv_item_title);
+            mTextView = itemView.findViewById(R.id.tv_item_text);
+            mDateView = itemView.findViewById(R.id.tv_item_date);
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if (mListener != null && position != RecyclerView.NO_POSITION) {
+                    mListener.onReminderClick(mReminderList.get(position).getId());
+                }
+            });
+        }
+
+        void bind(Reminder reminder) {
+            Context context = itemView.getContext();
+            mIconView.setImageResource(IconUtils.getIconResId(context, reminder.getIconName()));
+            mTitleView.setText(reminder.getTitle());
+            mTextView.setText(reminder.getText());
         }
     }
 }

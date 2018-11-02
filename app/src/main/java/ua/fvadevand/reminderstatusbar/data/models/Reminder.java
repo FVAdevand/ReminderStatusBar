@@ -6,9 +6,9 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import ua.fvadevand.reminderstatusbar.Const;
-
 import java.util.Objects;
+
+import ua.fvadevand.reminderstatusbar.Const;
 
 @Entity(tableName = Const.TABLE_NAME_REMINDERS)
 public class Reminder {
@@ -17,10 +17,9 @@ public class Reminder {
     @ColumnInfo(name = "id")
     private long mId;
 
-    @ColumnInfo(name = "icon_id")
-    private int mIconId;
+    @ColumnInfo(name = "icon_res_name")
+    private String mIconName;
 
-    @NonNull
     @ColumnInfo(name = "title")
     private String mTitle;
 
@@ -31,12 +30,11 @@ public class Reminder {
     private long mTimestamp;
 
     @Ignore
-    public Reminder(int iconId, @NonNull String title, long timestamp) {
-        this(iconId, title, null, timestamp);
+    public Reminder() {
     }
 
-    public Reminder(int iconId, @NonNull String title, String text, long timestamp) {
-        mIconId = iconId;
+    public Reminder(String iconName, String title, String text, long timestamp) {
+        mIconName = iconName;
         mTitle = title;
         mText = text;
         mTimestamp = timestamp;
@@ -50,12 +48,12 @@ public class Reminder {
         mId = id;
     }
 
-    public int getIconId() {
-        return mIconId;
+    public String getIconName() {
+        return mIconName;
     }
 
-    public void setIconId(int iconId) {
-        mIconId = iconId;
+    public void setIconName(String iconName) {
+        mIconName = iconName;
     }
 
     @NonNull
@@ -88,14 +86,15 @@ public class Reminder {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Reminder reminder = (Reminder) o;
-        return mIconId == reminder.mIconId &&
+        return mId == reminder.mId &&
                 mTimestamp == reminder.mTimestamp &&
+                Objects.equals(mIconName, reminder.mIconName) &&
                 Objects.equals(mTitle, reminder.mTitle) &&
                 Objects.equals(mText, reminder.mText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mIconId, mTitle, mText, mTimestamp);
+        return Objects.hash(mId, mIconName, mTitle, mText, mTimestamp);
     }
 }

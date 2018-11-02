@@ -1,11 +1,16 @@
 package ua.fvadevand.reminderstatusbar.utilities;
 
+import android.content.Context;
+import android.support.annotation.DrawableRes;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ua.fvadevand.reminderstatusbar.R;
 
 public class IconUtils {
+
+    private static final String RESOURCE_FOLDER_DRAWABLE = "drawable";
 
     private IconUtils() {
         //no instance
@@ -42,5 +47,13 @@ public class IconUtils {
         iconIds.add(R.drawable.ic_notif_umbrella);
         iconIds.add(R.drawable.ic_notif_worldwide);
         return iconIds;
+    }
+
+    public static String getIconName(Context context, @DrawableRes int iconResId) {
+        return context.getResources().getResourceEntryName(iconResId);
+    }
+
+    public static int getIconResId(Context context, String iconName) {
+        return context.getResources().getIdentifier(iconName, RESOURCE_FOLDER_DRAWABLE, context.getPackageName());
     }
 }

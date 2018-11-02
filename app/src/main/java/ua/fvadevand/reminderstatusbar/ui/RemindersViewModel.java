@@ -2,6 +2,7 @@ package ua.fvadevand.reminderstatusbar.ui;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import java.util.List;
 
@@ -9,6 +10,8 @@ import ua.fvadevand.reminderstatusbar.data.AppRepository;
 import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 public class RemindersViewModel extends ViewModel {
+
+    private static final String TAG = "RemindersViewModel";
 
     private AppRepository mRepository;
     private LiveData<List<Reminder>> mReminderList;
@@ -18,20 +21,25 @@ public class RemindersViewModel extends ViewModel {
         mReminderList = mRepository.getReminderList();
     }
 
-    public LiveData<List<Reminder>> getReminderList() {
+    LiveData<List<Reminder>> getReminderList() {
         return mReminderList;
     }
 
-    //    for test
-    public void insertReminder(final Reminder reminder) {
-        mRepository.insertReminder(reminder);
+    LiveData<Reminder> getReminderById(long id) {
+        return mRepository.getReminderById(id);
     }
 
-    public void deleteReminder(final Reminder reminder) {
+    //    for test
+    void insertReminder(final Reminder reminder) {
+        mRepository.insertReminder(reminder, reminderId ->
+                Log.i(TAG, "insertSuccess: count=" + reminderId + " : " + Thread.currentThread().getName()));
+    }
+
+    void deleteReminder(final Reminder reminder) {
         mRepository.deleteReminder(reminder);
     }
 
-    public void clearDb() {
+    void clearDb() {
         mRepository.clearDb();
     }
 }

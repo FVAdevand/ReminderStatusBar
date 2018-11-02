@@ -23,5 +23,6 @@
     <string name="alarm_dialog_time_label">Time</string>
     <string name="alarm_dialog_date_label">Date</string>
     <string name="alarm_dialog_title">Time notification</string>
+    <string name="reminder_edit_error_empty_title">Please enter a title</string>
 
 </resources>

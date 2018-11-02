@@ -7,18 +7,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.List;
 
 import ua.fvadevand.reminderstatusbar.Const;
 import ua.fvadevand.reminderstatusbar.FakeDataUtils;
 import ua.fvadevand.reminderstatusbar.R;
+import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter.OnReminderClickListener;
 import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 import ua.fvadevand.reminderstatusbar.listeners.FabVisibilityChangeListener;
 
 public class MainActivity extends AppCompatActivity
-        implements FabVisibilityChangeListener {
+        implements FabVisibilityChangeListener, OnReminderClickListener {
 
     private RemindersViewModel mViewModel;
     private FloatingActionButton mFab;
@@ -34,12 +34,7 @@ public class MainActivity extends AppCompatActivity
         mViewModel = ViewModelProviders.of(this).get(RemindersViewModel.class);
 
         mFab = findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showReminderEditFragment(Const.NEW_REMINDER_ID);
-            }
-        });
+        mFab.setOnClickListener(v -> showReminderEditFragment(Const.NEW_REMINDER_ID));
     }
 
     @Override
@@ -94,5 +89,10 @@ public class MainActivity extends AppCompatActivity
         } else {
             mFab.hide();
         }
+    }
+
+    @Override
+    public void onReminderClick(long id) {
+        showReminderEditFragment(id);
     }
 }

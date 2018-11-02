@@ -23,7 +23,8 @@
             android:id="@+id/et_edit_reminder_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/edit_reminder_hint_title" />
+            android:hint="@string/edit_reminder_hint_title"
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
     <ImageButton

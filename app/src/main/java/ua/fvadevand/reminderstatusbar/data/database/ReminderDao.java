@@ -7,9 +7,9 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import ua.fvadevand.reminderstatusbar.data.models.Reminder;
-
 import java.util.List;
+
+import ua.fvadevand.reminderstatusbar.data.models.Reminder;
 
 @Dao
 public interface ReminderDao {
@@ -21,7 +21,7 @@ public interface ReminderDao {
     LiveData<Reminder> getById(long id);
 
     @Insert
-    void insert(Reminder reminder);
+    long insert(Reminder reminder);
 
     @Update
     void update(Reminder reminder);
