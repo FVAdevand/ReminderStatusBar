@@ -1,8 +1,9 @@
 package ua.fvadevand.reminderstatusbar.ui;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
 import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 

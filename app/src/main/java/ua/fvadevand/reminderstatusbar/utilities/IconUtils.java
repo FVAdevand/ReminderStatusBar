@@ -1,7 +1,8 @@
 package ua.fvadevand.reminderstatusbar.utilities;
 
 import android.content.Context;
-import android.support.annotation.DrawableRes;
+
+import androidx.annotation.DrawableRes;
 
 import java.util.ArrayList;
 import java.util.List;

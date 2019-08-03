@@ -1,7 +1,8 @@
 package ua.fvadevand.reminderstatusbar.app;
 
 import android.app.Application;
-import android.arch.persistence.room.Room;
+
+import androidx.room.Room;
 
 import ua.fvadevand.reminderstatusbar.Const;
 import ua.fvadevand.reminderstatusbar.data.database.AppDatabase;
