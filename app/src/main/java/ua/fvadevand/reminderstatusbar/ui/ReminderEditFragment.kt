@@ -148,7 +148,7 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
         if (editMode) {
             reminder.id = currentReminderId
         }
-        viewModel.insertReminder(reminder)
+        viewModel.addReminder(reminder)
         editMode = false
         clearView()
     }

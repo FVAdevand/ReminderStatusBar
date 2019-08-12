@@ -38,7 +38,7 @@ class ReminderAdapter(
         diffUtilResult.dispatchUpdatesTo(this)
     }
 
-    internal inner class ReminderDiffUtilCallback(
+    inner class ReminderDiffUtilCallback(
             private val mOldList: List<Reminder>,
             private val mNewList: List<Reminder>
     ) : DiffUtil.Callback() {

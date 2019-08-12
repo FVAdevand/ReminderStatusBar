@@ -1,37 +1,33 @@
 package ua.fvadevand.reminderstatusbar.ui
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import ua.fvadevand.reminderstatusbar.data.AppRepository
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import ua.fvadevand.reminderstatusbar.app.ReminderApp
+import ua.fvadevand.reminderstatusbar.data.Repository
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
 class RemindersViewModel : ViewModel() {
 
-    private val repository: AppRepository = AppRepository.instance
-    val reminders: LiveData<List<Reminder>>
-
-    init {
-        reminders = repository.getReminders()
+    private val repository: Repository = ReminderApp.instance.repository
+    val reminders: LiveData<List<Reminder>> by lazy(LazyThreadSafetyMode.NONE) {
+        repository.getAllReminders()
     }
 
     fun getReminderById(id: Long): LiveData<Reminder> {
         return repository.getReminderById(id)
     }
 
-    fun insertReminder(reminder: Reminder) {
-        repository.insertReminder(reminder) { Log.i(TAG, "insertSuccess: count=$it") }
+    fun addReminder(reminder: Reminder) {
+        viewModelScope.launch {
+            repository.addReminder(reminder)
+        }
     }
 
-    fun deleteReminder(reminder: Reminder) {
-        repository.deleteReminder(reminder)
-    }
-
-    fun clearDb() {
-        repository.clearDb()
-    }
-
-    companion object {
-        private const val TAG = "RemindersViewModel"
+    fun removeReminder(reminder: Reminder) {
+        viewModelScope.launch {
+            repository.removeReminder(reminder)
+        }
     }
 }

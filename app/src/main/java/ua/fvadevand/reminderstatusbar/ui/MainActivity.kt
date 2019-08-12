@@ -36,8 +36,7 @@ class MainActivity : AppCompatActivity(), OnFabVisibilityChangeListener, Reminde
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_add_all -> FakeDataUtils.reminderList.forEach { viewModel.insertReminder(it) }
-            R.id.action_clear -> viewModel.clearDb()
+            R.id.action_add_all -> FakeDataUtils.reminderList.forEach { viewModel.addReminder(it) }
         }
         return super.onOptionsItemSelected(item)
     }

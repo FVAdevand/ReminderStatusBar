@@ -5,16 +5,33 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
+    def env = System.getenv()
     defaultConfig {
         applicationId "ua.fvadevand.reminderstatusbar"
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                def project = "reminders"
+                def SEP = "_"
+                def buildType = variant.variantData.variantConfiguration.buildType.name
+                def version = variant.versionName + '.' + versionCode
+                def date = new Date()
+                def formattedDate = date.format('ddMMyy_HHmm')
+                def buildName = env.getOrDefault('BUILD_FILE_NAME', project + SEP + version + SEP + buildType + SEP + formattedDate + ".apk")
+                outputFileName = buildName
+            }
+        }
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -37,11 +54,12 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.1.0'
     kapt "android.arch.persistence.room:compiler:2.1.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
     implementation "androidx.core:core-ktx:1.0.2"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-rc01'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
+
+    // cotoutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
 }
