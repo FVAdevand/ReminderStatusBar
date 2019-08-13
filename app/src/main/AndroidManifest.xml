@@ -4,7 +4,7 @@
     package="ua.fvadevand.reminderstatusbar">
 
     <application
-        android:name="ua.fvadevand.reminderstatusbar.app.ReminderApp"
+        android:name=".ReminderApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -24,6 +24,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".receivers.NotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER" />
+                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DISMISS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

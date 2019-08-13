@@ -13,31 +13,37 @@ class Repository(
         return reminderDao.getAll()
     }
 
-    fun getReminderById(id: Long): LiveData<Reminder> {
-        return reminderDao.getById(id)
+    fun getLiveReminderById(id: Long): LiveData<Reminder> {
+        return reminderDao.getLiveById(id)
     }
 
-    suspend fun addReminder(reminder: Reminder) {
-        runInIOThread {
+    suspend fun getReminderById(id: Long): Reminder? {
+        return withContext(Dispatchers.IO) {
+            reminderDao.getById(id)
+        }
+    }
+
+    suspend fun addReminder(reminder: Reminder): Long {
+        return withContext(Dispatchers.IO) {
             reminderDao.insert(reminder)
         }
     }
 
     suspend fun editReminder(reminder: Reminder) {
-        runInIOThread {
+        withContext(Dispatchers.IO) {
             reminderDao.update(reminder)
         }
     }
 
     suspend fun removeReminder(reminder: Reminder) {
-        runInIOThread {
+        withContext(Dispatchers.IO) {
             reminderDao.delete(reminder)
         }
     }
 
-    private suspend fun runInIOThread(block: () -> Unit) {
+    suspend fun removeAllReminders() {
         withContext(Dispatchers.IO) {
-            block()
+            reminderDao.deleteAll()
         }
     }
 }

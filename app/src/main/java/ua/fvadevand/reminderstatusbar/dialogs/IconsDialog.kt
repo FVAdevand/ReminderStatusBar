@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.IconAdapter
-import ua.fvadevand.reminderstatusbar.utilities.IconUtils
+import ua.fvadevand.reminderstatusbar.utils.IconUtils
 
 class IconsDialog : DialogFragment() {
     private var listener: OnIconClickListener? = null

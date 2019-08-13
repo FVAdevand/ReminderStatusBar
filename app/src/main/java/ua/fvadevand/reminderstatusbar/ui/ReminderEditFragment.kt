@@ -22,8 +22,8 @@ import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.dialogs.IconsDialog
 import ua.fvadevand.reminderstatusbar.listeners.OnFabVisibilityChangeListener
-import ua.fvadevand.reminderstatusbar.utilities.IconUtils
-import ua.fvadevand.reminderstatusbar.utilities.ReminderDateUtils
+import ua.fvadevand.reminderstatusbar.utils.IconUtils
+import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Calendar
 
 class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListener, IconsDialog.OnIconClickListener {
@@ -48,7 +48,7 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
         editMode = currentReminderId != Const.NEW_REMINDER_ID
         viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
         if (editMode) {
-            currentReminderLive = viewModel.getReminderById(currentReminderId)
+            currentReminderLive = viewModel.getLiveReminderById(currentReminderId)
         }
     }
 

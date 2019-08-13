@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
-import ua.fvadevand.reminderstatusbar.utilities.IconUtils
+import ua.fvadevand.reminderstatusbar.utils.IconUtils
 
 class ReminderAdapter(
         private val listener: (Long) -> Unit

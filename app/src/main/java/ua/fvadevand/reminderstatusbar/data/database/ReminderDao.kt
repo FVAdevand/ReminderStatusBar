@@ -17,14 +17,20 @@ interface ReminderDao {
     fun getAll(): LiveData<List<Reminder>>
 
     @Query("SELECT * FROM reminders WHERE id = :id")
-    fun getById(id: Long): LiveData<Reminder>
+    fun getLiveById(id: Long): LiveData<Reminder>
+
+    @Query("SELECT * FROM reminders WHERE id = :id")
+    fun getById(id: Long): Reminder
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(reminder: Reminder)
+    fun insert(reminder: Reminder): Long
 
     @Update
     fun update(reminder: Reminder)
 
     @Delete
     fun delete(reminder: Reminder)
+
+    @Query("DELETE FROM reminders")
+    fun deleteAll()
 }

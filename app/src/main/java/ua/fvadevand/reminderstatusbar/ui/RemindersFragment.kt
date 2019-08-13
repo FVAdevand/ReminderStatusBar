@@ -22,8 +22,8 @@ class RemindersFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        onFabVisibilityChangeListener = context as OnFabVisibilityChangeListener?
-        onReminderClickListener = context as OnReminderClickListener?
+        onFabVisibilityChangeListener = context as? OnFabVisibilityChangeListener
+        onReminderClickListener = context as? OnReminderClickListener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

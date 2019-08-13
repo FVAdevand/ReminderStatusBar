@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/edit_reminder_hint_title"
+            android:inputType="textCapSentences"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,7 +56,8 @@
             android:id="@+id/et_edit_reminder_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/edit_reminder_hint_message" />
+            android:hint="@string/edit_reminder_hint_message"
+            android:inputType="textCapSentences" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageButton
@@ -88,7 +90,7 @@
         android:id="@+id/btn_edit_reminder_notify"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/oval_background"
         android:text="@string/edit_reminder_action_notify"
         android:textColor="@color/colorButtonText"

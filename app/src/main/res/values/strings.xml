@@ -25,4 +25,9 @@
     <string name="alarm_dialog_title">Time notification</string>
     <string name="reminder_edit_error_empty_title">Please enter a title</string>
 
+    // notifications
+    <string name="reminder_channel_name">Reminders</string>
+    <string name="reminder_channel_description">Notification about new reminders</string>
+    <string name="notification_action_dismiss">Dismiss</string>
+
 </resources>

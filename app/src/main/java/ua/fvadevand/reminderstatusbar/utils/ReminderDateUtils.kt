@@ -1,4 +1,4 @@
-package ua.fvadevand.reminderstatusbar.utilities
+package ua.fvadevand.reminderstatusbar.utils
 
 import android.content.Context
 import android.text.format.DateFormat

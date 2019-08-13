@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ua.fvadevand.reminderstatusbar.R
-import ua.fvadevand.reminderstatusbar.utilities.ReminderDateUtils
+import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Calendar
 
 class AlarmSetDialog : DialogFragment() {
