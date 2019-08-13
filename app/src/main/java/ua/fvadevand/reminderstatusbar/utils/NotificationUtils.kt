@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -44,8 +45,12 @@ object NotificationUtils {
                 .setAutoCancel(true)
                 .addAction(getDismissAction(context, reminder.id))
         reminder.text?.let { nBuilder.setContentText(it) }
-        val largeIcon = getBitmap(context.getDrawable(iconResId))
-        nBuilder.setLargeIcon(largeIcon)
+        val iconDrawable = context.getDrawable(iconResId)
+        iconDrawable?.let {
+            it.setColorFilter(context.getColor(R.color.colorReminderIcons), PorterDuff.Mode.SRC_IN)
+            val largeIcon = getBitmap(it)
+            nBuilder.setLargeIcon(largeIcon)
+        }
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
         notificationManager?.notify(reminder.id.hashCode(), nBuilder.build())
     }
