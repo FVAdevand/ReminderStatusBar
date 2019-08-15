@@ -10,17 +10,17 @@ object FakeDataUtils {
             add(Reminder(
                     "Reminder",
                     null,
-                    "ic_notif_mail",
+                    R.drawable.ic_notif_id_card,
                     System.currentTimeMillis()))
             add(Reminder(
                     "Reminder",
                     "Subscription",
-                    "ic_notif_mail",
+                    R.drawable.ic_notif_file,
                     System.currentTimeMillis()))
             add(Reminder(
                     "Reminder",
                     null,
-                    "ic_notif_mail",
+                    R.drawable.ic_notif_like,
                     System.currentTimeMillis()))
         }
 
@@ -28,7 +28,7 @@ object FakeDataUtils {
         get() = Reminder(
                 "Reminder",
                 null,
-                "ic_notif_mail",
+                R.drawable.ic_notif_briefcase,
                 System.currentTimeMillis()
         )
 }

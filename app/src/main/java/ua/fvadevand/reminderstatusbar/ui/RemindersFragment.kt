@@ -22,8 +22,8 @@ class RemindersFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        onFabVisibilityChangeListener = context as? OnFabVisibilityChangeListener
-        onReminderClickListener = context as? OnReminderClickListener
+        onFabVisibilityChangeListener = context as OnFabVisibilityChangeListener
+        onReminderClickListener = context as OnReminderClickListener
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +52,7 @@ class RemindersFragment : Fragment() {
     private fun setupRecyclerView(view: View) {
         val reminderListView = view.findViewById<RecyclerView>(R.id.reminder_list)
         reminderListView.layoutManager = LinearLayoutManager(context)
-        reminderAdapter = ReminderAdapter { onReminderClickListener?.onReminderClick(it) }
+        reminderAdapter = ReminderAdapter(context!!) { onReminderClickListener?.onReminderClick(it) }
         reminderListView.adapter = reminderAdapter
     }
 

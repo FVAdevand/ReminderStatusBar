@@ -35,7 +35,7 @@ object NotificationUtils {
     }
 
     fun showNotification(context: Context, reminder: Reminder) {
-        val iconResId = IconUtils.getIconResId(context, reminder.iconName)
+        val iconResId = reminder.iconResId
         val nBuilder = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
                 .setContentTitle(reminder.title)
                 .setSmallIcon(iconResId)

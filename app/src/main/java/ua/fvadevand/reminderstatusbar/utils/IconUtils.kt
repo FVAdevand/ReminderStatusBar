@@ -1,12 +1,8 @@
 package ua.fvadevand.reminderstatusbar.utils
 
-import android.content.Context
-import androidx.annotation.DrawableRes
 import ua.fvadevand.reminderstatusbar.R
 
 object IconUtils {
-
-    private const val RESOURCE_FOLDER_DRAWABLE = "drawable"
 
     val iconsIds: List<Int>
         get() {
@@ -41,12 +37,4 @@ object IconUtils {
                     R.drawable.ic_notif_worldwide
             )
         }
-
-    fun getIconName(context: Context, @DrawableRes iconResId: Int): String {
-        return context.resources.getResourceEntryName(iconResId)
-    }
-
-    fun getIconResId(context: Context, iconName: String): Int {
-        return context.resources.getIdentifier(iconName, RESOURCE_FOLDER_DRAWABLE, context.packageName)
-    }
 }

@@ -1,15 +1,15 @@
 <resources>
-    <string name="app_name">Reminder Status Bar</string>
+    <string name="app_name">Reminders</string>
     <string name="action_settings">Settings</string>
 
-    // edit_reminder_fragment
+    <!--edit_reminder_fragment-->
     <string name="edit_reminder_hint_title">Title</string>
     <string name="edit_reminder_hint_message">Message</string>
     <string name="edit_reminder_action_notify">notify</string>
     <string name="edit_reminder_action_save">save</string>
     <string name="edit_reminder_notification_time">Reminder will be shown %s</string>
 
-    // utilities
+    <!--utilities-->
     <string name="utils_format_time_24h">HH:mm</string>
     <string name="utils_format_time_12h">h:mm a</string>
     <string name="utils_format_full_date">EEEE, dd MMM yyyy</string>
@@ -19,13 +19,13 @@
     <string name="utils_date_now">now</string>
     <string name="utils_date_tomorrow">tomorrow at %s</string>
 
-    // alarm_dialog
+    <!--alarm_dialog-->
     <string name="alarm_dialog_time_label">Time</string>
     <string name="alarm_dialog_date_label">Date</string>
     <string name="alarm_dialog_title">Time notification</string>
     <string name="reminder_edit_error_empty_title">Please enter a title</string>
 
-    // notifications
+    <!--notifications-->
     <string name="reminder_channel_name">Reminders</string>
     <string name="reminder_channel_description">Notification about new reminders</string>
     <string name="notification_action_dismiss">Dismiss</string>

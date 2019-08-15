@@ -33,7 +33,7 @@ class IconAdapter(
         private val iconView: ImageView = itemView.findViewById(R.id.iv_icon)
 
         init {
-            itemView.setOnClickListener { v ->
+            itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position in 0 until itemCount) {
                     listener(iconIds[position])

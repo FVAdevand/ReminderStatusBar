@@ -22,7 +22,6 @@ import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.dialogs.IconsDialog
 import ua.fvadevand.reminderstatusbar.listeners.OnFabVisibilityChangeListener
-import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Calendar
 
@@ -38,9 +37,9 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
     private lateinit var currentReminderLive: LiveData<Reminder>
     private lateinit var calendar: Calendar
     private var onFabVisibilityChangeListener: OnFabVisibilityChangeListener? = null
-    private var editMode: Boolean = false
-    private var iconResId: Int = 0
-    private var currentReminderId: Long = Const.NEW_REMINDER_ID
+    private var editMode = false
+    private var iconResId = 0
+    private var currentReminderId = Const.NEW_REMINDER_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,16 +84,21 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
         notifyBtn.setOnClickListener(this)
         timeView = view.findViewById(R.id.tv_edit_reminder_time)
         delayNotificationView = view.findViewById(R.id.cb_edit_reminder_delay_notification)
+        delayNotificationView.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                notifyBtn.setText(R.string.edit_reminder_action_save)
+            } else {
+                notifyBtn.setText(R.string.edit_reminder_action_notify)
+            }
+        }
         calendar = Calendar.getInstance()
     }
 
     private fun fillView(reminder: Reminder) {
         titleView.setText(reminder.title)
         textView.setText(reminder.text)
-        context?.let {
-            iconResId = IconUtils.getIconResId(it, reminder.iconName)
-            iconBtn.setImageResource(iconResId)
-        }
+        iconResId = reminder.iconResId
+        iconBtn.setImageResource(iconResId)
         if (reminder.timestamp > System.currentTimeMillis()) {
             setVisibilityTimeView(true)
             calendar.timeInMillis = reminder.timestamp
@@ -134,7 +138,7 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
             return
         }
         val text = textView.text.toString().trim()
-        val timeInMillis: Long = if (delayNotificationView.isChecked) {
+        val timeInMillis = if (delayNotificationView.isChecked) {
             calendar.timeInMillis
         } else {
             System.currentTimeMillis()
@@ -142,7 +146,7 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
         val reminder = Reminder(
                 title,
                 text,
-                IconUtils.getIconName(context!!, iconResId),
+                iconResId,
                 timeInMillis
         )
         if (editMode) {

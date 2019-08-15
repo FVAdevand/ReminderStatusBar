@@ -8,7 +8,7 @@
     android:layout_marginTop="2dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="2dp"
-    app:cardCornerRadius="2dp">
+    app:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:id="@+id/layout_reminder"
@@ -28,6 +28,7 @@
             android:background="@drawable/oval_background"
             android:backgroundTint="@color/colorAccent"
             android:padding="12dp"
+            tools:ignore="ContentDescription"
             tools:src="@drawable/ic_add_24dp" />
 
         <LinearLayout
@@ -79,7 +80,8 @@
             android:background="@android:color/transparent"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:src="@drawable/ic_upward_24dp" />
+            android:src="@drawable/ic_upward_24dp"
+            tools:ignore="ContentDescription" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
