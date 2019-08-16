@@ -22,7 +22,11 @@ data class Reminder(
         var iconResId: Int,
 
         @ColumnInfo(name = "timestamp")
-        var timestamp: Long = 0
+        var timestamp: Long,
+
+        @ColumnInfo(name = "notify_status")
+        var notify: Boolean
+
 ) {
 
     @PrimaryKey(autoGenerate = true)

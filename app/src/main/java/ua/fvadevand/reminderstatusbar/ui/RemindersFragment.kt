@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
 import ua.fvadevand.reminderstatusbar.listeners.OnFabVisibilityChangeListener
+import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
 class RemindersFragment : Fragment() {
 
@@ -52,12 +53,8 @@ class RemindersFragment : Fragment() {
     private fun setupRecyclerView(view: View) {
         val reminderListView = view.findViewById<RecyclerView>(R.id.reminder_list)
         reminderListView.layoutManager = LinearLayoutManager(context)
-        reminderAdapter = ReminderAdapter(context!!) { onReminderClickListener?.onReminderClick(it) }
+        reminderAdapter = ReminderAdapter(context!!, onReminderClickListener!!)
         reminderListView.adapter = reminderAdapter
-    }
-
-    interface OnReminderClickListener {
-        fun onReminderClick(id: Long)
     }
 
     companion object {

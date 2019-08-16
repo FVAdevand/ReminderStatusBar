@@ -1,6 +1,7 @@
 package ua.fvadevand.reminderstatusbar.ui
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -15,7 +16,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repository: Repository = ReminderApp.instance.repository
     val reminders: LiveData<List<Reminder>> by lazy(LazyThreadSafetyMode.NONE) {
-        repository.getAllReminders()
+        repository.getAllLiveReminders()
     }
 
     fun getLiveReminderById(id: Long): LiveData<Reminder> {
@@ -34,15 +35,32 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun removeReminder(reminder: Reminder) {
+    fun removeReminderById(id: Long) {
         viewModelScope.launch {
-            repository.removeReminder(reminder)
+            val context: Context = getApplication()
+            NotificationUtils.cancel(context, id.hashCode())
+            AlarmUtils.cancelAlarm(context, id)
+            repository.removeReminderById(id)
         }
     }
 
     fun removeAllReminders() {
         viewModelScope.launch {
             repository.removeAllReminders()
+        }
+    }
+
+    fun notifyReminder(id: Long) {
+        viewModelScope.launch {
+            val context: Context = getApplication()
+            val reminder = repository.getReminderById(id)
+            reminder?.let {
+                NotificationUtils.showNotification(context, it)
+                AlarmUtils.cancelAlarm(context, id)
+                it.notify = true
+                it.timestamp = System.currentTimeMillis()
+                repository.editReminder(it)
+            }
         }
     }
 }

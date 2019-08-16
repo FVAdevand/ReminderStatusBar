@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="action_settings">Настройки</string>
+    <string name="alarm_dialog_date_label">Дата</string>
+    <string name="alarm_dialog_time_label">Время</string>
+    <string name="alarm_dialog_title">Время уведомления</string>
+    <string name="edit_reminder_action_notify">Уведомить</string>
+    <string name="edit_reminder_action_save">Сохранить</string>
+    <string name="edit_reminder_hint_message">Описание</string>
+    <string name="edit_reminder_hint_title">Заголовок</string>
+    <string name="edit_reminder_notification_time">Напоминание покажеться %s</string>
+    <string name="notification_action_dismiss">Отклонить</string>
+    <string name="reminder_channel_description">Уведомления о новом напоминании</string>
+    <string name="reminder_channel_name">Напоминания</string>
+    <string name="reminder_edit_error_empty_title">Пожалуйста введите заголовок</string>
+    <string name="utils_date_now">сейчас</string>
+    <string name="utils_date_today">сегодня в %s</string>
+    <string name="utils_date_tomorrow">завтра в %s</string>
+    <string name="notification_action_delete">Удалить</string>
+</resources>

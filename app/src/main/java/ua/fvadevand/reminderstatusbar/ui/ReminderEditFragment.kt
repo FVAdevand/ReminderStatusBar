@@ -147,7 +147,8 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
                 title,
                 text,
                 iconResId,
-                timeInMillis
+                timeInMillis,
+                notify = true
         )
         if (editMode) {
             reminder.id = currentReminderId

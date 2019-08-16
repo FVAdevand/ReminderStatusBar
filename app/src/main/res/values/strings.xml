@@ -1,20 +1,20 @@
 <resources>
-    <string name="app_name">Reminders</string>
+    <string name="app_name" translatable="false">Reminders</string>
     <string name="action_settings">Settings</string>
 
     <!--edit_reminder_fragment-->
     <string name="edit_reminder_hint_title">Title</string>
-    <string name="edit_reminder_hint_message">Message</string>
+    <string name="edit_reminder_hint_message">Description</string>
     <string name="edit_reminder_action_notify">notify</string>
     <string name="edit_reminder_action_save">save</string>
     <string name="edit_reminder_notification_time">Reminder will be shown %s</string>
 
     <!--utilities-->
-    <string name="utils_format_time_24h">HH:mm</string>
-    <string name="utils_format_time_12h">h:mm a</string>
-    <string name="utils_format_full_date">EEEE, dd MMM yyyy</string>
-    <string name="utils_format_notification_time">EEEE, dd MMM</string>
-    <string name="utils_format_short_date">dd.MM.yy</string>
+    <string name="utils_format_time_24h" translatable="false">HH:mm</string>
+    <string name="utils_format_time_12h" translatable="false">h:mm a</string>
+    <string name="utils_format_full_date" translatable="false">EEEE, dd MMM yyyy</string>
+    <string name="utils_format_notification_time" translatable="false">EEEE, dd MMM</string>
+    <string name="utils_format_short_date" translatable="false">dd.MM.yy</string>
     <string name="utils_date_today">today at %s</string>
     <string name="utils_date_now">now</string>
     <string name="utils_date_tomorrow">tomorrow at %s</string>
@@ -29,5 +29,6 @@
     <string name="reminder_channel_name">Reminders</string>
     <string name="reminder_channel_description">Notification about new reminders</string>
     <string name="notification_action_dismiss">Dismiss</string>
+    <string name="notification_action_delete">Delete</string>
 
 </resources>

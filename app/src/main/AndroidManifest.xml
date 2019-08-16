@@ -31,6 +31,7 @@
             <intent-filter>
                 <action android:name="ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER" />
                 <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DISMISS" />
+                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DELETE" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

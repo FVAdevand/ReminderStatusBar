@@ -11,8 +11,9 @@ import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.FakeDataUtils
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.listeners.OnFabVisibilityChangeListener
+import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
-class MainActivity : AppCompatActivity(), OnFabVisibilityChangeListener, RemindersFragment.OnReminderClickListener {
+class MainActivity : AppCompatActivity(), OnFabVisibilityChangeListener, OnReminderClickListener {
 
     private lateinit var viewModel: RemindersViewModel
     private lateinit var fab: FloatingActionButton
@@ -68,7 +69,15 @@ class MainActivity : AppCompatActivity(), OnFabVisibilityChangeListener, Reminde
         if (isVisible) fab.show() else fab.hide()
     }
 
-    override fun onReminderClick(id: Long) {
+    override fun onClickReminder(id: Long) {
         showReminderEditFragment(id)
+    }
+
+    override fun onClickReminderDelete(id: Long) {
+        viewModel.removeReminderById(id)
+    }
+
+    override fun onClickReminderNotify(id: Long) {
+        viewModel.notifyReminder(id)
     }
 }

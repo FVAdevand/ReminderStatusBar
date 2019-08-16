@@ -16,11 +16,11 @@ import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.receivers.NotificationReceiver
 
-private const val TAG = "NotificationUtils"
-private const val VERSION = 1
-private const val REMINDER_CHANNEL_ID = "reminder_channel_$VERSION"
-
 object NotificationUtils {
+
+    private const val TAG = "NotificationUtils"
+    private const val VERSION = 1
+    private const val REMINDER_CHANNEL_ID = "reminder_channel_$VERSION"
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun registerNotificationChannels(context: Context) {
@@ -36,6 +36,7 @@ object NotificationUtils {
 
     fun showNotification(context: Context, reminder: Reminder) {
         val iconResId = reminder.iconResId
+        val reminderId = reminder.id
         val nBuilder = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
                 .setContentTitle(reminder.title)
                 .setSmallIcon(iconResId)
@@ -43,7 +44,8 @@ object NotificationUtils {
                 .setOngoing(false)
                 .setShowWhen(true)
                 .setAutoCancel(true)
-                .addAction(getDismissAction(context, reminder.id))
+                .addAction(getDismissAction(context, reminderId))
+                .addAction(getDeleteAction(context, reminderId))
         reminder.text?.let { nBuilder.setContentText(it) }
         val iconDrawable = context.getDrawable(iconResId)
         iconDrawable?.let {
@@ -52,18 +54,12 @@ object NotificationUtils {
             nBuilder.setLargeIcon(largeIcon)
         }
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-        notificationManager?.notify(reminder.id.hashCode(), nBuilder.build())
+        notificationManager?.notify(reminderId.hashCode(), nBuilder.build())
     }
 
     fun cancel(context: Context, id: Int) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
         notificationManager?.cancel(id)
-    }
-
-
-    fun cancelAll(context: Context) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
-        notificationManager?.cancelAll()
     }
 
     private fun getBitmap(drawable: Drawable?): Bitmap? {
@@ -86,9 +82,16 @@ object NotificationUtils {
     }
 
     private fun getDismissAction(context: Context, reminderId: Long): NotificationCompat.Action {
-        return NotificationCompat.Action.Builder(android.R.drawable.ic_menu_close_clear_cancel,
+        return NotificationCompat.Action.Builder(R.drawable.ic_action_cancel,
                 context.getString(R.string.notification_action_dismiss),
                 NotificationReceiver.getDismissIntent(context, reminderId))
+                .build()
+    }
+
+    private fun getDeleteAction(context: Context, reminderId: Long): NotificationCompat.Action {
+        return NotificationCompat.Action.Builder(R.drawable.ic_action_delete,
+                context.getString(R.string.notification_action_delete),
+                NotificationReceiver.getDeleteIntent(context, reminderId))
                 .build()
     }
 }

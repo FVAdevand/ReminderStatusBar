@@ -5,7 +5,6 @@ import android.content.Context
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.receivers.NotificationReceiver
 
-
 object AlarmUtils {
 
     fun setAlarm(context: Context, reminder: Reminder) {
@@ -14,5 +13,10 @@ object AlarmUtils {
                 AlarmManager.RTC_WAKEUP,
                 reminder.timestamp,
                 NotificationReceiver.getNotifyIntent(context, reminder.id))
+    }
+
+    fun cancelAlarm(context: Context, reminderId: Long) {
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+        alarmManager?.cancel(NotificationReceiver.getNotifyIntent(context, reminderId))
     }
 }

@@ -13,28 +13,34 @@ import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 
 private const val ACTION_SHOW_REMINDER = "ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER"
 private const val ACTION_DISMISS = "ua.fvadevand.reminderstatusbar.ACTION_DISMISS"
+private const val ACTION_DELETE = "ua.fvadevand.reminderstatusbar.ACTION_DELETE"
 private const val EXTRA_REMINDER_ID = "REMINDER_ID"
 
 class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         val action = intent?.action ?: return
-        val reminderId: Long
+        val reminderId = intent.getLongExtra(EXTRA_REMINDER_ID, Const.NEW_REMINDER_ID)
         when (action) {
             ACTION_SHOW_REMINDER -> {
-                reminderId = intent.getLongExtra(EXTRA_REMINDER_ID, Const.NEW_REMINDER_ID)
-                if (reminderId != Const.NEW_REMINDER_ID) {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
-                        reminder?.let {
-                            NotificationUtils.showNotification(context, it)
-                        }
+                GlobalScope.launch(Dispatchers.Main) {
+                    val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
+                    reminder?.let {
+                        NotificationUtils.showNotification(context, it)
                     }
                 }
             }
             ACTION_DISMISS -> {
-                reminderId = intent.getLongExtra(EXTRA_REMINDER_ID, 0)
                 NotificationUtils.cancel(context, reminderId.hashCode())
+                GlobalScope.launch(Dispatchers.IO) {
+                    ReminderApp.instance.repository.updateNotifyStatus(reminderId, notify = false)
+                }
+            }
+            ACTION_DELETE -> {
+                NotificationUtils.cancel(context, reminderId.hashCode())
+                GlobalScope.launch(Dispatchers.IO) {
+                    ReminderApp.instance.repository.removeReminderById(reminderId)
+                }
             }
         }
     }
@@ -53,6 +59,15 @@ class NotificationReceiver : BroadcastReceiver() {
             return PendingIntent.getBroadcast(context,
                     reminderId.hashCode(),
                     Intent(ACTION_DISMISS)
+                            .setPackage(context.packageName)
+                            .putExtra(EXTRA_REMINDER_ID, reminderId),
+                    PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        fun getDeleteIntent(context: Context, reminderId: Long): PendingIntent {
+            return PendingIntent.getBroadcast(context,
+                    reminderId.hashCode(),
+                    Intent(ACTION_DELETE)
                             .setPackage(context.packageName)
                             .putExtra(EXTRA_REMINDER_ID, reminderId),
                     PendingIntent.FLAG_UPDATE_CURRENT)

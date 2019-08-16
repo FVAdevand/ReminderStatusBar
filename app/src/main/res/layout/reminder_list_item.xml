@@ -10,12 +10,13 @@
     android:layout_marginBottom="2dp"
     app:cardCornerRadius="4dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_reminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="80dp"
-        android:padding="8dp">
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
         <ImageView
             android:id="@+id/iv_item_icon"
@@ -23,21 +24,27 @@
             android:layout_height="48dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="16dp"
             android:background="@drawable/oval_background"
             android:backgroundTint="@color/colorAccent"
             android:padding="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription"
             tools:src="@drawable/ic_add_24dp" />
 
         <LinearLayout
+            android:id="@+id/reminder_item_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/btn_item_notify"
-            android:layout_toEndOf="@id/iv_item_icon"
-            android:orientation="vertical">
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/view_item_divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_icon"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tv_item_title"
@@ -60,28 +67,60 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Notification"
                 tools:text="text" />
 
-            <TextView
-                android:id="@+id/tv_item_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Notification"
-                tools:text="16:00" />
-
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btn_item_notify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:src="@drawable/ic_upward_24dp"
-            tools:ignore="ContentDescription" />
+        <View
+            android:id="@+id/view_item_divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorDividerItem"
+            app:layout_constraintBottom_toTopOf="@+id/tv_item_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_icon" />
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/tv_item_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@android:style/TextAppearance.Material.Notification"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ibtn_item_action_notify"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_icon"
+            tools:text="16:00" />
+
+        <ImageButton
+            android:id="@+id/ibtn_item_action_delete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@android:color/transparent"
+            android:padding="2dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_action_delete"
+            android:tint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_item_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_item_date" />
+
+        <ImageButton
+            android:id="@+id/ibtn_item_action_notify"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:padding="2dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_action_notify"
+            android:tint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/ibtn_item_action_delete"
+            app:layout_constraintEnd_toStartOf="@+id/ibtn_item_action_delete"
+            app:layout_constraintTop_toTopOf="@+id/ibtn_item_action_delete" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
