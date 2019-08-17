@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
+import ua.fvadevand.reminderstatusbar.decorators.OutsideOffsetItemDecorator
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
 class RemindersFragment : Fragment() {
 
     private lateinit var reminderAdapter: ReminderAdapter
+    private lateinit var viewModel: RemindersViewModel
     private var onReminderClickListener: OnReminderClickListener? = null
 
     override fun onAttach(context: Context?) {
@@ -31,7 +33,7 @@ class RemindersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
+        viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
         setupRecyclerView(view)
         viewModel.reminders.observe(viewLifecycleOwner, Observer { reminderAdapter.setReminders(it) })
     }
@@ -44,8 +46,13 @@ class RemindersFragment : Fragment() {
     private fun setupRecyclerView(view: View) {
         val reminderListView = view.findViewById<RecyclerView>(R.id.reminder_list)
         reminderListView.layoutManager = LinearLayoutManager(context)
-        reminderAdapter = ReminderAdapter(context!!, onReminderClickListener!!)
+        reminderAdapter = ReminderAdapter(context!!) {
+            viewModel.currentReminderId = it
+            onReminderClickListener?.onClickReminder()
+        }
         reminderListView.adapter = reminderAdapter
+        val offsetTopBottom = context!!.resources.getDimensionPixelOffset(R.dimen.item_reminder_margin_top_bottom)
+        reminderListView.addItemDecoration(OutsideOffsetItemDecorator(offsetTopBottom, offsetTopBottom))
     }
 
     companion object {

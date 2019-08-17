@@ -45,15 +45,13 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     private lateinit var calendar: Calendar
     private var editMode = false
     private var iconResId = 0
-    private var currentReminderId = Const.NEW_REMINDER_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { currentReminderId = it.getLong(ARG_REMINDER_ID) }
-        editMode = currentReminderId != Const.NEW_REMINDER_ID
         viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
+        editMode = viewModel.currentReminderId != Const.NEW_REMINDER_ID
         if (editMode) {
-            currentReminderLive = viewModel.getLiveReminderById(currentReminderId)
+            currentReminderLive = viewModel.getLiveCurrentReminder()
         }
     }
 
@@ -189,7 +187,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
                 notify = true
         )
         if (editMode) {
-            reminder.id = currentReminderId
+            reminder.id = viewModel.currentReminderId
         }
         viewModel.addReminder(reminder)
         editMode = false
@@ -221,14 +219,5 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
 
     companion object {
         const val TAG = "ReminderEditFragment"
-        private const val ARG_REMINDER_ID = "reminder_id"
-
-        fun newInstance(reminderId: Long): ReminderEditFragment {
-            val fragment = ReminderEditFragment()
-            val args = Bundle()
-            args.putLong(ARG_REMINDER_ID, reminderId)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

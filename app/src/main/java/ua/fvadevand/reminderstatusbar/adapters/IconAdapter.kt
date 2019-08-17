@@ -16,7 +16,7 @@ class IconAdapter(
 ) : RecyclerView.Adapter<IconAdapter.IconViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.icon_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_icon, parent, false)
         return IconViewHolder(view)
     }
 
