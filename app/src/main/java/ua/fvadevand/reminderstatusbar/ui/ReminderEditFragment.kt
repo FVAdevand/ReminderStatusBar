@@ -1,31 +1,38 @@
 package ua.fvadevand.reminderstatusbar.ui
 
-import android.content.Context
+import android.animation.ValueAnimator
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.dialogs.IconsDialog
-import ua.fvadevand.reminderstatusbar.listeners.OnFabVisibilityChangeListener
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Calendar
 
-class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListener, IconsDialog.OnIconClickListener {
+private const val DELAY_UP_DIALOG = 50L
+private const val DELAY_DOWN_DIALOG = 50L
+
+class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, OnAlarmSetListener, IconsDialog.OnIconClickListener {
 
     private lateinit var titleView: EditText
     private lateinit var textView: EditText
@@ -36,7 +43,6 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
     private lateinit var viewModel: RemindersViewModel
     private lateinit var currentReminderLive: LiveData<Reminder>
     private lateinit var calendar: Calendar
-    private var onFabVisibilityChangeListener: OnFabVisibilityChangeListener? = null
     private var editMode = false
     private var iconResId = 0
     private var currentReminderId = Const.NEW_REMINDER_ID
@@ -53,7 +59,9 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_reminder_edit, container, false)
+        val view = inflater.inflate(R.layout.fragment_reminder_edit, container, false)
+        handleKeyboardHeight(view)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,14 +79,51 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
         }
     }
 
+    private fun handleKeyboardHeight(view: View) {
+        dialog?.window?.setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+                        or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+        val decorView = activity?.window?.decorView
+        decorView?.viewTreeObserver?.addOnGlobalLayoutListener {
+            val displayFrame = Rect()
+            decorView.getWindowVisibleDisplayFrame(displayFrame)
+            val height = decorView.context.resources.displayMetrics.heightPixels
+            val heightDifference = height - displayFrame.bottom
+            val animator = ValueAnimator.ofInt(view.paddingBottom, heightDifference)
+            val duration = if (heightDifference == 0) DELAY_DOWN_DIALOG else DELAY_UP_DIALOG
+            animator.addUpdateListener { view.setPadding(0, 0, 0, it.animatedValue as Int) }
+            animator.duration = duration
+            animator.start()
+        }
+        dialog?.setOnShowListener {
+            val bottomSheetDialog = dialog as? BottomSheetDialog
+            val bottomSheet = bottomSheetDialog?.findViewById<ViewGroup>(R.id.design_bottom_sheet)
+            val behavior = BottomSheetBehavior.from(bottomSheet)
+            behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+    }
+
     private fun initView(view: View) {
         titleView = view.findViewById(R.id.et_edit_reminder_title)
         titleView.requestFocus()
         textView = view.findViewById(R.id.et_edit_reminder_text)
+        textView.setOnEditorActionListener { _, actionId, _ ->
+            when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    if (TextUtils.isEmpty(titleView.text)) {
+                        titleView.requestFocus()
+                    } else {
+                        saveAndNotifyReminder()
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
         iconBtn = view.findViewById(R.id.btn_edit_reminder_icon)
         iconBtn.setOnClickListener(this)
         iconResId = R.drawable.ic_notif_edit
-        iconBtn.setImageResource(iconResId)
+        iconBtn.setImageResource(R.drawable.ic_grid)
         view.findViewById<View>(R.id.btn_edit_reminder_time).setOnClickListener(this)
         notifyBtn = view.findViewById(R.id.btn_edit_reminder_notify)
         notifyBtn.setOnClickListener(this)
@@ -106,13 +151,6 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
         } else {
             setVisibilityTimeView(false)
         }
-    }
-
-    private fun clearView() {
-        titleView.text.clear()
-        textView.text.clear()
-        titleView.requestFocus()
-        setVisibilityTimeView(false)
     }
 
     override fun onClick(v: View) {
@@ -155,7 +193,7 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
         }
         viewModel.addReminder(reminder)
         editMode = false
-        clearView()
+        dismiss()
     }
 
     override fun onAlarmSet(alarmTimeInMillis: Long) {
@@ -171,7 +209,7 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
 
     private fun setVisibilityTimeView(isVisible: Boolean) {
         delayNotificationView.isChecked = isVisible
-        val visibility = if (isVisible) View.VISIBLE else View.INVISIBLE
+        val visibility = if (isVisible) View.VISIBLE else View.GONE
         delayNotificationView.visibility = visibility
         timeView.visibility = visibility
     }
@@ -179,21 +217,6 @@ class ReminderEditFragment : Fragment(), View.OnClickListener, OnAlarmSetListene
     override fun onIconClick(iconId: Int) {
         iconResId = iconId
         iconBtn.setImageResource(iconResId)
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        onFabVisibilityChangeListener = context as OnFabVisibilityChangeListener?
-    }
-
-    override fun onStart() {
-        super.onStart()
-        onFabVisibilityChangeListener?.onFabVisibilityChange(false)
-    }
-
-    override fun onDetach() {
-        onFabVisibilityChangeListener = null
-        super.onDetach()
     }
 
     companion object {

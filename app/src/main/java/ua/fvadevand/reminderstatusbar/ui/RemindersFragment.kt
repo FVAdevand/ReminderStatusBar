@@ -12,18 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
-import ua.fvadevand.reminderstatusbar.listeners.OnFabVisibilityChangeListener
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
 class RemindersFragment : Fragment() {
 
     private lateinit var reminderAdapter: ReminderAdapter
-    private var onFabVisibilityChangeListener: OnFabVisibilityChangeListener? = null
     private var onReminderClickListener: OnReminderClickListener? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        onFabVisibilityChangeListener = context as OnFabVisibilityChangeListener
         onReminderClickListener = context as OnReminderClickListener
     }
 
@@ -39,13 +36,7 @@ class RemindersFragment : Fragment() {
         viewModel.reminders.observe(viewLifecycleOwner, Observer { reminderAdapter.setReminders(it) })
     }
 
-    override fun onStart() {
-        super.onStart()
-        onFabVisibilityChangeListener?.onFabVisibilityChange(true)
-    }
-
     override fun onDetach() {
-        onFabVisibilityChangeListener = null
         onReminderClickListener = null
         super.onDetach()
     }
