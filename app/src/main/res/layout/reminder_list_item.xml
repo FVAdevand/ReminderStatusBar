@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
-    android:layout_marginTop="2dp"
+    android:layout_marginTop="@dimen/item_reminder_margin_top_bottom"
     android:layout_marginEnd="8dp"
-    android:layout_marginBottom="2dp"
+    android:layout_marginBottom="@dimen/item_reminder_margin_top_bottom"
     app:cardCornerRadius="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +24,7 @@
             android:layout_height="48dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/oval_background"
+            android:background="@drawable/round_background"
             android:backgroundTint="@color/colorAccent"
             android:padding="12dp"
             app:layout_constraintBottom_toBottomOf="parent"

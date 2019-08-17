@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
+import ua.fvadevand.reminderstatusbar.decorators.OutsideOffsetItemDecorator
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
 class RemindersFragment : Fragment() {
@@ -46,6 +47,8 @@ class RemindersFragment : Fragment() {
         reminderListView.layoutManager = LinearLayoutManager(context)
         reminderAdapter = ReminderAdapter(context!!, onReminderClickListener!!)
         reminderListView.adapter = reminderAdapter
+        val offsetTopBottom = context!!.resources.getDimensionPixelOffset(R.dimen.item_reminder_margin_top_bottom)
+        reminderListView.addItemDecoration(OutsideOffsetItemDecorator(offsetTopBottom, offsetTopBottom))
     }
 
     companion object {
