@@ -4,25 +4,40 @@
     package="ua.fvadevand.reminderstatusbar">
 
     <application
-        android:name="ua.fvadevand.reminderstatusbar.app.ReminderApp"
+        android:name=".ReminderApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
         <activity
-            android:name="ua.fvadevand.reminderstatusbar.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".receivers.NotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER" />
+                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DISMISS" />
+                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DELETE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

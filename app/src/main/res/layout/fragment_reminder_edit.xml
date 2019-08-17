@@ -3,106 +3,103 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.ReminderEditFragment">
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_edit_reminder_title_container"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/et_edit_reminder_title"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/btn_edit_reminder_icon"
+        android:background="@android:color/transparent"
+        android:hint="@string/edit_reminder_hint_title"
+        android:imeOptions="actionNext"
+        android:inputType="textCapSentences"
+        android:maxLines="1"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_edit_reminder_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/edit_reminder_hint_title"
-            android:maxLines="1" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/btn_edit_reminder_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/round_background"
-        android:elevation="4dp"
-        android:src="@drawable/ic_add_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/til_edit_reminder_title_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/til_edit_reminder_title_container" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_edit_reminder_text_container"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/btn_edit_reminder_time"
+        android:background="@android:color/transparent"
+        android:padding="12dp"
+        android:src="@drawable/ic_grid"
+        android:tint="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_edit_reminder_title_container">
+        app:layout_constraintTop_toBottomOf="@+id/tv_edit_reminder_time" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_edit_reminder_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/edit_reminder_hint_message" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/et_edit_reminder_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:hint="@string/edit_reminder_hint_message"
+        android:imeOptions="actionDone"
+        android:inputType="textCapSentences"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:selectAllOnFocus="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_edit_reminder_title" />
 
     <ImageButton
         android:id="@+id/btn_edit_reminder_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/round_background"
-        android:elevation="4dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:padding="12dp"
         android:src="@drawable/ic_alarm_add_24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/til_edit_reminder_text_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/til_edit_reminder_text_container" />
+        android:tint="@color/colorAccent"
+        app:layout_constraintStart_toEndOf="@+id/btn_edit_reminder_icon"
+        app:layout_constraintTop_toBottomOf="@+id/tv_edit_reminder_time"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tv_edit_reminder_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@android:color/primary_text_light"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/cb_edit_reminder_delay_notification"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_edit_reminder_text_container"
+        app:layout_constraintTop_toBottomOf="@+id/et_edit_reminder_text"
         tools:text="Reminder will show today in 12:35" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_edit_reminder_notify"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/oval_background"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/edit_reminder_action_notify"
-        android:textColor="@color/colorButtonText"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_edit_reminder_time" />
 
     <CheckBox
         android:id="@+id/cb_edit_reminder_delay_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_edit_reminder_time"
-        app:layout_constraintEnd_toEndOf="@+id/btn_edit_reminder_time"
-        app:layout_constraintStart_toStartOf="@+id/btn_edit_reminder_time"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_edit_reminder_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

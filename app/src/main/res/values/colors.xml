@@ -2,7 +2,10 @@
 <resources>
     <color name="colorPrimary">#344955</color>
     <color name="colorPrimaryDark">#232F34</color>
-    <color name="colorAccent">#0277bd</color>
+    <color name="colorAccent">#0265EC</color>
+    <color name="colorReminderIcons">@color/colorAccent</color>
     <color name="colorWindowBackground">#F0F0F0</color>
     <color name="colorButtonText">#ffffff</color>
+    <color name="colorDividerItem">#151515</color>
+    <color name="ic_launcher_background">@color/colorAccent</color>
 </resources>
