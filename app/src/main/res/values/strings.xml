@@ -31,4 +31,8 @@
     <string name="notification_action_dismiss">Dismiss</string>
     <string name="notification_action_delete">Delete</string>
 
+    <!--bottom bar reminders-->
+    <string name="reminders_menu_edit">Edit</string>
+    <string name="reminders_menu_notify">Notify</string>
+    <string name="reminders_menu_delete">Delete</string>
 </resources>

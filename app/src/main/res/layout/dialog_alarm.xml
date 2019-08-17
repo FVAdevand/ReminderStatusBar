@@ -12,7 +12,7 @@
         android:layout_marginStart="@dimen/margin_edge_dialog_item"
         android:layout_marginTop="@dimen/margin_top_dialog_item"
         android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:drawableStart="@drawable/ic_access_time_24dp"
+        android:drawableStart="@drawable/ic_access_time"
         android:drawablePadding="@dimen/drawable_padding"
         android:gravity="center_vertical"
         android:text="@string/alarm_dialog_time_label"
@@ -34,7 +34,7 @@
         android:layout_marginStart="@dimen/margin_edge_dialog_item"
         android:layout_marginTop="@dimen/margin_top_dialog_item"
         android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:drawableStart="@drawable/ic_insert_invitation_24dp"
+        android:drawableStart="@drawable/ic_insert_invitation"
         android:drawablePadding="@dimen/drawable_padding"
         android:text="@string/alarm_dialog_date_label"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />

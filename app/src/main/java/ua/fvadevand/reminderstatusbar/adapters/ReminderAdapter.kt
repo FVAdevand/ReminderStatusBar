@@ -5,26 +5,24 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
-import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Calendar
 
 class ReminderAdapter(
         private val context: Context,
-        private val listener: OnReminderClickListener
+        private val listener: (Long) -> Unit
 ) : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
     private var reminders: MutableList<Reminder> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.reminder_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_reminder, parent, false)
         return ReminderViewHolder(view)
     }
 
@@ -74,24 +72,15 @@ class ReminderAdapter(
         private val titleView: TextView = itemView.findViewById(R.id.tv_item_title)
         private val textView: TextView = itemView.findViewById(R.id.tv_item_text)
         private val dateView: TextView = itemView.findViewById(R.id.tv_item_date)
-        private val deleteBtn: ImageButton = itemView.findViewById(R.id.ibtn_item_action_delete)
-        private val notifyBtn: ImageButton = itemView.findViewById(R.id.ibtn_item_action_notify)
-        private val itemViewId: Int = itemView.id
         private val onClickListener = View.OnClickListener {
             val position = adapterPosition
-            if (!isValidPosition(position)) return@OnClickListener
-            val reminderId = reminders[position].id
-            when (it.id) {
-                itemViewId -> listener.onClickReminder(reminderId)
-                R.id.ibtn_item_action_delete -> listener.onClickReminderDelete(reminderId)
-                R.id.ibtn_item_action_notify -> listener.onClickReminderNotify(reminderId)
+            if (isValidPosition(position)) {
+                listener(reminders[position].id)
             }
         }
 
         init {
             itemView.setOnClickListener(onClickListener)
-            deleteBtn.setOnClickListener(onClickListener)
-            notifyBtn.setOnClickListener(onClickListener)
         }
 
         fun bind(reminder: Reminder) {
@@ -110,7 +99,7 @@ class ReminderAdapter(
                 calendar.timeInMillis = reminder.timestamp
                 dateView.text = ReminderDateUtils.getNotificationTime(context, calendar)
             } else {
-                dateView.visibility = View.INVISIBLE
+                dateView.visibility = View.GONE
             }
         }
     }

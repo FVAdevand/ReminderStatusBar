@@ -18,4 +18,7 @@
     <string name="utils_date_today">сегодня в %s</string>
     <string name="utils_date_tomorrow">завтра в %s</string>
     <string name="notification_action_delete">Удалить</string>
+    <string name="reminders_menu_notify">Показать уведомление</string>
+    <string name="reminders_menu_edit">Редактировать</string>
+    <string name="reminders_menu_delete">Удалить</string>
 </resources>

@@ -20,11 +20,10 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProviders.of(this).get(RemindersViewModel::class.java)
+        initView()
         if (savedInstanceState == null) {
             showRemindersFragment()
         }
-        fab = findViewById(R.id.fab)
-        fab.setOnClickListener { showReminderEditFragment(Const.NEW_REMINDER_ID) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -40,6 +39,14 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun initView() {
+        fab = findViewById(R.id.fab)
+        fab.setOnClickListener {
+            viewModel.currentReminderId = Const.NEW_REMINDER_ID
+            showReminderEditFragment()
+        }
+    }
+
     private fun showRemindersFragment() {
         val fragment = supportFragmentManager.findFragmentByTag(RemindersFragment.TAG)
                 ?: RemindersFragment.newInstance()
@@ -48,21 +55,23 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
                 .commit()
     }
 
-    private fun showReminderEditFragment(reminderId: Long) {
-        val fragment: ReminderEditFragment = supportFragmentManager.findFragmentByTag(ReminderEditFragment.TAG) as? ReminderEditFragment
-                ?: ReminderEditFragment.newInstance(reminderId)
+    private fun showReminderEditFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(ReminderEditFragment.TAG) as? ReminderEditFragment
+                ?: ReminderEditFragment()
         fragment.show(supportFragmentManager, ReminderEditFragment.TAG)
     }
 
-    override fun onClickReminder(id: Long) {
-        showReminderEditFragment(id)
+    private fun showReminderMenuFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(ReminderMenuFragment.TAG) as? ReminderMenuFragment
+                ?: ReminderMenuFragment()
+        fragment.show(supportFragmentManager, ReminderMenuFragment.TAG)
     }
 
-    override fun onClickReminderDelete(id: Long) {
-        viewModel.removeReminderById(id)
+    override fun onClickReminder() {
+        showReminderMenuFragment()
     }
 
-    override fun onClickReminderNotify(id: Long) {
-        viewModel.notifyReminder(id)
+    override fun onClickReminderEdit() {
+        showReminderEditFragment()
     }
 }
