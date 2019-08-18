@@ -41,7 +41,7 @@ object NotificationUtils {
                 .setContentTitle(reminder.title)
                 .setSmallIcon(iconResId)
                 .setColor(context.getColor(R.color.colorAccent))
-                .setOngoing(false)
+                .setOngoing(true)
                 .setShowWhen(true)
                 .setAutoCancel(true)
                 .addAction(getDismissAction(context, reminderId))

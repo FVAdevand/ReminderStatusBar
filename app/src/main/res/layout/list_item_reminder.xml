@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_reminder"
+    android:id="@+id/item_reminder_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     android:minHeight="64dp"
     android:paddingStart="16dp"
     android:paddingTop="4dp"
@@ -11,7 +12,7 @@
     android:paddingBottom="4dp">
 
     <ImageView
-        android:id="@+id/iv_item_icon"
+        android:id="@+id/iv_item_reminder_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentStart="true"
@@ -25,13 +26,14 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/iv_item_icon"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@id/iv_item_reminder_status"
+        android:layout_toEndOf="@id/iv_item_reminder_icon"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_item_title"
+            android:id="@+id/tv_item_reminder_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -42,7 +44,7 @@
             tools:text="Title" />
 
         <TextView
-            android:id="@+id/tv_item_text"
+            android:id="@+id/tv_item_reminder_text"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -52,7 +54,7 @@
             tools:text="text" />
 
         <TextView
-            android:id="@+id/tv_item_date"
+            android:id="@+id/tv_item_reminder_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -64,5 +66,15 @@
             tools:text="16:00" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_item_reminder_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_status_done"
+        android:tint="@color/colorReminderStatusIcon"
+        tools:ignore="ContentDescription" />
 
 </RelativeLayout>

@@ -125,7 +125,6 @@ class DividerItemDecoration(
         }
         if (orientation == LinearLayout.VERTICAL) {
             outRect.set(0, 0, 0, divider!!.intrinsicHeight)
-            Log.i(TAG, "getItemOffsets: ${divider!!.intrinsicHeight}")
         } else {
             outRect.set(0, 0, divider!!.intrinsicWidth, 0)
         }

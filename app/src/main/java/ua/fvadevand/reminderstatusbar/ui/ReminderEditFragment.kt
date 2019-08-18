@@ -23,6 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.dialogs.IconsDialog
@@ -181,7 +182,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
                 text,
                 iconResId,
                 timeInMillis,
-                notify = true
+                if (calendar.timeInMillis > System.currentTimeMillis()) ReminderStatus.DELAYED else ReminderStatus.NOTIFYING
         )
         if (editMode) {
             reminder.id = viewModel.currentReminderId

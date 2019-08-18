@@ -1,6 +1,5 @@
 package ua.fvadevand.reminderstatusbar.adapters
 
-import android.content.Context
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Calendar
 
 class ReminderAdapter(
-        private val context: Context,
         private val listener: (Long) -> Unit
 ) : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
@@ -67,20 +66,19 @@ class ReminderAdapter(
     }
 
     inner class ReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val iconView: ImageView = itemView.findViewById(R.id.iv_item_icon)
-        private val titleView: TextView = itemView.findViewById(R.id.tv_item_title)
-        private val textView: TextView = itemView.findViewById(R.id.tv_item_text)
-        private val dateView: TextView = itemView.findViewById(R.id.tv_item_date)
-        private val onClickListener = View.OnClickListener {
-            val position = adapterPosition
-            if (isValidPosition(position)) {
-                listener(reminders[position].id)
-            }
-        }
+        private val iconView: ImageView = itemView.findViewById(R.id.iv_item_reminder_icon)
+        private val titleView: TextView = itemView.findViewById(R.id.tv_item_reminder_title)
+        private val textView: TextView = itemView.findViewById(R.id.tv_item_reminder_text)
+        private val dateView: TextView = itemView.findViewById(R.id.tv_item_reminder_date)
+        private val statusView: ImageView = itemView.findViewById(R.id.iv_item_reminder_status)
 
         init {
-            itemView.setOnClickListener(onClickListener)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (isValidPosition(position)) {
+                    listener(reminders[position].id)
+                }
+            }
         }
 
         fun bind(reminder: Reminder) {
@@ -97,10 +95,11 @@ class ReminderAdapter(
                 dateView.visibility = View.VISIBLE
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = reminder.timestamp
-                dateView.text = ReminderDateUtils.getNotificationTime(context, calendar)
+                dateView.text = ReminderDateUtils.getNotificationTime(dateView.context.applicationContext, calendar)
             } else {
                 dateView.visibility = View.GONE
             }
+            statusView.setImageResource(ReminderStatus.getIconResIdByStatus(reminder.status))
         }
     }
 }

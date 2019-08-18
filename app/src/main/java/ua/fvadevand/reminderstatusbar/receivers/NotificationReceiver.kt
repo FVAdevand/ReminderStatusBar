@@ -9,6 +9,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.ReminderApp
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 
 private const val ACTION_SHOW_REMINDER = "ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER"
@@ -26,6 +27,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 GlobalScope.launch(Dispatchers.Main) {
                     val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
                     reminder?.let {
+                        ReminderApp.instance.repository.updateStatus(reminderId, ReminderStatus.NOTIFYING)
                         NotificationUtils.showNotification(context, it)
                     }
                 }
@@ -33,7 +35,7 @@ class NotificationReceiver : BroadcastReceiver() {
             ACTION_DISMISS -> {
                 NotificationUtils.cancel(context, reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
-                    ReminderApp.instance.repository.updateNotifyStatus(reminderId, notify = false)
+                    ReminderApp.instance.repository.updateStatus(reminderId, ReminderStatus.DONE)
                 }
             }
             ACTION_DELETE -> {

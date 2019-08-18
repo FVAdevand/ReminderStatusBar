@@ -48,7 +48,7 @@ class RemindersFragment : Fragment() {
         val reminderListView = view.findViewById<RecyclerView>(R.id.reminder_list)
         val layoutManager = LinearLayoutManager(context)
         reminderListView.layoutManager = layoutManager
-        reminderAdapter = ReminderAdapter(context) {
+        reminderAdapter = ReminderAdapter {
             viewModel.currentReminderId = it
             onReminderClickListener?.onClickReminder()
         }
