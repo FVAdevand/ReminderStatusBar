@@ -7,6 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuses
 
 @Dao
 interface ReminderDao {
@@ -20,7 +22,7 @@ interface ReminderDao {
     @Query("SELECT * FROM reminders WHERE id = :id")
     fun getById(id: Long): Reminder
 
-    @Query("SELECT * FROM reminders WHERE notify_status = 1")
+    @Query("SELECT * FROM reminders WHERE status > ${ReminderStatus.DONE}")
     fun getRemindersForNotify(): List<Reminder>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -29,8 +31,8 @@ interface ReminderDao {
     @Update
     fun update(reminder: Reminder)
 
-    @Query("UPDATE reminders SET notify_status = :notify WHERE id = :reminderId ")
-    fun updateNotifyStatus(reminderId: Long, notify: Boolean)
+    @Query("UPDATE reminders SET status = :status WHERE id = :reminderId ")
+    fun updateStatus(reminderId: Long, @ReminderStatuses status: Int)
 
     @Query("DELETE FROM reminders WHERE id = :reminderId")
     fun deleteById(reminderId: Long)

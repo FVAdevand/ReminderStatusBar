@@ -1,13 +1,10 @@
 package ua.fvadevand.reminderstatusbar.ui
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ua.fvadevand.reminderstatusbar.Const
-import ua.fvadevand.reminderstatusbar.FakeDataUtils
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
@@ -26,18 +23,13 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_add_all -> FakeDataUtils.reminderList.forEach { viewModel.addReminder(it) }
-            R.id.action_clear -> viewModel.removeAllReminders()
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        return super.onCreateOptionsMenu(menu)
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun initView() {
         fab = findViewById(R.id.fab)

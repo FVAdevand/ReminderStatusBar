@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.data.converters.IconResTypeConverter
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuses
 
 @Entity(tableName = Const.TABLE_NAME_REMINDERS)
 data class Reminder(
@@ -24,12 +25,14 @@ data class Reminder(
         @ColumnInfo(name = "timestamp")
         var timestamp: Long,
 
-        @ColumnInfo(name = "notify_status")
-        var notify: Boolean
+        @ColumnInfo(name = "status")
+        @ReminderStatuses
+        var status: Int
 
 ) {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Long = 0
+
 }

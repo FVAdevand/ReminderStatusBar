@@ -9,6 +9,9 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/reminder_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/reminders_list_padding_top"
+        android:paddingBottom="@dimen/reminders_list_padding_bottom" />
 
 </FrameLayout>

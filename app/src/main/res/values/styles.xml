@@ -4,6 +4,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listDivider">@drawable/list_divider</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="android:windowBackground">@color/colorWindowBackground</item>
     </style>
@@ -14,6 +15,15 @@
 
     <style name="AppBottomSheetDialogStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/round_corner_background</item>
+    </style>
+
+    <style name="editReminderImageButtonStyle">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="android:tint">@color/colorAccent</item>
     </style>
 
 </resources>

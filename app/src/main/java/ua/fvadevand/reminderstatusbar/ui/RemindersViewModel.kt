@@ -10,6 +10,7 @@ import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.Repository
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
 import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 
@@ -33,10 +34,10 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch {
             val id = repository.addReminder(reminder)
             reminder.id = id
-            if (reminder.timestamp <= System.currentTimeMillis()) {
-                NotificationUtils.showNotification(getApplication(), reminder)
-            } else {
+            if (reminder.timestamp > System.currentTimeMillis()) {
                 AlarmUtils.setAlarm(getApplication(), reminder)
+            } else {
+                NotificationUtils.showNotification(getApplication(), reminder)
             }
         }
     }
@@ -69,11 +70,11 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             val context: Context = getApplication()
             val reminder = repository.getReminderById(id)
             reminder?.let {
-                NotificationUtils.showNotification(context, it)
                 AlarmUtils.cancelAlarm(context, id)
-                it.notify = true
+                it.status = ReminderStatus.NOTIFYING
                 it.timestamp = System.currentTimeMillis()
                 repository.editReminder(it)
+                NotificationUtils.showNotification(context, it)
             }
         }
     }

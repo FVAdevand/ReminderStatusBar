@@ -23,14 +23,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.dialogs.IconsDialog
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Calendar
-
-private const val DELAY_UP_DIALOG = 50L
-private const val DELAY_DOWN_DIALOG = 50L
 
 class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, OnAlarmSetListener, IconsDialog.OnIconClickListener {
 
@@ -184,7 +182,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
                 text,
                 iconResId,
                 timeInMillis,
-                notify = true
+                if (calendar.timeInMillis > System.currentTimeMillis()) ReminderStatus.DELAYED else ReminderStatus.NOTIFYING
         )
         if (editMode) {
             reminder.id = viewModel.currentReminderId
@@ -219,5 +217,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
 
     companion object {
         const val TAG = "ReminderEditFragment"
+        private const val DELAY_UP_DIALOG = 200L
+        private const val DELAY_DOWN_DIALOG = 50L
     }
 }
