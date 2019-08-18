@@ -4,5 +4,8 @@
     <dimen name="margin_top_dialog_item">20dp</dimen>
     <dimen name="margin_bottom_dialog_item">24dp</dimen>
     <dimen name="drawable_padding">8dp</dimen>
-    <dimen name="item_reminder_margin_top_bottom">4dp</dimen>
+    <dimen name="reminders_list_padding_top">0dp</dimen>
+    <dimen name="reminders_list_padding_bottom">84dp</dimen>
+    <dimen name="item_reminder_divider_offset_start">72dp</dimen>
+    <dimen name="item_reminder_divider_offset_end">16dp</dimen>
 </resources>
