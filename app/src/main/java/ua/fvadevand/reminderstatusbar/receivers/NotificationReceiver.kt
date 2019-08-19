@@ -12,11 +12,6 @@ import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 
-private const val ACTION_SHOW_REMINDER = "ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER"
-private const val ACTION_DISMISS = "ua.fvadevand.reminderstatusbar.ACTION_DISMISS"
-private const val ACTION_DELETE = "ua.fvadevand.reminderstatusbar.ACTION_DELETE"
-private const val EXTRA_REMINDER_ID = "REMINDER_ID"
-
 class NotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
@@ -48,6 +43,11 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     companion object {
+        private const val ACTION_SHOW_REMINDER = "ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER"
+        private const val ACTION_DISMISS = "ua.fvadevand.reminderstatusbar.ACTION_DISMISS"
+        private const val ACTION_DELETE = "ua.fvadevand.reminderstatusbar.ACTION_DELETE"
+        private const val EXTRA_REMINDER_ID = "REMINDER_ID"
+
         fun getNotifyIntent(context: Context, reminderId: Long): PendingIntent {
             return PendingIntent.getBroadcast(context,
                     reminderId.hashCode(),

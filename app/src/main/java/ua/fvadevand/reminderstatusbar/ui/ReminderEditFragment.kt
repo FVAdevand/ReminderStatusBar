@@ -66,7 +66,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         if (editMode) {
             currentReminderLive.observe(viewLifecycleOwner, Observer { reminder ->
                 reminder?.let {
-                    currentReminderLive.removeObservers(this@ReminderEditFragment)
+                    currentReminderLive.removeObservers(viewLifecycleOwner)
                     fillView(it)
                 }
             })

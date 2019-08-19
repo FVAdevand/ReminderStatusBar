@@ -14,7 +14,8 @@ import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
-        if (Intent.ACTION_BOOT_COMPLETED != intent?.action) return
+        val action = intent?.action
+        if (Intent.ACTION_BOOT_COMPLETED != action && Intent.ACTION_MY_PACKAGE_REPLACED != action) return
         val currentTimeInMillis = System.currentTimeMillis()
         GlobalScope.launch(Dispatchers.IO) {
             val reminders = ReminderApp.instance.repository.getRemindersForNotify()

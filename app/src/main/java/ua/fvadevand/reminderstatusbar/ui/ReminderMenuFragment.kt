@@ -5,15 +5,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import ua.fvadevand.reminderstatusbar.R
+import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
 class ReminderMenuFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: RemindersViewModel
+    private lateinit var reminderTitleView: TextView
+    private lateinit var reminderIconView: ImageView
+    private lateinit var currentReminderLive: LiveData<Reminder>
     private var listener: OnReminderClickListener? = null
 
     override fun onAttach(context: Context?) {
@@ -24,6 +32,7 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
+        currentReminderLive = viewModel.getLiveCurrentReminder()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,6 +41,8 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        reminderTitleView = view.findViewById(R.id.tv_menu_reminder_title)
+        reminderIconView = view.findViewById(R.id.iv_menu_reminder_icon)
         view.findViewById<NavigationView>(R.id.reminder_menu).setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_reminder_edit -> listener?.onClickReminderEdit()
@@ -41,7 +52,13 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
             dismiss()
             true
         }
-
+        currentReminderLive.observe(viewLifecycleOwner, Observer { reminder ->
+            reminder?.let {
+                currentReminderLive.removeObservers(viewLifecycleOwner)
+                reminderIconView.setImageResource(it.iconResId)
+                reminderTitleView.text = (it.title)
+            }
+        })
     }
 
     override fun onDetach() {
