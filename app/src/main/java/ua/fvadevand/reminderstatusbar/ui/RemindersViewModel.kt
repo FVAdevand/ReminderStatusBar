@@ -35,6 +35,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             val id = repository.addReminder(reminder)
             reminder.id = id
             if (reminder.timestamp > System.currentTimeMillis()) {
+                NotificationUtils.cancel(getApplication(), id.hashCode())
                 AlarmUtils.setAlarm(getApplication(), reminder)
             } else {
                 NotificationUtils.showNotification(getApplication(), reminder)
@@ -54,6 +55,19 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun notifyCurrentReminder() {
         notifyReminder(currentReminderId)
+    }
+
+    fun setCurrentReminderStatusDone() {
+        viewModelScope.launch {
+            NotificationUtils.cancel(getApplication(), currentReminderId.hashCode())
+            AlarmUtils.cancelAlarm(getApplication(), currentReminderId)
+            val reminder = repository.getReminderById(currentReminderId)
+            reminder?.let {
+                it.status = ReminderStatus.DONE
+                it.timestamp = System.currentTimeMillis()
+                repository.editReminder(it)
+            }
+        }
     }
 
     private fun removeReminderById(id: Long) {

@@ -35,8 +35,7 @@
         <TextView
             android:id="@+id/tv_item_reminder_title"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
@@ -46,10 +45,7 @@
         <TextView
             android:id="@+id/tv_item_reminder_text"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
+            android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Material.Notification"
             tools:text="text" />
 

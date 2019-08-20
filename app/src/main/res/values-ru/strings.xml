@@ -10,7 +10,7 @@
     <string name="edit_reminder_hint_message">Описание</string>
     <string name="edit_reminder_hint_title">Заголовок</string>
     <string name="edit_reminder_notification_time">Напоминание покажеться %s</string>
-    <string name="notification_action_dismiss">Отклонить</string>
+    <string name="notification_action_done">Выполнено</string>
     <string name="reminder_channel_description">Уведомления о новом напоминании</string>
     <string name="reminder_channel_name">Напоминания</string>
     <string name="reminder_edit_error_empty_title">Пожалуйста введите заголовок</string>
@@ -20,6 +20,5 @@
     <string name="notification_action_delete">Удалить</string>
     <string name="reminders_menu_notify">Показать уведомление</string>
     <string name="reminders_menu_edit">Редактировать</string>
-    <string name="reminders_menu_delete">Удалить</string>
     <string name="reminders_title">Напоминания</string>
 </resources>

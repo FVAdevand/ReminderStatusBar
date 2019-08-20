@@ -34,7 +34,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER" />
-                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DISMISS" />
+                <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DONE" />
                 <action android:name="ua.fvadevand.reminderstatusbar.ACTION_DELETE" />
             </intent-filter>
         </receiver>

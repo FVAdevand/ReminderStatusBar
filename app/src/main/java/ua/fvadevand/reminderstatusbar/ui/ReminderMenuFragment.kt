@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
 class ReminderMenuFragment : BottomSheetDialogFragment() {
@@ -43,10 +44,12 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         reminderTitleView = view.findViewById(R.id.tv_menu_reminder_title)
         reminderIconView = view.findViewById(R.id.iv_menu_reminder_icon)
-        view.findViewById<NavigationView>(R.id.reminder_menu).setNavigationItemSelectedListener {
+        val navigationView: NavigationView = view.findViewById(R.id.reminder_menu)
+        navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_reminder_edit -> listener?.onClickReminderEdit()
                 R.id.menu_reminder_notify -> viewModel.notifyCurrentReminder()
+                R.id.menu_reminder_done -> viewModel.setCurrentReminderStatusDone()
                 R.id.menu_reminder_delete -> viewModel.removeCurrentReminder()
             }
             dismiss()
@@ -57,6 +60,12 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
                 currentReminderLive.removeObservers(viewLifecycleOwner)
                 reminderIconView.setImageResource(it.iconResId)
                 reminderTitleView.text = (it.title)
+                val menu = navigationView.menu
+                if (it.status == ReminderStatus.DONE) {
+                    menu.findItem(R.id.menu_reminder_notify).isVisible = true
+                } else {
+                    menu.findItem(R.id.menu_reminder_done).isVisible = true
+                }
             }
         })
     }

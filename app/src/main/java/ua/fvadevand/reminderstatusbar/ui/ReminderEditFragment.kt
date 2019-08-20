@@ -103,6 +103,8 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         titleView = view.findViewById(R.id.et_edit_reminder_title)
         titleView.requestFocus()
         textView = view.findViewById(R.id.et_edit_reminder_text)
+        textView.setHorizontallyScrolling(false)
+        textView.maxLines = 20
         textView.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {

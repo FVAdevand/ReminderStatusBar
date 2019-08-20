@@ -29,11 +29,12 @@
     <!--notifications-->
     <string name="reminder_channel_name">Reminders</string>
     <string name="reminder_channel_description">Notification about new reminders</string>
-    <string name="notification_action_dismiss">Dismiss</string>
+    <string name="notification_action_done">Done</string>
     <string name="notification_action_delete">Delete</string>
 
     <!--bottom bar reminders-->
     <string name="reminders_menu_edit">Edit</string>
     <string name="reminders_menu_notify">Notify</string>
-    <string name="reminders_menu_delete">Delete</string>
+    <string name="reminders_menu_done" translatable="false">@string/notification_action_done</string>
+    <string name="reminders_menu_delete" translatable="false">@string/notification_action_delete</string>
 </resources>

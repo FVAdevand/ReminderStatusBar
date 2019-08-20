@@ -27,7 +27,7 @@ class NotificationReceiver : BroadcastReceiver() {
                     }
                 }
             }
-            ACTION_DISMISS -> {
+            ACTION_DONE -> {
                 NotificationUtils.cancel(context, reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
                     ReminderApp.instance.repository.updateStatus(reminderId, ReminderStatus.DONE)
@@ -44,7 +44,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
     companion object {
         private const val ACTION_SHOW_REMINDER = "ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER"
-        private const val ACTION_DISMISS = "ua.fvadevand.reminderstatusbar.ACTION_DISMISS"
+        private const val ACTION_DONE = "ua.fvadevand.reminderstatusbar.ACTION_DONE"
         private const val ACTION_DELETE = "ua.fvadevand.reminderstatusbar.ACTION_DELETE"
         private const val EXTRA_REMINDER_ID = "REMINDER_ID"
 
@@ -57,10 +57,10 @@ class NotificationReceiver : BroadcastReceiver() {
                     PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
-        fun getDismissIntent(context: Context, reminderId: Long): PendingIntent {
+        fun getDoneIntent(context: Context, reminderId: Long): PendingIntent {
             return PendingIntent.getBroadcast(context,
                     reminderId.hashCode(),
-                    Intent(ACTION_DISMISS)
+                    Intent(ACTION_DONE)
                             .setPackage(context.packageName)
                             .putExtra(EXTRA_REMINDER_ID, reminderId),
                     PendingIntent.FLAG_UPDATE_CURRENT)
