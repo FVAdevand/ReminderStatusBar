@@ -1,4 +1,4 @@
-package ua.fvadevand.reminderstatusbar.dialogs
+package ua.fvadevand.reminderstatusbar.ui.dialogs
 
 import android.annotation.SuppressLint
 import android.app.Dialog

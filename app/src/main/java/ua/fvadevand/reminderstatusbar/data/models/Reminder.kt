@@ -1,12 +1,9 @@
 package ua.fvadevand.reminderstatusbar.data.models
 
-import androidx.annotation.DrawableRes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import ua.fvadevand.reminderstatusbar.Const
-import ua.fvadevand.reminderstatusbar.data.converters.IconResTypeConverter
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType.PeriodTypes
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuses
 
@@ -19,9 +16,7 @@ data class Reminder(
         var text: String? = null,
 
         @ColumnInfo(name = "icon_res_name")
-        @TypeConverters(IconResTypeConverter::class)
-        @DrawableRes
-        var iconResId: Int,
+        var iconName: String,
 
         @ColumnInfo(name = "timestamp")
         var timestamp: Long = System.currentTimeMillis(),

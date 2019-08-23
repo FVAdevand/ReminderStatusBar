@@ -77,7 +77,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_edit_reminder_text"
         tools:text="Repeat every day"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip_edit_reminder_time"
@@ -91,7 +91,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/chip_edit_reminder_repeat"
         tools:text="Start time 12-00"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_edit_reminder_notify"

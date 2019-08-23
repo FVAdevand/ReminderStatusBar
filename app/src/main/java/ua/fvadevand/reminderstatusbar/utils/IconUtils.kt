@@ -1,8 +1,12 @@
 package ua.fvadevand.reminderstatusbar.utils
 
+import android.content.Context
+import androidx.annotation.DrawableRes
 import ua.fvadevand.reminderstatusbar.R
 
 object IconUtils {
+
+    private const val RESOURCE_FOLDER_DRAWABLE = "drawable"
 
     val iconsIds: List<Int>
         get() {
@@ -12,6 +16,8 @@ object IconUtils {
                     R.drawable.ic_notif_battery,
                     R.drawable.ic_notif_briefcase,
                     R.drawable.ic_notif_calendar,
+                    R.drawable.ic_notif_call,
+                    R.drawable.ic_notif_car,
                     R.drawable.ic_notif_database,
                     R.drawable.ic_notif_edit,
                     R.drawable.ic_notif_file,
@@ -25,16 +31,29 @@ object IconUtils {
                     R.drawable.ic_notif_locked,
                     R.drawable.ic_notif_mail,
                     R.drawable.ic_notif_notebook,
+                    R.drawable.ic_notif_package,
                     R.drawable.ic_notif_photo_camera,
+                    R.drawable.ic_notif_pill,
                     R.drawable.ic_notif_placeholder,
                     R.drawable.ic_notif_print,
                     R.drawable.ic_notif_search,
                     R.drawable.ic_notif_settings,
+                    R.drawable.ic_notif_shopping_cart,
                     R.drawable.ic_notif_smartphone,
                     R.drawable.ic_notif_speaker,
                     R.drawable.ic_notif_star,
+                    R.drawable.ic_notif_tool,
                     R.drawable.ic_notif_umbrella,
+                    R.drawable.ic_notif_users,
                     R.drawable.ic_notif_worldwide
             )
         }
+
+    @DrawableRes
+    fun toResId(context: Context, resName: String): Int {
+        return context.resources.getIdentifier(resName, RESOURCE_FOLDER_DRAWABLE, context.packageName)
+    }
+
+    fun toResName(context: Context, @DrawableRes resId: Int): String =
+            context.resources.getResourceEntryName(resId)
 }

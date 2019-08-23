@@ -61,11 +61,11 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <Spinner
+        android:id="@+id/spinner_alarm_dialog_repeat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_edge_dialog_item"
         android:layout_marginTop="@dimen/margin_top_dialog_item"
-        android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:id="@+id/spinner_alarm_dialog_repeat"/>
+        android:layout_marginEnd="@dimen/margin_edge_dialog_item" />
 
 </LinearLayout>

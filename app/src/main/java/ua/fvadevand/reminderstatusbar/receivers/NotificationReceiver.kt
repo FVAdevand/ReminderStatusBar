@@ -41,12 +41,18 @@ class NotificationReceiver : BroadcastReceiver() {
             ACTION_DONE -> {
                 NotificationUtils.cancel(context, reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
-                    ReminderApp.instance.repository.updateStatus(reminderId, ReminderStatus.DONE)
+                    val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
+                    reminder?.let {
+                        if (it.status != ReminderStatus.PERIODIC) {
+                            ReminderApp.instance.repository.updateStatus(reminderId, ReminderStatus.DONE)
+                        }
+                    }
                 }
             }
             ACTION_DELETE -> {
                 NotificationUtils.cancel(context, reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
+                    AlarmUtils.cancelAlarm(context, reminderId)
                     ReminderApp.instance.repository.removeReminderById(reminderId)
                 }
             }

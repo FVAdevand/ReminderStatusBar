@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 
 class ReminderAdapter(
@@ -81,7 +82,7 @@ class ReminderAdapter(
         }
 
         fun bind(reminder: Reminder) {
-            iconView.setImageResource(reminder.iconResId)
+            iconView.setImageResource(IconUtils.toResId(iconView.context, reminder.iconName))
             titleView.text = reminder.title
             val reminderText = reminder.text
             if (TextUtils.isEmpty(reminderText)) {

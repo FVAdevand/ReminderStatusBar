@@ -25,9 +25,10 @@ import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType.PeriodTypes
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
-import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog
-import ua.fvadevand.reminderstatusbar.dialogs.AlarmSetDialog.OnAlarmSetListener
-import ua.fvadevand.reminderstatusbar.dialogs.IconsDialog
+import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog
+import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog.OnAlarmSetListener
+import ua.fvadevand.reminderstatusbar.ui.dialogs.IconsDialog
+import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 import java.util.Locale
 
@@ -142,7 +143,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     private fun fillView(reminder: Reminder) {
         titleView.setText(reminder.title)
         textView.setText(reminder.text)
-        iconResId = reminder.iconResId
+        iconResId = IconUtils.toResId(context!!, reminder.iconName)
         iconBtn.setImageResource(iconResId)
         if (reminder.timestamp > System.currentTimeMillis()) {
             startTimeChip.visibility = View.VISIBLE
@@ -155,6 +156,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         repeatChip.visibility = if (periodType == PeriodType.ONE_TIME) {
             View.GONE
         } else {
+            repeatChip.text = getRepeatString()
             View.VISIBLE
         }
     }
@@ -190,9 +192,10 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         val reminder = Reminder(
                 title,
                 text,
-                iconResId,
+                IconUtils.toResName(context!!, iconResId),
                 startTimeInMillis,
-                status
+                status,
+                periodType
         )
         if (editMode) {
             reminder.id = viewModel.currentReminderId
@@ -211,6 +214,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         } else {
             notifyBtn.setText(R.string.edit_reminder_action_notify)
         }
+        this.periodType = periodType
         if (periodType > PeriodType.ONE_TIME) {
             repeatChip.visibility = View.VISIBLE
             repeatChip.text = getRepeatString()
@@ -234,7 +238,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
 
     companion object {
         const val TAG = "ReminderEditFragment"
-        private const val DELAY_UP_DIALOG = 200L
+        private const val DELAY_UP_DIALOG = 100L
         private const val DELAY_DOWN_DIALOG = 50L
     }
 }

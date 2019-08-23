@@ -53,7 +53,8 @@ dependencies {
 
     // Architecture Components
     implementation 'androidx.room:room-runtime:2.1.0'
-    kapt "android.arch.persistence.room:compiler:2.1.0"
+    implementation "androidx.room:room-ktx:2.1.0"
+    kapt "androidx.room:room-compiler:2.1.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.0.0'
     implementation "androidx.core:core-ktx:1.0.2"
