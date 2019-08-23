@@ -34,7 +34,7 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_grid"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_edit_reminder_time" />
+        app:layout_constraintTop_toBottomOf="@+id/chip_edit_reminder_time" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/et_edit_reminder_text"
@@ -65,19 +65,33 @@
         app:layout_constraintTop_toTopOf="@+id/btn_edit_reminder_icon"
         tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/tv_edit_reminder_time"
-        android:layout_width="0dp"
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_edit_reminder_repeat"
+        style="@style/AppChip.Entry"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textColor="@android:color/primary_text_light"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toStartOf="@+id/cb_edit_reminder_delay_notification"
+        android:visibility="gone"
+        app:chipIcon="@drawable/ic_loop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_edit_reminder_text"
-        tools:text="Reminder will show today in 12:35" />
+        app:layout_constraintTop_toBottomOf="@id/et_edit_reminder_text"
+        tools:text="Repeat every day"
+        tools:visibility="visible"/>
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_edit_reminder_time"
+        style="@style/AppChip.Entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        app:chipIcon="@drawable/ic_insert_invitation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chip_edit_reminder_repeat"
+        tools:text="Start time 12-00"
+        tools:visibility="visible"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_edit_reminder_notify"
@@ -89,14 +103,5 @@
         android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btn_edit_reminder_icon" />
-
-    <CheckBox
-        android:id="@+id/cb_edit_reminder_delay_notification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_edit_reminder_time"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_edit_reminder_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

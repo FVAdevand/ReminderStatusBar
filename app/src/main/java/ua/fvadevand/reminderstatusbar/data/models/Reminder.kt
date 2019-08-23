@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.data.converters.IconResTypeConverter
+import ua.fvadevand.reminderstatusbar.data.models.PeriodType.PeriodTypes
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuses
 
 @Entity(tableName = Const.TABLE_NAME_REMINDERS)
@@ -23,12 +24,18 @@ data class Reminder(
         var iconResId: Int,
 
         @ColumnInfo(name = "timestamp")
-        var timestamp: Long,
+        var timestamp: Long = System.currentTimeMillis(),
 
         @ColumnInfo(name = "status")
         @ReminderStatuses
-        var status: Int
+        var status: Int,
 
+        @ColumnInfo(name = "period_type")
+        @PeriodTypes
+        var periodType: Int = PeriodType.ONE_TIME,
+
+        @ColumnInfo(name = "repeat_period")
+        var period: Long = 0
 ) {
 
     @PrimaryKey(autoGenerate = true)

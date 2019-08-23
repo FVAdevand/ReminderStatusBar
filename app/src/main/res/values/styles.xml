@@ -26,4 +26,11 @@
         <item name="android:tint">@color/colorAccent</item>
     </style>
 
+    <style name="AppChip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/colorChipStroke</item>
+        <item name="chipBackgroundColor">@android:color/transparent</item>
+    </style>
+
+
 </resources>

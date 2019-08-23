@@ -9,7 +9,9 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.ReminderApp
+import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
 import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 
 class NotificationReceiver : BroadcastReceiver() {
@@ -22,8 +24,17 @@ class NotificationReceiver : BroadcastReceiver() {
                 GlobalScope.launch(Dispatchers.Main) {
                     val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
                     reminder?.let {
-                        ReminderApp.instance.repository.updateStatus(reminderId, ReminderStatus.NOTIFYING)
                         NotificationUtils.showNotification(context, it)
+                        if (it.status == ReminderStatus.PERIODIC) {
+                            val nextTimestamp = PeriodType.getNextAlarmTimeByType(it.periodType, it.timestamp)
+                            it.timestamp = nextTimestamp
+                            if (nextTimestamp > System.currentTimeMillis()) {
+                                AlarmUtils.setAlarm(context, reminder)
+                            }
+                        } else {
+                            it.status = ReminderStatus.NOTIFYING
+                        }
+                        ReminderApp.instance.repository.editReminder(it)
                     }
                 }
             }

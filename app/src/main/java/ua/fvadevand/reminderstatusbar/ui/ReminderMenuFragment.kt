@@ -59,12 +59,21 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
             reminder?.let {
                 currentReminderLive.removeObservers(viewLifecycleOwner)
                 reminderIconView.setImageResource(it.iconResId)
-                reminderTitleView.text = (it.title)
+                reminderTitleView.text = it.title
                 val menu = navigationView.menu
-                if (it.status == ReminderStatus.DONE) {
-                    menu.findItem(R.id.menu_reminder_notify).isVisible = true
-                } else {
-                    menu.findItem(R.id.menu_reminder_done).isVisible = true
+                when (it.status) {
+                    ReminderStatus.DONE -> {
+                        menu.findItem(R.id.menu_reminder_notify).isVisible = true
+                    }
+                    ReminderStatus.NOTIFYING -> {
+                        menu.findItem(R.id.menu_reminder_done).isVisible = true
+                    }
+                    ReminderStatus.DELAYED -> {
+                        menu.findItem(R.id.menu_reminder_notify).isVisible = true
+                        menu.findItem(R.id.menu_reminder_done).isVisible = true
+                    }
+                    ReminderStatus.PERIODIC -> {
+                    }
                 }
             }
         })

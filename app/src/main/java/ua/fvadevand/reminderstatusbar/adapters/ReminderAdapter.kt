@@ -12,7 +12,6 @@ import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
-import java.util.Calendar
 
 class ReminderAdapter(
         private val listener: (Long) -> Unit
@@ -93,9 +92,8 @@ class ReminderAdapter(
             }
             if (reminder.timestamp > System.currentTimeMillis()) {
                 dateView.visibility = View.VISIBLE
-                val calendar = Calendar.getInstance()
-                calendar.timeInMillis = reminder.timestamp
-                dateView.text = ReminderDateUtils.getNotificationTime(dateView.context.applicationContext, calendar)
+                dateView.text = ReminderDateUtils
+                        .getNotificationTime(dateView.context.applicationContext, reminder.timestamp)
             } else {
                 dateView.visibility = View.GONE
             }

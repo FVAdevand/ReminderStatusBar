@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.Repository
+import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
@@ -39,6 +40,12 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
                 AlarmUtils.setAlarm(getApplication(), reminder)
             } else {
                 NotificationUtils.showNotification(getApplication(), reminder)
+                if (reminder.periodType > PeriodType.ONE_TIME) {
+                    val nextTimestamp = PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
+                    reminder.timestamp = nextTimestamp
+                    AlarmUtils.setAlarm(getApplication(), reminder)
+                    repository.editReminder(reminder)
+                }
             }
         }
     }

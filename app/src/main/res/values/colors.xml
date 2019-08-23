@@ -8,5 +8,6 @@
     <color name="colorBottomBarBackground">#FFFFFF</color>
     <color name="colorReminderStatusIcon">@color/colorPrimary</color>
     <color name="colorTextDefault">#151515</color>
+    <color name="colorChipStroke">#404040</color>
     <color name="ic_launcher_background">@color/colorAccent</color>
 </resources>
