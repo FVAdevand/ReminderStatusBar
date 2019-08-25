@@ -1,9 +1,12 @@
 package ua.fvadevand.reminderstatusbar.ui
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.activity_main.bottom_app_bar
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
@@ -16,6 +19,7 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(bottom_app_bar)
         viewModel = ViewModelProviders.of(this).get(RemindersViewModel::class.java)
         initView()
         if (savedInstanceState == null) {
@@ -23,13 +27,17 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        return super.onCreateOptionsMenu(menu)
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return super.onOptionsItemSelected(item)
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_sorting -> showReminderSortMenuFragment()
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun initView() {
         fab = findViewById(R.id.fab)
@@ -57,6 +65,12 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
         val fragment = supportFragmentManager.findFragmentByTag(ReminderMenuFragment.TAG) as? ReminderMenuFragment
                 ?: ReminderMenuFragment()
         fragment.show(supportFragmentManager, ReminderMenuFragment.TAG)
+    }
+
+    private fun showReminderSortMenuFragment() {
+        val fragment = supportFragmentManager.findFragmentByTag(ReminderSortMenuFragment.TAG) as? ReminderSortMenuFragment
+                ?: ReminderSortMenuFragment()
+        fragment.show(supportFragmentManager, ReminderSortMenuFragment.TAG)
     }
 
     override fun onClickReminder() {

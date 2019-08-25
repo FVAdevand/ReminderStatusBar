@@ -28,4 +28,8 @@
     <string name="alarm_dialog_period_monthly">Каждый месяц</string>
     <string name="alarm_dialog_period_label">Повторять</string>
     <string name="edit_reminder_repeat">Повторять %s</string>
+    <string name="reminders_menu_sort_status">Сортировать по статусу</string>
+    <string name="reminders_menu_sort_time">Сортировать по времени</string>
+    <string name="reminders_menu_sort_title">Сортировать по заголовку</string>
+    <string name="action_sort">Сортировка</string>
 </resources>

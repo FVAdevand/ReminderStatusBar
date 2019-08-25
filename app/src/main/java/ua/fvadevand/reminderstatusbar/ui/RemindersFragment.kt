@@ -35,7 +35,8 @@ class RemindersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
         setupRecyclerView(view)
-        viewModel.reminders.observe(viewLifecycleOwner, Observer { reminderAdapter.setReminders(it) })
+        viewModel.remindersSortedLive.observe(viewLifecycleOwner,
+                Observer { reminderAdapter.setReminders(it) })
     }
 
     override fun onDetach() {
