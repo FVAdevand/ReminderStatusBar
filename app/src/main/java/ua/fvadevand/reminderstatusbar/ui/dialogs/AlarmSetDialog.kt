@@ -85,7 +85,7 @@ class AlarmSetDialog : DialogFragment() {
         val periodTypes = PeriodType.getPeriodTypes()
         val adapter = PeriodTypesAdapter(context, periodTypes)
         spinner.adapter = adapter
-        for (i in 0 until periodTypes.size) {
+        for (i in periodTypes.indices) {
             if (periodType == periodTypes[i]) {
                 spinner.setSelection(i)
                 break
