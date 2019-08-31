@@ -6,7 +6,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import ua.fvadevand.reminderstatusbar.Const
-
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
 @Database(entities = [Reminder::class], version = 1)

@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
-import java.util.Calendar
 
 class ReminderAdapter(
         private val listener: (Long) -> Unit
@@ -82,7 +82,7 @@ class ReminderAdapter(
         }
 
         fun bind(reminder: Reminder) {
-            iconView.setImageResource(reminder.iconResId)
+            iconView.setImageResource(IconUtils.toResId(iconView.context, reminder.iconName))
             titleView.text = reminder.title
             val reminderText = reminder.text
             if (TextUtils.isEmpty(reminderText)) {
@@ -93,9 +93,8 @@ class ReminderAdapter(
             }
             if (reminder.timestamp > System.currentTimeMillis()) {
                 dateView.visibility = View.VISIBLE
-                val calendar = Calendar.getInstance()
-                calendar.timeInMillis = reminder.timestamp
-                dateView.text = ReminderDateUtils.getNotificationTime(dateView.context.applicationContext, calendar)
+                dateView.text = ReminderDateUtils
+                        .getNotificationTime(dateView.context.applicationContext, reminder.timestamp)
             } else {
                 dateView.visibility = View.GONE
             }

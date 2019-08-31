@@ -4,7 +4,6 @@
 
     <solid android:color="@color/colorBottomBarBackground" />
 
-    <corners
-        android:topLeftRadius="12dp"
-        android:topRightRadius="12dp" />
+    <corners android:radius="@dimen/background_dialog_corner_radius" />
+
 </shape>

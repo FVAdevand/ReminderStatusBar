@@ -8,4 +8,6 @@
     <dimen name="reminders_list_padding_bottom">84dp</dimen>
     <dimen name="item_reminder_divider_offset_start">72dp</dimen>
     <dimen name="item_reminder_divider_offset_end">16dp</dimen>
+    <dimen name="background_dialog_corner_radius">4dp</dimen>
+    <dimen name="background_bottom_sheet_corner_radius">8dp</dimen>
 </resources>

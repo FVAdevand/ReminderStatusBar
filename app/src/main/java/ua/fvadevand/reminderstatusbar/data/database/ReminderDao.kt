@@ -13,16 +13,16 @@ import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuse
 @Dao
 interface ReminderDao {
 
-    @Query("SELECT * FROM reminders")
+    @Query("SELECT * FROM ${Reminder.TABLE_NAME}")
     fun getAllLive(): LiveData<List<Reminder>>
 
-    @Query("SELECT * FROM reminders WHERE id = :id")
+    @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :id")
     fun getLiveById(id: Long): LiveData<Reminder>
 
-    @Query("SELECT * FROM reminders WHERE id = :id")
+    @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :id")
     fun getById(id: Long): Reminder
 
-    @Query("SELECT * FROM reminders WHERE status > ${ReminderStatus.DONE}")
+    @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_STATUS} > ${ReminderStatus.DONE}")
     fun getRemindersForNotify(): List<Reminder>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -31,12 +31,12 @@ interface ReminderDao {
     @Update
     fun update(reminder: Reminder)
 
-    @Query("UPDATE reminders SET status = :status WHERE id = :reminderId ")
+    @Query("UPDATE ${Reminder.TABLE_NAME} SET ${Reminder.COLUMN_STATUS} = :status WHERE ${Reminder.COLUMN_ID} = :reminderId ")
     fun updateStatus(reminderId: Long, @ReminderStatuses status: Int)
 
-    @Query("DELETE FROM reminders WHERE id = :reminderId")
+    @Query("DELETE FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :reminderId")
     fun deleteById(reminderId: Long)
 
-    @Query("DELETE FROM reminders")
+    @Query("DELETE FROM ${Reminder.TABLE_NAME}")
     fun deleteAll()
 }

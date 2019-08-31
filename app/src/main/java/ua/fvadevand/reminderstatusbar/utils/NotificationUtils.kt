@@ -35,7 +35,7 @@ object NotificationUtils {
     }
 
     fun showNotification(context: Context, reminder: Reminder) {
-        val iconResId = reminder.iconResId
+        val iconResId = IconUtils.toResId(context, reminder.iconName)
         val reminderId = reminder.id
         val nBuilder = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
                 .setContentTitle(reminder.title)
@@ -44,9 +44,12 @@ object NotificationUtils {
                 .setOngoing(true)
                 .setShowWhen(true)
                 .setAutoCancel(true)
-                .addAction(getDismissAction(context, reminderId))
+                .addAction(getDoneAction(context, reminderId))
                 .addAction(getDeleteAction(context, reminderId))
-        reminder.text?.let { nBuilder.setContentText(it) }
+        reminder.text?.let {
+            nBuilder.setContentText(it)
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(it))
+        }
         val iconDrawable = context.getDrawable(iconResId)
         iconDrawable?.let {
             it.setColorFilter(context.getColor(R.color.colorReminderIcons), PorterDuff.Mode.SRC_IN)
@@ -81,10 +84,10 @@ object NotificationUtils {
         return null
     }
 
-    private fun getDismissAction(context: Context, reminderId: Long): NotificationCompat.Action {
-        return NotificationCompat.Action.Builder(R.drawable.ic_action_cancel,
-                context.getString(R.string.notification_action_dismiss),
-                NotificationReceiver.getDismissIntent(context, reminderId))
+    private fun getDoneAction(context: Context, reminderId: Long): NotificationCompat.Action {
+        return NotificationCompat.Action.Builder(R.drawable.ic_action_done,
+                context.getString(R.string.notification_action_done),
+                NotificationReceiver.getDoneIntent(context, reminderId))
                 .build()
     }
 

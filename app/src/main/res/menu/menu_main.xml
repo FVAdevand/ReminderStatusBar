@@ -2,21 +2,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ua.fvadevand.reminderstatusbar.ui.MainActivity">
-    <item
-        android:id="@+id/action_add_all"
-        android:orderInCategory="100"
-        android:title="Add all"
-        app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_clear"
-        android:orderInCategory="100"
-        android:title="Clear"
-        app:showAsAction="never" />
+        android:id="@+id/action_sorting"
+        android:icon="@drawable/ic_sort"
+        android:title="@string/action_sort"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:icon="@drawable/ic_settings"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>

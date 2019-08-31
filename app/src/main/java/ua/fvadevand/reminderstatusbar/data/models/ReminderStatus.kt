@@ -9,7 +9,8 @@ object ReminderStatus {
     @IntDef(
             DONE,
             NOTIFYING,
-            DELAYED
+            DELAYED,
+            PERIODIC
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class ReminderStatuses
@@ -17,6 +18,7 @@ object ReminderStatus {
     const val DONE = 1
     const val NOTIFYING = 2
     const val DELAYED = 3
+    const val PERIODIC = 4
 
     @DrawableRes
     fun getIconResIdByStatus(@ReminderStatuses status: Int): Int {
@@ -24,7 +26,8 @@ object ReminderStatus {
             DONE -> R.drawable.ic_status_done
             NOTIFYING -> R.drawable.ic_status_notifying
             DELAYED -> R.drawable.ic_status_delayed
-            else -> R.drawable.ic_status_done
+            PERIODIC -> R.drawable.ic_status_periodic
+            else -> throw IllegalArgumentException("Status must be from @ReminderStatuses, current status = $status")
         }
     }
 }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.ReminderApp
+import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
 import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
@@ -14,7 +15,8 @@ import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
-        if (Intent.ACTION_BOOT_COMPLETED != intent?.action) return
+        val action = intent?.action
+        if (Intent.ACTION_BOOT_COMPLETED != action && Intent.ACTION_MY_PACKAGE_REPLACED != action) return
         val currentTimeInMillis = System.currentTimeMillis()
         GlobalScope.launch(Dispatchers.IO) {
             val reminders = ReminderApp.instance.repository.getRemindersForNotify()
@@ -22,8 +24,14 @@ class BootReceiver : BroadcastReceiver() {
                 if (reminder.timestamp > currentTimeInMillis) {
                     AlarmUtils.setAlarm(context, reminder)
                 } else {
-                    ReminderApp.instance.repository.updateStatus(reminder.id, ReminderStatus.NOTIFYING)
                     NotificationUtils.showNotification(context, reminder)
+                    if (reminder.status == ReminderStatus.PERIODIC) {
+                        reminder.timestamp = PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
+                        AlarmUtils.setAlarm(context, reminder)
+                    } else {
+                        reminder.status = ReminderStatus.NOTIFYING
+                    }
+                    ReminderApp.instance.repository.editReminder(reminder)
                 }
             }
         }
