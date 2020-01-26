@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
@@ -19,24 +20,45 @@ class RemindersFragment : Fragment() {
 
     private lateinit var reminderAdapter: ReminderAdapter
     private lateinit var viewModel: RemindersViewModel
+    private lateinit var reminderListView: RecyclerView
+    private var placeholder: View? = null
     private var onReminderClickListener: OnReminderClickListener? = null
 
-    override fun onAttach(context: Context?) {
+    companion object {
+        const val TAG = "RemindersFragment"
+
+        fun newInstance(): RemindersFragment {
+            return RemindersFragment()
+        }
+    }
+
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         onReminderClickListener = context as OnReminderClickListener
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_reminders, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
         setupRecyclerView(view)
         viewModel.remindersSortedLive.observe(viewLifecycleOwner,
-                Observer { reminderAdapter.setReminders(it) })
+            Observer { reminders ->
+                reminders?.let {
+                    if (it.isEmpty()) {
+                        (placeholder ?: inflatePlaceholder())?.visibility = View.VISIBLE
+                    } else {
+                        placeholder?.visibility = View.GONE
+                    }
+                    reminderAdapter.setReminders(it)
+                }
+            })
     }
 
     override fun onDetach() {
@@ -46,7 +68,7 @@ class RemindersFragment : Fragment() {
 
     private fun setupRecyclerView(view: View) {
         val context = view.context
-        val reminderListView = view.findViewById<RecyclerView>(R.id.reminder_list)
+        reminderListView = view.findViewById(R.id.reminder_list)
         val layoutManager = LinearLayoutManager(context)
         reminderListView.layoutManager = layoutManager
         reminderAdapter = ReminderAdapter {
@@ -54,19 +76,21 @@ class RemindersFragment : Fragment() {
             onReminderClickListener?.onClickReminder()
         }
         reminderListView.adapter = reminderAdapter
-        reminderListView.addItemDecoration(DividerItemDecoration(
+        reminderListView.addItemDecoration(
+            DividerItemDecoration(
                 context,
                 layoutManager.orientation,
                 false,
                 context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_start),
-                context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_end)))
+                context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_end)
+            )
+        )
     }
 
-    companion object {
-        const val TAG = "RemindersFragment"
-
-        fun newInstance(): RemindersFragment {
-            return RemindersFragment()
-        }
+    private fun inflatePlaceholder(): View? {
+        val viewStub: ViewStub? = view?.findViewById<ViewStub>(R.id.view_stub_reminders)
+        placeholder = viewStub?.inflate()
+        return placeholder
     }
+
 }

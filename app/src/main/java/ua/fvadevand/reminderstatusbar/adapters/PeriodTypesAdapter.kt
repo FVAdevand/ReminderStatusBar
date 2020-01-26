@@ -10,8 +10,8 @@ import android.widget.TextView
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 
 class PeriodTypesAdapter(
-        context: Context,
-        private val periodTypes: List<Int>
+    context: Context,
+    private val periodTypes: List<Int>
 ) : BaseAdapter() {
 
     private val inflater = LayoutInflater.from(context)

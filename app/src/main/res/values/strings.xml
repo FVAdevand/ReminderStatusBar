@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">Reminders</string>
+
+    <!--    reminders_fragment-->
     <string name="reminders_title">Reminders</string>
+    <string name="reminders_placeholder">Add new reminders</string>
 
     <!--main menu-->
     <string name="action_sort">Sorting</string>

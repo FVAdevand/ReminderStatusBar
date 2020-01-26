@@ -15,13 +15,14 @@ import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
 
 class ReminderAdapter(
-        private val listener: (Long) -> Unit
+    private val listener: (Long) -> Unit
 ) : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>() {
 
     private var reminders: MutableList<Reminder> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_reminder, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.list_item_reminder, parent, false)
         return ReminderViewHolder(view)
     }
 
@@ -44,8 +45,8 @@ class ReminderAdapter(
     private fun isValidPosition(position: Int) = position in 0 until itemCount
 
     inner class ReminderDiffUtilCallback(
-            private val oldList: List<Reminder>,
-            private val newList: List<Reminder>
+        private val oldList: List<Reminder>,
+        private val newList: List<Reminder>
     ) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {
@@ -94,7 +95,7 @@ class ReminderAdapter(
             if (reminder.timestamp > System.currentTimeMillis()) {
                 dateView.visibility = View.VISIBLE
                 dateView.text = ReminderDateUtils
-                        .getNotificationTime(dateView.context.applicationContext, reminder.timestamp)
+                    .getNotificationTime(dateView.context.applicationContext, reminder.timestamp)
             } else {
                 dateView.visibility = View.GONE
             }

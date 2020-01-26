@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/reminder_list"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:clipToPadding="false"
-    android:paddingTop="@dimen/reminders_list_padding_top"
-    android:paddingBottom="@dimen/reminders_list_padding_bottom" />
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reminder_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/reminders_list_padding_top"
+        android:paddingBottom="@dimen/reminders_list_padding_bottom" />
+
+    <ViewStub
+        android:id="@+id/view_stub_reminders"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/reminders_placeholder" />
+
+</FrameLayout>

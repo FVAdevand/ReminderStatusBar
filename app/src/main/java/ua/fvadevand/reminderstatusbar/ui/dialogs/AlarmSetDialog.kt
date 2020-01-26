@@ -27,21 +27,39 @@ class AlarmSetDialog : DialogFragment() {
     private var periodType = PeriodType.ONE_TIME
     private var listener: OnAlarmSetListener? = null
 
-    private var timeCallBack: TimePickerDialog.OnTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-        with(calendar) {
-            set(Calendar.HOUR_OF_DAY, hourOfDay)
-            set(Calendar.MINUTE, minute)
+    private var timeCallBack: TimePickerDialog.OnTimeSetListener =
+        TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+            with(calendar) {
+                set(Calendar.HOUR_OF_DAY, hourOfDay)
+                set(Calendar.MINUTE, minute)
+            }
+            timeTextView.text = ReminderDateUtils.formatTime(view.context, calendar)
         }
-        timeTextView.text = ReminderDateUtils.formatTime(view.context, calendar)
-    }
 
-    private var dateCallBack: DatePickerDialog.OnDateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-        with(calendar) {
-            set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            set(Calendar.MONTH, month)
-            set(Calendar.YEAR, year)
+    private var dateCallBack: DatePickerDialog.OnDateSetListener =
+        DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            with(calendar) {
+                set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                set(Calendar.MONTH, month)
+                set(Calendar.YEAR, year)
+            }
+            dateTextView.text = ReminderDateUtils.formatFullDate(view.context, calendar)
         }
-        dateTextView.text = ReminderDateUtils.formatFullDate(view.context, calendar)
+
+    companion object {
+
+        const val TAG = "AlarmSetDialog"
+        private const val ARG_CALENDAR = "calendar"
+        private const val ARG_PERIOD_TYPE = "period_type"
+
+        fun newInstance(timeInMillis: Long, @PeriodTypes periodType: Int): AlarmSetDialog {
+            val fragment = AlarmSetDialog()
+            val args = Bundle()
+            args.putLong(ARG_CALENDAR, timeInMillis)
+            args.putInt(ARG_PERIOD_TYPE, periodType)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,11 +78,13 @@ class AlarmSetDialog : DialogFragment() {
         timeTextView.setOnClickListener { v ->
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
-            val timeDialog = TimePickerDialog(v.context,
-                    timeCallBack,
-                    hour,
-                    minute,
-                    DateFormat.is24HourFormat(v.context))
+            val timeDialog = TimePickerDialog(
+                v.context,
+                timeCallBack,
+                hour,
+                minute,
+                DateFormat.is24HourFormat(v.context)
+            )
             timeDialog.show()
         }
 
@@ -74,11 +94,13 @@ class AlarmSetDialog : DialogFragment() {
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
-            val dateDialog = DatePickerDialog(v.context,
-                    dateCallBack,
-                    year,
-                    month,
-                    day)
+            val dateDialog = DatePickerDialog(
+                v.context,
+                dateCallBack,
+                year,
+                month,
+                day
+            )
             dateDialog.show()
         }
         val spinner: Spinner = rootView.findViewById(R.id.spinner_alarm_dialog_repeat)
@@ -92,18 +114,21 @@ class AlarmSetDialog : DialogFragment() {
             }
         }
         return AlertDialog.Builder(context)
-                .setView(rootView)
-                .setTitle(R.string.alarm_dialog_title)
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    listener?.onAlarmSet(calendar.timeInMillis, adapter.getItem(spinner.selectedItemPosition))
-                }
-                .setNegativeButton(android.R.string.cancel) { _, _ -> }
-                .create()
+            .setView(rootView)
+            .setTitle(R.string.alarm_dialog_title)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                listener?.onAlarmSet(
+                    calendar.timeInMillis,
+                    adapter.getItem(spinner.selectedItemPosition)
+                )
+            }
+            .setNegativeButton(android.R.string.cancel) { _, _ -> }
+            .create()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = parentFragment as OnAlarmSetListener?
+        listener = parentFragment as? OnAlarmSetListener
     }
 
     override fun onDetach() {
@@ -113,21 +138,5 @@ class AlarmSetDialog : DialogFragment() {
 
     interface OnAlarmSetListener {
         fun onAlarmSet(alarmTimeInMillis: Long, @PeriodTypes periodType: Int)
-    }
-
-    companion object {
-
-        const val TAG = "AlarmSetDialog"
-        private const val ARG_CALENDAR = "calendar"
-        private const val ARG_PERIOD_TYPE = "period_type"
-
-        fun newInstance(timeInMillis: Long, @PeriodTypes periodType: Int): AlarmSetDialog {
-            val fragment = AlarmSetDialog()
-            val args = Bundle()
-            args.putLong(ARG_CALENDAR, timeInMillis)
-            args.putInt(ARG_PERIOD_TYPE, periodType)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

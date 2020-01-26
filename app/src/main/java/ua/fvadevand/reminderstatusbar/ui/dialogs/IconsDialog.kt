@@ -16,7 +16,12 @@ import ua.fvadevand.reminderstatusbar.utils.IconUtils
 class IconsDialog : DialogFragment() {
     private var listener: OnIconClickListener? = null
 
-    override fun onAttach(context: Context?) {
+    companion object {
+        const val TAG = "IconsDialog"
+        private const val SPAN_COUNT = 4
+    }
+
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = parentFragment as OnIconClickListener?
     }
@@ -33,8 +38,8 @@ class IconsDialog : DialogFragment() {
         }
         iconsView.adapter = adapter
         return AlertDialog.Builder(context)
-                .setView(rootView)
-                .create()
+            .setView(rootView)
+            .create()
     }
 
     override fun onDetach() {
@@ -44,10 +49,5 @@ class IconsDialog : DialogFragment() {
 
     interface OnIconClickListener {
         fun onIconClick(iconId: Int)
-    }
-
-    companion object {
-        const val TAG = "IconsDialog"
-        private const val SPAN_COUNT = 4
     }
 }

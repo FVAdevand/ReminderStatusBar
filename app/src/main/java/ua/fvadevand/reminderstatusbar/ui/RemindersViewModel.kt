@@ -46,22 +46,19 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         _remindersSortedLive
     }
 
-    fun getLiveCurrentReminder(): LiveData<Reminder> {
-        return repository.getLiveReminderById(currentReminderId)
-    }
+    fun getLiveCurrentReminder() = repository.getLiveReminderById(currentReminderId)
 
     fun addReminder(reminder: Reminder) {
         viewModelScope.launch {
-            val id = repository.addReminder(reminder)
-            reminder.id = id
+            reminder.id = repository.addReminder(reminder)
             if (reminder.timestamp > System.currentTimeMillis()) {
-                NotificationUtils.cancel(getApplication(), id.hashCode())
+                NotificationUtils.cancel(getApplication(), reminder.id.hashCode())
                 AlarmUtils.setAlarm(getApplication(), reminder)
             } else {
                 NotificationUtils.showNotification(getApplication(), reminder)
                 if (reminder.periodType > PeriodType.ONE_TIME) {
-                    val nextTimestamp = PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
-                    reminder.timestamp = nextTimestamp
+                    reminder.timestamp =
+                        PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
                     AlarmUtils.setAlarm(getApplication(), reminder)
                     repository.editReminder(reminder)
                 }
@@ -87,8 +84,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     fun notifyCurrentReminder() {
         viewModelScope.launch {
             val context: Context = getApplication()
-            val reminder = repository.getReminderById(currentReminderId)
-            reminder?.let {
+            repository.getReminderById(currentReminderId)?.let {
                 AlarmUtils.cancelAlarm(context, currentReminderId)
                 it.status = ReminderStatus.NOTIFYING
                 it.timestamp = System.currentTimeMillis()
@@ -102,8 +98,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch {
             NotificationUtils.cancel(getApplication(), currentReminderId.hashCode())
             AlarmUtils.cancelAlarm(getApplication(), currentReminderId)
-            val reminder = repository.getReminderById(currentReminderId)
-            reminder?.let {
+            repository.getReminderById(currentReminderId)?.let {
                 it.status = ReminderStatus.DONE
                 it.timestamp = System.currentTimeMillis()
                 repository.editReminder(it)
@@ -117,7 +112,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             reminderSortFieldLive.postValue(sortField)
         } else {
             val sortOrderAsc = reminderSortOrderAscLive.value
-                    ?: AppPref.DEFAULT_REMINDER_SORT_ORDER_ASC
+                ?: AppPref.DEFAULT_REMINDER_SORT_ORDER_ASC
             appPref.reminderSortOrderAsc = !sortOrderAsc
             reminderSortOrderAscLive.postValue(!sortOrderAsc)
         }
@@ -128,13 +123,15 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             val reminders = remindersFromDb.value ?: return@launch
             val sortField = reminderSortFieldLive.value ?: return@launch
             val sortOrderAsc = reminderSortOrderAscLive.value
-                    ?: AppPref.DEFAULT_REMINDER_SORT_ORDER_ASC
+                ?: AppPref.DEFAULT_REMINDER_SORT_ORDER_ASC
             val comparator = when (sortField) {
                 Reminder.COLUMN_TITLE -> SortUtils.ReminderTitleComparator(sortOrderAsc)
                 Reminder.COLUMN_STATUS -> SortUtils.ReminderStatusComparator(sortOrderAsc)
                 Reminder.COLUMN_TIMESTAMP -> SortUtils.ReminderTimeComparator(sortOrderAsc)
-                else -> throw IllegalArgumentException("SortField must be in" +
-                        " @Reminder.SortFields, current value = $sortField ")
+                else -> throw IllegalArgumentException(
+                    "SortField must be in" +
+                            " @Reminder.SortFields, current value = $sortField "
+                )
             }
             Collections.sort(reminders, comparator)
             _remindersSortedLive.postValue(reminders)

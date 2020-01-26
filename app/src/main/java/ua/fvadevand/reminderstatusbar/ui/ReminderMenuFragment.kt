@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import ua.fvadevand.reminderstatusbar.R
@@ -26,18 +26,26 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
     private lateinit var currentReminderLive: LiveData<Reminder>
     private var listener: OnReminderClickListener? = null
 
-    override fun onAttach(context: Context?) {
+    companion object {
+        const val TAG = "ReminderMenuFragment"
+    }
+
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = context as OnReminderClickListener
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
+        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
         currentReminderLive = viewModel.getLiveCurrentReminder()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_reminder_menu, container, false)
     }
 
@@ -59,7 +67,12 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
         currentReminderLive.observe(viewLifecycleOwner, Observer { reminder ->
             reminder?.let {
                 currentReminderLive.removeObservers(viewLifecycleOwner)
-                reminderIconView.setImageResource(IconUtils.toResId(reminderIconView.context, it.iconName))
+                reminderIconView.setImageResource(
+                    IconUtils.toResId(
+                        reminderIconView.context,
+                        it.iconName
+                    )
+                )
                 reminderTitleView.text = it.title
                 val menu = navigationView.menu
                 when (it.status) {
@@ -83,9 +96,5 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
     override fun onDetach() {
         listener = null
         super.onDetach()
-    }
-
-    companion object {
-        const val TAG = "ReminderMenuFragment"
     }
 }
