@@ -1,6 +1,7 @@
 package ua.fvadevand.reminderstatusbar
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import ua.fvadevand.reminderstatusbar.data.Repository
 import ua.fvadevand.reminderstatusbar.data.database.AppDatabase
 import ua.fvadevand.reminderstatusbar.handlers.AppPref
@@ -15,6 +16,11 @@ class ReminderApp : Application() {
     lateinit var appPref: AppPref
         private set
 
+    companion object {
+        lateinit var instance: ReminderApp
+            private set
+    }
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -24,10 +30,8 @@ class ReminderApp : Application() {
         if (Utils.isAndroidO()) {
             NotificationUtils.registerNotificationChannels(applicationContext)
         }
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 
-    companion object {
-        lateinit var instance: ReminderApp
-            private set
-    }
 }

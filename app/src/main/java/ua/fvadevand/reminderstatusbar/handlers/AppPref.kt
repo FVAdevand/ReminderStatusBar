@@ -6,14 +6,16 @@ import android.preference.PreferenceManager
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
 class AppPref(
-        context: Context
+    context: Context
 ) {
 
-    private val sharedPref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    private val sharedPref: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(context)
 
     @Reminder.SortFields
     var reminderSortField: String
         get() = sharedPref.getString(PREF_REMINDER_SORT_FIELD, DEFAULT_REMINDER_SORT_FIELD)
+            ?: DEFAULT_REMINDER_SORT_FIELD
         set(value) {
             sharedPref.edit().putString(PREF_REMINDER_SORT_FIELD, value).apply()
         }
