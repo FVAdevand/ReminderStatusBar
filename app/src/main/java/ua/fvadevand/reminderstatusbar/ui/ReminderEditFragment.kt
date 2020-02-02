@@ -13,8 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -49,13 +48,10 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     @PeriodTypes
     private var periodType = PeriodType.ONE_TIME
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
-        editMode = viewModel.currentReminderId != Const.NEW_REMINDER_ID
-        if (editMode) {
-            currentReminderLive = viewModel.getLiveCurrentReminder()
-        }
+    companion object {
+        const val TAG = "ReminderEditFragment"
+        private const val DELAY_UP_DIALOG = 100L
+        private const val DELAY_DOWN_DIALOG = 50L
     }
 
     override fun onCreateView(
@@ -69,14 +65,15 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
+        editMode = viewModel.currentReminderId != Const.NEW_REMINDER_ID
         initView(view)
         if (editMode) {
-            currentReminderLive.observe(viewLifecycleOwner, Observer { reminder ->
-                reminder?.let {
-                    currentReminderLive.removeObservers(viewLifecycleOwner)
-                    fillView(it)
+            viewModel.getCurrentReminder {
+                it?.let {
+                    populateData(it)
                 }
-            })
+            }
         }
     }
 
@@ -110,7 +107,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         titleView.requestFocus()
         textView = view.findViewById(R.id.et_edit_reminder_text)
         textView.setHorizontallyScrolling(false)
-        textView.maxLines = 20
+//        textView.maxLines = 20 // TODO: 02.02.20 ? (Vladimir)
         textView.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
@@ -144,7 +141,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         startTimeInMillis = System.currentTimeMillis()
     }
 
-    private fun fillView(reminder: Reminder) {
+    private fun populateData(reminder: Reminder) {
         titleView.setText(reminder.title)
         textView.setText(reminder.text)
         iconResId = IconUtils.toResId(context!!, reminder.iconName)
@@ -245,9 +242,4 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         iconBtn.setImageResource(iconResId)
     }
 
-    companion object {
-        const val TAG = "ReminderEditFragment"
-        private const val DELAY_UP_DIALOG = 100L
-        private const val DELAY_DOWN_DIALOG = 50L
-    }
 }

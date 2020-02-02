@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_main.bottom_app_bar
+import kotlinx.android.synthetic.main.activity_main.*
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(bottom_app_bar)
-        viewModel = ViewModelProviders.of(this).get(RemindersViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(RemindersViewModel::class.java)
         initView()
         if (savedInstanceState == null) {
             showRemindersFragment()
@@ -49,26 +49,29 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
 
     private fun showRemindersFragment() {
         val fragment = supportFragmentManager.findFragmentByTag(RemindersFragment.TAG)
-                ?: RemindersFragment.newInstance()
+            ?: RemindersFragment.newInstance()
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment, RemindersFragment.TAG)
-                .commit()
+            .replace(R.id.fragment_container, fragment, RemindersFragment.TAG)
+            .commit()
     }
 
     private fun showReminderEditFragment() {
-        val fragment = supportFragmentManager.findFragmentByTag(ReminderEditFragment.TAG) as? ReminderEditFragment
+        val fragment =
+            supportFragmentManager.findFragmentByTag(ReminderEditFragment.TAG) as? ReminderEditFragment
                 ?: ReminderEditFragment()
         fragment.show(supportFragmentManager, ReminderEditFragment.TAG)
     }
 
     private fun showReminderMenuFragment() {
-        val fragment = supportFragmentManager.findFragmentByTag(ReminderMenuFragment.TAG) as? ReminderMenuFragment
+        val fragment =
+            supportFragmentManager.findFragmentByTag(ReminderMenuFragment.TAG) as? ReminderMenuFragment
                 ?: ReminderMenuFragment()
         fragment.show(supportFragmentManager, ReminderMenuFragment.TAG)
     }
 
     private fun showReminderSortMenuFragment() {
-        val fragment = supportFragmentManager.findFragmentByTag(ReminderSortMenuFragment.TAG) as? ReminderSortMenuFragment
+        val fragment =
+            supportFragmentManager.findFragmentByTag(ReminderSortMenuFragment.TAG) as? ReminderSortMenuFragment
                 ?: ReminderSortMenuFragment()
         fragment.show(supportFragmentManager, ReminderSortMenuFragment.TAG)
     }

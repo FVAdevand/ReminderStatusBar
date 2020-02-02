@@ -18,11 +18,6 @@ class ReminderSortMenuFragment : BottomSheetDialogFragment() {
         const val TAG = "ReminderSortMenuFragment"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,6 +28,7 @@ class ReminderSortMenuFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
         val navigationView: NavigationView = view.findViewById(R.id.reminder_menu_sort)
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {

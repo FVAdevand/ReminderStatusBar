@@ -2,12 +2,17 @@ package ua.fvadevand.reminderstatusbar.handlers
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
-class AppPref(
-    context: Context
-) {
+class AppPref(context: Context) {
+
+    companion object {
+        private const val PREF_REMINDER_SORT_FIELD = "REMINDER_SORT_FIELD"
+        private const val PREF_REMINDER_SORT_ORDER_ASC = "REMINDER_SORT_ORDER_ASC"
+        private const val DEFAULT_REMINDER_SORT_FIELD = Reminder.COLUMN_TITLE
+        const val DEFAULT_REMINDER_SORT_ORDER_ASC = true
+    }
 
     private val sharedPref: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
@@ -26,10 +31,4 @@ class AppPref(
             sharedPref.edit().putBoolean(PREF_REMINDER_SORT_ORDER_ASC, value).apply()
         }
 
-    companion object {
-        private const val PREF_REMINDER_SORT_FIELD = "REMINDER_SORT_FIELD"
-        private const val PREF_REMINDER_SORT_ORDER_ASC = "REMINDER_SORT_ORDER_ASC"
-        private const val DEFAULT_REMINDER_SORT_FIELD = Reminder.COLUMN_TITLE
-        const val DEFAULT_REMINDER_SORT_ORDER_ASC = true
-    }
 }

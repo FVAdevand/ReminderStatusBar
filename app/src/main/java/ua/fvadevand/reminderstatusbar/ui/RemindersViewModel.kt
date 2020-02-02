@@ -46,7 +46,10 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         _remindersSortedLive
     }
 
-    fun getLiveCurrentReminder() = repository.getLiveReminderById(currentReminderId)
+    fun getCurrentReminder(onSuccess: (Reminder?) -> Unit) =
+        viewModelScope.launch {
+            onSuccess(repository.getReminderById(currentReminderId))
+        }
 
     fun addReminder(reminder: Reminder) {
         viewModelScope.launch {

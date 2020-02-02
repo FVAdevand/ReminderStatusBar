@@ -38,14 +38,6 @@ data class Reminder(
     @ColumnInfo(name = COLUMN_ID)
     var id: Long = 0
 
-    @StringDef(
-            COLUMN_TITLE,
-            COLUMN_STATUS,
-            COLUMN_TIMESTAMP
-    )
-    @Retention(AnnotationRetention.SOURCE)
-    annotation class SortFields
-
     companion object {
         const val TABLE_NAME = "reminders"
         const val COLUMN_ID = "id"
@@ -57,5 +49,13 @@ data class Reminder(
         const val COLUMN_PERIOD_TYPE = "period_type"
         const val COLUMN_PERIOD = "repeat_period"
     }
+
+    @StringDef(
+            COLUMN_TITLE,
+            COLUMN_STATUS,
+            COLUMN_TIMESTAMP
+    )
+    @Retention(AnnotationRetention.SOURCE)
+    annotation class SortFields
 
 }
