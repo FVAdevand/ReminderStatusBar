@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -52,9 +53,9 @@ class RemindersFragment : Fragment() {
             Observer { reminders ->
                 reminders?.let {
                     if (it.isEmpty()) {
-                        (placeholder ?: inflatePlaceholder())?.visibility = View.VISIBLE
+                        (placeholder ?: inflatePlaceholder())?.isVisible = true
                     } else {
-                        placeholder?.visibility = View.GONE
+                        placeholder?.isVisible = false
                     }
                     reminderAdapter.setReminders(it)
                 }

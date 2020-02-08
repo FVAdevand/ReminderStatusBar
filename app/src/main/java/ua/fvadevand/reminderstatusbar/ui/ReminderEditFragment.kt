@@ -12,7 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import androidx.lifecycle.LiveData
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -28,7 +28,7 @@ import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.IconsDialog
 import ua.fvadevand.reminderstatusbar.utils.IconUtils
-import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
+import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
 import java.util.Locale
 
 class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, OnAlarmSetListener,
@@ -41,7 +41,6 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     private lateinit var repeatChip: Chip
     private lateinit var startTimeChip: Chip
     private lateinit var viewModel: RemindersViewModel
-    private lateinit var currentReminderLive: LiveData<Reminder>
     private var startTimeInMillis = System.currentTimeMillis()
     private var editMode = false
     private var iconResId = R.drawable.ic_notif_edit
@@ -70,9 +69,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         initView(view)
         if (editMode) {
             viewModel.getCurrentReminder {
-                it?.let {
-                    populateData(it)
-                }
+                it?.let { populateData(it) }
             }
         }
     }
@@ -107,7 +104,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         titleView.requestFocus()
         textView = view.findViewById(R.id.et_edit_reminder_text)
         textView.setHorizontallyScrolling(false)
-//        textView.maxLines = 20 // TODO: 02.02.20 ? (Vladimir)
+        textView.maxLines = 20
         textView.setOnEditorActionListener { _, actionId, _ ->
             when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
@@ -129,12 +126,12 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         notifyBtn.setOnClickListener(this)
         repeatChip = view.findViewById(R.id.chip_edit_reminder_repeat)
         repeatChip.setOnCloseIconClickListener {
-            it.visibility = View.GONE
+            it.isVisible = false
             periodType = PeriodType.ONE_TIME
         }
         startTimeChip = view.findViewById(R.id.chip_edit_reminder_time)
         startTimeChip.setOnCloseIconClickListener {
-            it.visibility = View.GONE
+            it.isVisible = false
             startTimeInMillis = System.currentTimeMillis()
             notifyBtn.setText(R.string.edit_reminder_action_notify)
         }
@@ -147,18 +144,18 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         iconResId = IconUtils.toResId(context!!, reminder.iconName)
         iconBtn.setImageResource(iconResId)
         if (reminder.timestamp > System.currentTimeMillis()) {
-            startTimeChip.visibility = View.VISIBLE
+            startTimeChip.isVisible = true
             startTimeInMillis = reminder.timestamp
-            startTimeChip.text = getStartNotificationTimeString()
+            startTimeChip.text = context.getNotificationTime(startTimeInMillis)
         } else {
-            startTimeChip.visibility = View.GONE
+            startTimeChip.isVisible = false
         }
         periodType = reminder.periodType
-        repeatChip.visibility = if (periodType == PeriodType.ONE_TIME) {
-            View.GONE
+        repeatChip.isVisible = if (periodType == PeriodType.ONE_TIME) {
+            false
         } else {
             repeatChip.text = getRepeatString()
-            View.VISIBLE
+            true
         }
     }
 
@@ -209,8 +206,8 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
 
     override fun onAlarmSet(alarmTimeInMillis: Long, @PeriodTypes periodType: Int) {
         startTimeInMillis = alarmTimeInMillis
-        startTimeChip.visibility = View.VISIBLE
-        startTimeChip.text = getStartNotificationTimeString()
+        startTimeChip.isVisible = true
+        startTimeChip.text = context.getNotificationTime(startTimeInMillis)
         if (startTimeInMillis > System.currentTimeMillis()) {
             notifyBtn.setText(R.string.edit_reminder_action_save)
         } else {
@@ -218,7 +215,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         }
         this.periodType = periodType
         if (periodType > PeriodType.ONE_TIME) {
-            repeatChip.visibility = View.VISIBLE
+            repeatChip.isVisible = true
             repeatChip.text = getRepeatString()
         }
     }
@@ -227,13 +224,6 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         return getString(
             R.string.edit_reminder_repeat,
             getString(PeriodType.getPeriodTypeStringResId(periodType)).toLowerCase(Locale.getDefault())
-        )
-    }
-
-    private fun getStartNotificationTimeString(): String {
-        return getString(
-            R.string.edit_reminder_notification_time,
-            ReminderDateUtils.getNotificationTime(context!!, startTimeInMillis)
         )
     }
 

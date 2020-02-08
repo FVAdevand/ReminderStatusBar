@@ -8,11 +8,11 @@ import java.util.Calendar
 object PeriodType {
 
     @IntDef(
-            ONE_TIME,
-            DAILY,
-            WEEKLY,
-            MONTHLY,
-            YEARLY
+        ONE_TIME,
+        DAILY,
+        WEEKLY,
+        MONTHLY,
+        YEARLY
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class PeriodTypes
@@ -25,23 +25,22 @@ object PeriodType {
 
     @StringRes
     fun getPeriodTypeStringResId(@PeriodTypes type: Int) =
-            when (type) {
-                ONE_TIME -> R.string.alarm_dialog_period_without
-                DAILY -> R.string.alarm_dialog_period_daily
-                WEEKLY -> R.string.alarm_dialog_period_weekly
-                MONTHLY -> R.string.alarm_dialog_period_monthly
-                YEARLY -> R.string.alarm_dialog_period_yearly
-                else -> throw IllegalArgumentException("Type must be from @PeriodTypes, current type = $type")
-            }
+        when (type) {
+            ONE_TIME -> R.string.alarm_dialog_period_without
+            DAILY -> R.string.alarm_dialog_period_daily
+            WEEKLY -> R.string.alarm_dialog_period_weekly
+            MONTHLY -> R.string.alarm_dialog_period_monthly
+            YEARLY -> R.string.alarm_dialog_period_yearly
+            else -> throw IllegalArgumentException("Type must be from @PeriodTypes, current type = $type")
+        }
 
-    fun getPeriodTypes() =
-            listOf(
-                    ONE_TIME,
-                    DAILY,
-                    WEEKLY,
-                    MONTHLY,
-                    YEARLY
-            )
+    fun getPeriodTypes() = listOf(
+        ONE_TIME,
+        DAILY,
+        WEEKLY,
+        MONTHLY,
+        YEARLY
+    )
 
     fun getNextAlarmTimeByType(@PeriodTypes type: Int, currentTime: Long): Long {
         val calendar = Calendar.getInstance()

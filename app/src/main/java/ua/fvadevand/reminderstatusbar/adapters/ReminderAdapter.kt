@@ -1,18 +1,18 @@
 package ua.fvadevand.reminderstatusbar.adapters
 
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.utils.IconUtils
-import ua.fvadevand.reminderstatusbar.utils.ReminderDateUtils
+import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
 
 class ReminderAdapter(
     private val listener: (Long) -> Unit
@@ -86,18 +86,17 @@ class ReminderAdapter(
             iconView.setImageResource(IconUtils.toResId(iconView.context, reminder.iconName))
             titleView.text = reminder.title
             val reminderText = reminder.text
-            if (TextUtils.isEmpty(reminderText)) {
-                textView.visibility = View.GONE
+            if (reminderText.isNullOrEmpty()) {
+                textView.isVisible = false
             } else {
-                textView.visibility = View.VISIBLE
+                textView.isVisible = true
                 textView.text = reminderText
             }
             if (reminder.timestamp > System.currentTimeMillis()) {
-                dateView.visibility = View.VISIBLE
-                dateView.text = ReminderDateUtils
-                    .getNotificationTime(dateView.context.applicationContext, reminder.timestamp)
+                dateView.isVisible = true
+                dateView.text = itemView.context.getNotificationTime(reminder.timestamp)
             } else {
-                dateView.visibility = View.GONE
+                dateView.isVisible = false
             }
             statusView.setImageResource(ReminderStatus.getIconResIdByStatus(reminder.status))
         }

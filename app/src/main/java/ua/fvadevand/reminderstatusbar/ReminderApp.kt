@@ -6,7 +6,7 @@ import ua.fvadevand.reminderstatusbar.data.Repository
 import ua.fvadevand.reminderstatusbar.data.database.AppDatabase
 import ua.fvadevand.reminderstatusbar.handlers.AppPref
 import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
-import ua.fvadevand.reminderstatusbar.utils.Utils
+import ua.fvadevand.reminderstatusbar.utils.isAndroidO
 
 class ReminderApp : Application() {
 
@@ -27,7 +27,7 @@ class ReminderApp : Application() {
         appPref = AppPref(applicationContext)
         val db = AppDatabase.getDatabase(applicationContext)
         repository = Repository(db.reminderDao())
-        if (Utils.isAndroidO()) {
+        if (isAndroidO()) {
             NotificationUtils.registerNotificationChannels(applicationContext)
         }
 

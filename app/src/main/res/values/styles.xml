@@ -4,14 +4,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorWindowBackground</item>
         <item name="android:listDivider">@drawable/list_divider</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="alertDialogTheme">@style/AppAlertDialogTheme</item>
-        <item name="android:windowBackground">@color/colorWindowBackground</item>
     </style>
 
-    <style name="AppBottomSheetDialogTheme" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <style name="AppBottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppBottomSheetDialogStyle</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 
     <style name="AppBottomSheetDialogStyle" parent="Widget.Design.BottomSheet.Modal">
