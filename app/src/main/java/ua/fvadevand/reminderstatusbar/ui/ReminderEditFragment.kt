@@ -1,7 +1,6 @@
 package ua.fvadevand.reminderstatusbar.ui
 
 import android.animation.ValueAnimator
-import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -12,10 +11,10 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import ua.fvadevand.reminderstatusbar.Const
@@ -29,6 +28,7 @@ import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog.OnAlarmSetListen
 import ua.fvadevand.reminderstatusbar.ui.dialogs.IconsDialog
 import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
+import ua.fvadevand.reminderstatusbar.utils.showKeyboard
 import java.util.Locale
 
 class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, OnAlarmSetListener,
@@ -46,6 +46,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     private var iconResId = R.drawable.ic_notif_edit
     @PeriodTypes
     private var periodType = PeriodType.ONE_TIME
+    private var navBarHeight = -1
 
     companion object {
         const val TAG = "ReminderEditFragment"
@@ -57,13 +58,22 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_reminder_edit, container, false)
-        handleKeyboardHeight(view)
-        return view
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+        return inflater.inflate(R.layout.fragment_reminder_edit, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog?.setOnShowListener {
+            (view.parent as? View)?.let {
+                BottomSheetBehavior.from(it).run {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    peekHeight = 0
+                    skipCollapsed = true
+                }
+            }
+        }
         viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
         editMode = viewModel.currentReminderId != Const.NEW_REMINDER_ID
         initView(view)
@@ -72,36 +82,44 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
                 it?.let { populateData(it) }
             }
         }
-    }
+        dialog?.window?.decorView?.also { decorView ->
+            ViewCompat.setOnApplyWindowInsetsListener(decorView) { v, insets ->
+                if (navBarHeight == -1) navBarHeight = insets.systemWindowInsetBottom
+                val heightDifference = insets.systemWindowInsetBottom - navBarHeight
+                if (view.paddingBottom != heightDifference) {
+                    val animator = ValueAnimator.ofInt(view.paddingBottom, heightDifference)
+                    val duration = if (heightDifference == 0) DELAY_DOWN_DIALOG else DELAY_UP_DIALOG
+                    animator.addUpdateListener { view.setPadding(0, 0, 0, it.animatedValue as Int) }
+                    animator.duration = duration
+                    animator.start()
+                }
 
-    private fun handleKeyboardHeight(view: View) {
-        dialog?.window?.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
-                    or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
-        )
-        val decorView = activity?.window?.decorView
-        decorView?.viewTreeObserver?.addOnGlobalLayoutListener {
-            val displayFrame = Rect()
-            decorView.getWindowVisibleDisplayFrame(displayFrame)
-            val height = decorView.context.resources.displayMetrics.heightPixels
-            val heightDifference = height - displayFrame.bottom
-            val animator = ValueAnimator.ofInt(view.paddingBottom, heightDifference)
-            val duration = if (heightDifference == 0) DELAY_DOWN_DIALOG else DELAY_UP_DIALOG
-            animator.addUpdateListener { view.setPadding(0, 0, 0, it.animatedValue as Int) }
-            animator.duration = duration
-            animator.start()
-        }
-        dialog?.setOnShowListener {
-            val bottomSheetDialog = dialog as? BottomSheetDialog
-            bottomSheetDialog?.findViewById<ViewGroup>(R.id.design_bottom_sheet)?.let {
-                BottomSheetBehavior.from(it).state = BottomSheetBehavior.STATE_EXPANDED
+                ViewCompat.onApplyWindowInsets(
+                    v,
+                    insets.replaceSystemWindowInsets(
+                        insets.systemWindowInsetLeft,
+                        insets.systemWindowInsetTop,
+                        insets.systemWindowInsetRight,
+                        navBarHeight
+                    )
+                )
             }
         }
     }
 
+    override fun onIconClick(iconId: Int) {
+        iconResId = iconId
+        iconBtn.setImageResource(iconResId)
+    }
+
+    override fun onDestroyView() {
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        super.onDestroyView()
+    }
+
     private fun initView(view: View) {
         titleView = view.findViewById(R.id.et_edit_reminder_title)
-        titleView.requestFocus()
+        titleView.showKeyboard()
         textView = view.findViewById(R.id.et_edit_reminder_text)
         textView.setHorizontallyScrolling(false)
         textView.maxLines = 20
@@ -225,11 +243,6 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
             R.string.edit_reminder_repeat,
             getString(PeriodType.getPeriodTypeStringResId(periodType)).toLowerCase(Locale.getDefault())
         )
-    }
-
-    override fun onIconClick(iconId: Int) {
-        iconResId = iconId
-        iconBtn.setImageResource(iconResId)
     }
 
 }
