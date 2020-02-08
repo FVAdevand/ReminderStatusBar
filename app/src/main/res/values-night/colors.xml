@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorWindowBackground">#11171a</color>
+    <color name="colorBottomSheetBackground">#1a2326</color>
+    <color name="colorTextDefault">#eaeaea</color>
+    <color name="colorChipStroke">#bfbfbf</color>
+</resources>

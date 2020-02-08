@@ -4,11 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ua.fvadevand.reminderstatusbar.utils.logW
 import kotlin.math.roundToInt
 
 /**
@@ -23,25 +23,35 @@ import kotlin.math.roundToInt
  */
 
 class DividerItemDecoration(
-        private val context: Context,
-        /**
-         * Current orientation. Either [LinearLayout.HORIZONTAL] or [LinearLayout.VERTICAL].
-         */
-        private val orientation: Int,
-        private val shownInLastItem: Boolean,
-        private val offsetStart: Int,
-        private val offsetEnd: Int
+    private val context: Context,
+    /**
+     * Current orientation. Either [LinearLayout.HORIZONTAL] or [LinearLayout.VERTICAL].
+     */
+    private val orientation: Int,
+    private val shownInLastItem: Boolean,
+    private val offsetStart: Int,
+    private val offsetEnd: Int
 ) : RecyclerView.ItemDecoration() {
 
     var divider: Drawable? = null
 
     init {
         val attr = context.obtainStyledAttributes(ATTRS)
-        divider = attr.getDrawable(0)
-        if (divider == null) {
-            Log.w(TAG, "@android:attr/listDivider was not set in the theme used for this " + "DividerItemDecoration. Please set that attribute all call setDrawable()")
+        try {
+            divider = attr.getDrawable(0)
+            if (divider == null) {
+                logW(
+                    "@android:attr/listDivider was not set in the theme used for this " +
+                            "DividerItemDecoration. Please set that attribute all call setDrawable()"
+                )
+            }
+        } finally {
+            attr.recycle()
         }
-        attr.recycle()
+    }
+
+    companion object {
+        private val ATTRS = intArrayOf(android.R.attr.listDivider)
     }
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -60,8 +70,12 @@ class DividerItemDecoration(
         if (parent.clipToPadding) {
             left = parent.paddingLeft + offsetStart
             right = parent.width - parent.paddingRight - offsetEnd
-            canvas.clipRect(left, parent.paddingTop, right,
-                    parent.height - parent.paddingBottom)
+            canvas.clipRect(
+                left,
+                parent.paddingTop,
+                right,
+                parent.height - parent.paddingBottom
+            )
         } else {
             left = offsetStart
             right = parent.width - offsetEnd
@@ -89,8 +103,12 @@ class DividerItemDecoration(
         if (parent.clipToPadding) {
             top = parent.paddingTop + offsetStart
             bottom = parent.height - parent.paddingBottom - offsetEnd
-            canvas.clipRect(parent.paddingLeft, top,
-                    parent.width - parent.paddingRight, bottom)
+            canvas.clipRect(
+                parent.paddingLeft,
+                top,
+                parent.width - parent.paddingRight,
+                bottom
+            )
         } else {
             top = 0 + offsetStart
             bottom = parent.height - offsetEnd
@@ -112,7 +130,12 @@ class DividerItemDecoration(
         canvas.restore()
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         if (divider == null) {
             outRect.setEmpty()
             return
@@ -130,8 +153,4 @@ class DividerItemDecoration(
         }
     }
 
-    companion object {
-        private const val TAG = "DividerItem"
-        private val ATTRS = intArrayOf(android.R.attr.listDivider)
-    }
 }

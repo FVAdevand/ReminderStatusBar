@@ -9,14 +9,13 @@
     <string name="edit_reminder_action_save">Сохранить</string>
     <string name="edit_reminder_hint_message">Описание</string>
     <string name="edit_reminder_hint_title">Заголовок</string>
-    <string name="edit_reminder_notification_time">Напоминание покажеться %s</string>
     <string name="notification_action_done">Выполнено</string>
     <string name="reminder_channel_description">Уведомления о новом напоминании</string>
     <string name="reminder_channel_name">Напоминания</string>
     <string name="edit_reminder_error_empty_title">Пожалуйста введите заголовок</string>
-    <string name="utils_date_now">сейчас</string>
-    <string name="utils_date_today">сегодня в %s</string>
-    <string name="utils_date_tomorrow">завтра в %s</string>
+    <string name="utils_date_now">Сейчас</string>
+    <string name="utils_date_today">Сегодня в %s</string>
+    <string name="utils_date_tomorrow">Завтра в %s</string>
     <string name="notification_action_delete">Удалить</string>
     <string name="reminders_menu_notify">Показать уведомление</string>
     <string name="reminders_menu_edit">Редактировать</string>
@@ -32,4 +31,5 @@
     <string name="reminders_menu_sort_time">Сортировать по времени</string>
     <string name="reminders_menu_sort_title">Сортировать по заголовку</string>
     <string name="action_sort">Сортировка</string>
+    <string name="reminders_placeholder">Добавьте напоминания</string>
 </resources>

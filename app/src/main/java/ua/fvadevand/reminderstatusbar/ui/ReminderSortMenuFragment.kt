@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import ua.fvadevand.reminderstatusbar.R
@@ -14,17 +14,21 @@ class ReminderSortMenuFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: RemindersViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!).get(RemindersViewModel::class.java)
+    companion object {
+        const val TAG = "ReminderSortMenuFragment"
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_reminder_menu_sort, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
         val navigationView: NavigationView = view.findViewById(R.id.reminder_menu_sort)
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -35,9 +39,5 @@ class ReminderSortMenuFragment : BottomSheetDialogFragment() {
             dismiss()
             true
         }
-    }
-
-    companion object {
-        const val TAG = "ReminderSortMenuFragment"
     }
 }

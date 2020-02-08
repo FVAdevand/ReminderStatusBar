@@ -18,7 +18,6 @@ import ua.fvadevand.reminderstatusbar.receivers.NotificationReceiver
 
 object NotificationUtils {
 
-    private const val TAG = "NotificationUtils"
     private const val VERSION = 1
     private const val REMINDER_CHANNEL_ID = "reminder_channel_$VERSION"
 
@@ -26,11 +25,13 @@ object NotificationUtils {
     fun registerNotificationChannels(context: Context) {
         val name = context.getString(R.string.reminder_channel_name)
         val description = context.getString(R.string.reminder_channel_description)
-        val channel = NotificationChannel(REMINDER_CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH)
+        val channel =
+            NotificationChannel(REMINDER_CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH)
         channel.description = description
         channel.enableLights(true)
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
         notificationManager?.createNotificationChannel(channel)
     }
 
@@ -38,17 +39,17 @@ object NotificationUtils {
         val iconResId = IconUtils.toResId(context, reminder.iconName)
         val reminderId = reminder.id
         val nBuilder = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
-                .setContentTitle(reminder.title)
-                .setSmallIcon(iconResId)
-                .setColor(context.getColor(R.color.colorAccent))
-                .setOngoing(true)
-                .setShowWhen(true)
-                .setAutoCancel(true)
-                .addAction(getDoneAction(context, reminderId))
-                .addAction(getDeleteAction(context, reminderId))
+            .setContentTitle(reminder.title)
+            .setSmallIcon(iconResId)
+            .setColor(context.getColor(R.color.colorAccent))
+            .setOngoing(true)
+            .setShowWhen(true)
+            .setAutoCancel(true)
+            .addAction(getDoneAction(context, reminderId))
+            .addAction(getDeleteAction(context, reminderId))
         reminder.text?.let {
             nBuilder.setContentText(it)
-                    .setStyle(NotificationCompat.BigTextStyle().bigText(it))
+                .setStyle(NotificationCompat.BigTextStyle().bigText(it))
         }
         val iconDrawable = context.getDrawable(iconResId)
         iconDrawable?.let {
@@ -56,12 +57,14 @@ object NotificationUtils {
             val largeIcon = getBitmap(it)
             nBuilder.setLargeIcon(largeIcon)
         }
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
         notificationManager?.notify(reminderId.hashCode(), nBuilder.build())
     }
 
     fun cancel(context: Context, id: Int) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as? NotificationManager
         notificationManager?.cancel(id)
     }
 
@@ -85,16 +88,20 @@ object NotificationUtils {
     }
 
     private fun getDoneAction(context: Context, reminderId: Long): NotificationCompat.Action {
-        return NotificationCompat.Action.Builder(R.drawable.ic_action_done,
-                context.getString(R.string.notification_action_done),
-                NotificationReceiver.getDoneIntent(context, reminderId))
-                .build()
+        return NotificationCompat.Action.Builder(
+            R.drawable.ic_action_done,
+            context.getString(R.string.notification_action_done),
+            NotificationReceiver.getDoneIntent(context, reminderId)
+        )
+            .build()
     }
 
     private fun getDeleteAction(context: Context, reminderId: Long): NotificationCompat.Action {
-        return NotificationCompat.Action.Builder(R.drawable.ic_action_delete,
-                context.getString(R.string.notification_action_delete),
-                NotificationReceiver.getDeleteIntent(context, reminderId))
-                .build()
+        return NotificationCompat.Action.Builder(
+            R.drawable.ic_action_delete,
+            context.getString(R.string.notification_action_delete),
+            NotificationReceiver.getDeleteIntent(context, reminderId)
+        )
+            .build()
     }
 }

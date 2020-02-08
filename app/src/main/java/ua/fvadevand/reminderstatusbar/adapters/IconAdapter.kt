@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 
 class IconAdapter(
-        private val iconIds: List<Int>,
-        private val listener: (Int) -> Unit
+    private val iconIds: List<Int>,
+    private val listener: (Int) -> Unit
 ) : RecyclerView.Adapter<IconAdapter.IconViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.list_item_icon, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.list_item_icon, parent, false)
         return IconViewHolder(view)
     }
 
