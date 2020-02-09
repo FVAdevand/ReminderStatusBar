@@ -58,21 +58,21 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener {
     private fun showReminderEditFragment() {
         val fragment =
             supportFragmentManager.findFragmentByTag(ReminderEditFragment.TAG) as? ReminderEditFragment
-                ?: ReminderEditFragment()
+                ?: ReminderEditFragment.newInstance()
         fragment.show(supportFragmentManager, ReminderEditFragment.TAG)
     }
 
     private fun showReminderMenuFragment() {
         val fragment =
             supportFragmentManager.findFragmentByTag(ReminderMenuFragment.TAG) as? ReminderMenuFragment
-                ?: ReminderMenuFragment()
+                ?: ReminderMenuFragment.newInstance()
         fragment.show(supportFragmentManager, ReminderMenuFragment.TAG)
     }
 
     private fun showReminderSortMenuFragment() {
         val fragment =
             supportFragmentManager.findFragmentByTag(ReminderSortMenuFragment.TAG) as? ReminderSortMenuFragment
-                ?: ReminderSortMenuFragment()
+                ?: ReminderSortMenuFragment.newInstance()
         fragment.show(supportFragmentManager, ReminderSortMenuFragment.TAG)
     }
 

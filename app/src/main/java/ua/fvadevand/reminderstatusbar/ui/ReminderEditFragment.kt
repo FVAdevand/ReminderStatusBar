@@ -54,6 +54,8 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         const val TAG = "ReminderEditFragment"
         private const val DELAY_UP_DIALOG = 100L
         private const val DELAY_DOWN_DIALOG = 50L
+
+        fun newInstance() = ReminderEditFragment()
     }
 
     override fun onCreateView(

@@ -16,6 +16,8 @@ class ReminderSortMenuFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "ReminderSortMenuFragment"
+
+        fun newInstance() = ReminderSortMenuFragment()
     }
 
     override fun onCreateView(

@@ -24,6 +24,8 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val TAG = "ReminderMenuFragment"
+
+        fun newInstance() = ReminderMenuFragment()
     }
 
     override fun onAttach(context: Context) {
