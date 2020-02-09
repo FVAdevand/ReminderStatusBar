@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -47,6 +48,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     @PeriodTypes
     private var periodType = PeriodType.ONE_TIME
     private var navBarHeight = -1
+    private var behavior: BottomSheetBehavior<View>? = null
 
     companion object {
         const val TAG = "ReminderEditFragment"
@@ -67,8 +69,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         super.onViewCreated(view, savedInstanceState)
         dialog?.setOnShowListener {
             (view.parent as? View)?.let {
-                BottomSheetBehavior.from(it).run {
-                    state = BottomSheetBehavior.STATE_EXPANDED
+                behavior = BottomSheetBehavior.from(it).apply {
                     peekHeight = 0
                     skipCollapsed = true
                 }
@@ -90,6 +91,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
                     val animator = ValueAnimator.ofInt(view.paddingBottom, heightDifference)
                     val duration = if (heightDifference == 0) DELAY_DOWN_DIALOG else DELAY_UP_DIALOG
                     animator.addUpdateListener { view.setPadding(0, 0, 0, it.animatedValue as Int) }
+                    animator.doOnEnd { behavior?.state = BottomSheetBehavior.STATE_EXPANDED }
                     animator.duration = duration
                     animator.start()
                 }
