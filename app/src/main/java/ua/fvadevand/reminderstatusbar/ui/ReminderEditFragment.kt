@@ -195,7 +195,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     }
 
     private fun showIconsDialog() {
-        IconsDialog().show(childFragmentManager, IconsDialog.TAG)
+        IconsDialog.newInstance().show(childFragmentManager, IconsDialog.TAG)
     }
 
     private fun saveAndNotifyReminder() {

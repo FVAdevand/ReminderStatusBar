@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorWindowBackground">#11171a</color>
-    <color name="colorBottomSheetBackground">#1a2326</color>
-    <color name="colorTextDefault">#eaeaea</color>
-    <color name="colorChipStroke">#bfbfbf</color>
+    <color name="colorAccent">#8AB4F8</color>
+    <color name="colorWindowBackground">#11171A</color>
+    <color name="colorBottomSheetBackground">#1A2326</color>
+    <color name="colorTextDefault">#EAEAEA</color>
+    <color name="colorChipStroke">#BFBFBF</color>
+    <color name="colorActiveElement">#EAEAEA</color>
+    <color name="colorInactiveElement">#BBBBBB</color>
 </resources>

@@ -31,7 +31,7 @@ class ReminderApp : Application() {
             NotificationUtils.registerNotificationChannels(applicationContext)
         }
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        AppCompatDelegate.setDefaultNightMode(appPref.nightMode)
     }
 
 }

@@ -32,4 +32,8 @@
     <string name="reminders_menu_sort_title">Сортировать по заголовку</string>
     <string name="action_sort">Сортировка</string>
     <string name="reminders_placeholder">Добавьте напоминания</string>
+    <string name="night_mode_light">Светлая</string>
+    <string name="night_mode_dark">Темная</string>
+    <string name="night_mode_follow_system">Системные настройки по умолчанию</string>
+    <string name="night_mode_dialog_title">Выберите тему</string>
 </resources>

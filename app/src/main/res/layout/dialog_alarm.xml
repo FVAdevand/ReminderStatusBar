@@ -1,71 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_alarm_dialog_time_label"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_edge_dialog_item"
         android:layout_marginTop="@dimen/margin_top_dialog_item"
         android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:drawableStart="@drawable/ic_access_time"
-        android:drawablePadding="@dimen/drawable_padding"
-        android:gravity="center_vertical"
-        android:text="@string/alarm_dialog_time_label"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:layout_marginBottom="@dimen/margin_bottom_dialog_item"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_alarm_dialog_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_edge_dialog_item"
-        android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="11:30" />
+        <TextView
+            android:id="@+id/tv_alarm_dialog_time_label"
+            style="@style/DialogItemTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_access_time"
+            android:gravity="center_vertical"
+            android:text="@string/alarm_dialog_time_label" />
 
-    <TextView
-        android:id="@+id/tv_alarm_dialog_date_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_edge_dialog_item"
-        android:layout_marginTop="@dimen/margin_top_dialog_item"
-        android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:drawableStart="@drawable/ic_insert_invitation"
-        android:drawablePadding="@dimen/drawable_padding"
-        android:text="@string/alarm_dialog_date_label"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <TextView
+            android:id="@+id/tv_alarm_dialog_time"
+            style="@style/DialogItemValueStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="11:30" />
 
-    <TextView
-        android:id="@+id/tv_alarm_dialog_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_edge_dialog_item"
-        android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        tools:text="06-02-2018" />
+        <TextView
+            android:id="@+id/tv_alarm_dialog_date_label"
+            style="@style/DialogItemTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top_dialog_item"
+            android:drawableStart="@drawable/ic_insert_invitation"
+            android:text="@string/alarm_dialog_date_label" />
 
-    <TextView
-        android:id="@+id/tv_alarm_dialog_period_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_edge_dialog_item"
-        android:layout_marginTop="@dimen/margin_top_dialog_item"
-        android:layout_marginEnd="@dimen/margin_edge_dialog_item"
-        android:drawableStart="@drawable/ic_loop"
-        android:drawablePadding="@dimen/drawable_padding"
-        android:text="@string/alarm_dialog_period_label"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <TextView
+            android:id="@+id/tv_alarm_dialog_date"
+            style="@style/DialogItemValueStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="06-02-2018" />
 
-    <Spinner
-        android:id="@+id/spinner_alarm_dialog_repeat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_edge_dialog_item"
-        android:layout_marginTop="@dimen/margin_top_dialog_item"
-        android:layout_marginEnd="@dimen/margin_edge_dialog_item" />
+        <TextView
+            android:id="@+id/tv_alarm_dialog_period_label"
+            style="@style/DialogItemTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_top_dialog_item"
+            android:drawableStart="@drawable/ic_loop"
+            android:text="@string/alarm_dialog_period_label" />
 
-</LinearLayout>
+        <Spinner
+            android:id="@+id/spinner_alarm_dialog_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="2dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

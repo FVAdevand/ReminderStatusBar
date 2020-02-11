@@ -19,6 +19,8 @@ class IconsDialog : DialogFragment() {
     companion object {
         const val TAG = "IconsDialog"
         private const val SPAN_COUNT = 4
+
+        fun newInstance() = IconsDialog()
     }
 
     override fun onAttach(context: Context) {

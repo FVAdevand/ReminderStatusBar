@@ -39,14 +39,17 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textAppearance="@android:style/TextAppearance.Material.Notification.Title"
+            android:textColor="@color/colorTextDefault"
+            android:textSize="14sp"
+            android:textStyle="bold"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/tv_item_reminder_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.Material.Notification"
+            android:textColor="@color/colorTextDefault"
+            android:textSize="14sp"
             tools:text="text" />
 
         <TextView
@@ -56,9 +59,11 @@
             android:layout_gravity="center_vertical"
             android:drawableStart="@drawable/ic_notifications_16dp"
             android:drawablePadding="4dp"
+            android:drawableTint="@color/colorActiveElement"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@android:style/TextAppearance.Material.Notification"
+            android:textColor="@color/colorTextDefault"
+            android:textSize="14sp"
             tools:text="16:00" />
 
     </LinearLayout>
@@ -71,7 +76,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_status_done"
-        android:tint="@color/colorReminderStatusIcon"
+        android:tint="@color/colorInactiveElement"
         tools:ignore="ContentDescription" />
 
 </RelativeLayout>

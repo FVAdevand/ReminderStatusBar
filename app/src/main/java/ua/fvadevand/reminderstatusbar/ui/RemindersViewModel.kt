@@ -2,6 +2,7 @@ package ua.fvadevand.reminderstatusbar.ui
 
 import android.app.Application
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -22,7 +23,6 @@ import java.util.Collections
 
 class RemindersViewModel(application: Application) : AndroidViewModel(application) {
 
-    var currentReminderId = Const.NEW_REMINDER_ID
     private val repository = ReminderApp.instance.repository
     private val appPref = ReminderApp.instance.appPref
     private val _remindersSortedLive: MediatorLiveData<List<Reminder>> = MediatorLiveData()
@@ -31,6 +31,13 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     private val remindersFromDb: LiveData<List<Reminder>> by lazy(LazyThreadSafetyMode.NONE) {
         repository.getAllLiveReminders()
     }
+    var currentReminderId = Const.NEW_REMINDER_ID
+    var nightMode
+        get() = appPref.nightMode
+        set(value) {
+            appPref.nightMode = value
+            AppCompatDelegate.setDefaultNightMode(value)
+        }
     val remindersSortedLive: LiveData<List<Reminder>> by lazy(LazyThreadSafetyMode.NONE) {
         reminderSortFieldLive.postValue(appPref.reminderSortField)
         reminderSortOrderAscLive.postValue(appPref.reminderSortOrderAsc)

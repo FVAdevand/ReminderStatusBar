@@ -6,8 +6,10 @@
     <color name="colorReminderIcons">@color/colorAccent</color>
     <color name="colorWindowBackground">#F0F0F0</color>
     <color name="colorBottomSheetBackground">#FFFFFF</color>
-    <color name="colorReminderStatusIcon">@color/colorPrimary</color>
     <color name="colorTextDefault">#151515</color>
     <color name="colorChipStroke">#404040</color>
-    <color name="ic_launcher_background">@color/colorAccent</color>
+    <color name="colorActiveElement">#151515</color>
+    <color name="colorInactiveElement">#444444</color>
+    <color name="colorDividerElement">@color/colorInactiveElement</color>
+    <color name="ic_launcher_background">#0265EC</color>
 </resources>
