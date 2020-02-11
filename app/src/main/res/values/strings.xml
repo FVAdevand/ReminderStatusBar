@@ -54,4 +54,16 @@
     <string name="reminders_menu_sort_title">Sort by title</string>
     <string name="reminders_menu_sort_status">Sort by status</string>
     <string name="reminders_menu_sort_time">Sort by time</string>
+
+    <!--night mode dialog-->
+    <string name="night_mode_dialog_title">Choose theme</string>
+    <string name="night_mode_light">Light</string>
+    <string name="night_mode_dark">Dark</string>
+    <string name="night_mode_follow_system">System default</string>
+    <string-array name="night_mode_settings">
+        <item>@string/night_mode_light</item>
+        <item>@string/night_mode_dark</item>
+        <item>@string/night_mode_follow_system</item>
+    </string-array>
+
 </resources>

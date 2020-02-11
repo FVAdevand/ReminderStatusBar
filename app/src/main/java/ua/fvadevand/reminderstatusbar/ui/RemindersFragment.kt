@@ -28,9 +28,7 @@ class RemindersFragment : Fragment() {
     companion object {
         const val TAG = "RemindersFragment"
 
-        fun newInstance(): RemindersFragment {
-            return RemindersFragment()
-        }
+        fun newInstance() = RemindersFragment()
     }
 
     override fun onAttach(context: Context) {
@@ -89,7 +87,7 @@ class RemindersFragment : Fragment() {
     }
 
     private fun inflatePlaceholder(): View? {
-        val viewStub: ViewStub? = view?.findViewById<ViewStub>(R.id.view_stub_reminders)
+        val viewStub = view?.findViewById<ViewStub>(R.id.view_stub_reminders)
         placeholder = viewStub?.inflate()
         return placeholder
     }
