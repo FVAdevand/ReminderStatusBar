@@ -14,6 +14,7 @@ import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.handlers.AppPref
 import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
@@ -25,12 +26,10 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     private val repository = ReminderApp.instance.repository
     private val appPref = ReminderApp.instance.appPref
-    private val _remindersSortedLive: MediatorLiveData<List<Reminder>> = MediatorLiveData()
+    private val _remindersSortedLive: MediatorLiveData<List<ReminderItem>> = MediatorLiveData()
     private val reminderSortOrderAscLive: MutableLiveData<Boolean> = MutableLiveData()
     private val reminderSortFieldLive: MutableLiveData<String> = MutableLiveData()
-    private val remindersFromDb: LiveData<List<Reminder>> by lazy(LazyThreadSafetyMode.NONE) {
-        repository.getAllLiveReminders()
-    }
+    private val remindersFromDb by lazy { repository.getAllLiveReminders() }
     var currentReminderId = Const.NEW_REMINDER_ID
     var nightMode
         get() = appPref.nightMode
@@ -38,7 +37,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             appPref.nightMode = value
             AppCompatDelegate.setDefaultNightMode(value)
         }
-    val remindersSortedLive: LiveData<List<Reminder>> by lazy(LazyThreadSafetyMode.NONE) {
+    val remindersSortedLive: LiveData<List<ReminderItem>> by lazy {
         reminderSortFieldLive.postValue(appPref.reminderSortField)
         reminderSortOrderAscLive.postValue(appPref.reminderSortOrderAsc)
         _remindersSortedLive.addSource(remindersFromDb) {
@@ -82,12 +81,6 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             NotificationUtils.cancel(context, currentReminderId.hashCode())
             AlarmUtils.cancelAlarm(context, currentReminderId)
             repository.removeReminderById(currentReminderId)
-        }
-    }
-
-    fun removeAllReminders() {
-        viewModelScope.launch {
-            repository.removeAllReminders()
         }
     }
 

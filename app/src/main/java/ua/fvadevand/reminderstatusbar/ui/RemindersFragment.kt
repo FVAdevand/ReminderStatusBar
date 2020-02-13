@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
+import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
@@ -55,7 +56,12 @@ class RemindersFragment : Fragment() {
                     } else {
                         placeholder?.isVisible = false
                     }
-                    reminderAdapter.setReminders(it)
+                    val remindersWithHeader = it.toMutableList().apply {
+                        add(0, ReminderItem(ReminderItem.TYPE_HEADER).apply {
+                            header = getString(R.string.reminders_title)
+                        })
+                    }
+                    reminderAdapter.setReminders(remindersWithHeader)
                 }
             })
     }
