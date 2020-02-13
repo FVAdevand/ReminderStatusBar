@@ -85,9 +85,10 @@ class RemindersFragment : Fragment() {
             DividerItemDecoration(
                 context,
                 layoutManager.orientation,
-                false,
                 context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_start),
-                context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_end)
+                context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_end),
+                drawInFirstItem = false,
+                drawInLastItem = false
             )
         )
     }

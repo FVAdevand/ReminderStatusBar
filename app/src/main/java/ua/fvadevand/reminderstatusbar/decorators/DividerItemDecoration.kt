@@ -17,9 +17,10 @@ import kotlin.math.roundToInt
  *
  * @param context          Current context, it will be used to access resources.
  * @param orientation      Divider orientation. Should be [.HORIZONTAL] or [.VERTICAL].
- * @param shownInLastItem Whether show the divider in last item.
- * @param offsetStart offset divider left in LinearLayout.VERTICAL or top in LinearLayout.HORIZONTAL
- * @param offsetEnd offset divider right in LinearLayout.VERTICAL or bottom in LinearLayout.HORIZONTAL
+ * @param offsetStart      Offset divider left in LinearLayout.VERTICAL or top in LinearLayout.HORIZONTAL
+ * @param offsetEnd        Offset divider right in LinearLayout.VERTICAL or bottom in LinearLayout.HORIZONTAL
+ * @param drawInFirstItem  Whether show the divider in first item.
+ * @param drawInLastItem   Whether show the divider in last item.
  */
 
 class DividerItemDecoration(
@@ -28,9 +29,10 @@ class DividerItemDecoration(
      * Current orientation. Either [LinearLayout.HORIZONTAL] or [LinearLayout.VERTICAL].
      */
     private val orientation: Int,
-    private val shownInLastItem: Boolean,
     private val offsetStart: Int,
-    private val offsetEnd: Int
+    private val offsetEnd: Int,
+    private val drawInFirstItem: Boolean = true,
+    private val drawInLastItem: Boolean = true
 ) : RecyclerView.ItemDecoration() {
 
     var divider: Drawable? = null
@@ -57,77 +59,81 @@ class DividerItemDecoration(
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         if (parent.layoutManager == null || divider == null) return
         if (orientation == LinearLayout.VERTICAL) {
-            drawVertical(c, parent)
+            drawVertical(c, parent, state)
         } else {
-            drawHorizontal(c, parent)
+            drawHorizontal(c, parent, state)
         }
     }
 
-    private fun drawVertical(canvas: Canvas, parent: RecyclerView) {
-        canvas.save()
-        val left: Int
-        val right: Int
-        if (parent.clipToPadding) {
-            left = parent.paddingLeft + offsetStart
-            right = parent.width - parent.paddingRight - offsetEnd
-            canvas.clipRect(
-                left,
-                parent.paddingTop,
-                right,
-                parent.height - parent.paddingBottom
-            )
-        } else {
-            left = offsetStart
-            right = parent.width - offsetEnd
+    private fun drawVertical(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        divider?.let { divider ->
+            canvas.save()
+            val left: Int
+            val right: Int
+            if (parent.clipToPadding) {
+                left = parent.paddingLeft + offsetStart
+                right = parent.width - parent.paddingRight - offsetEnd
+                canvas.clipRect(
+                    left,
+                    parent.paddingTop,
+                    right,
+                    parent.height - parent.paddingBottom
+                )
+            } else {
+                left = offsetStart
+                right = parent.width - offsetEnd
+            }
+            for (i in 0 until parent.childCount) {
+                val child = parent.getChildAt(i)
+                val position = parent.getChildAdapterPosition(child)
+                if ((drawInFirstItem || position > 0) &&
+                    (drawInLastItem || position < state.itemCount - 1)
+                ) {
+                    val decoratedBottom = parent.layoutManager?.getDecoratedBottom(child) ?: 0
+                    val bottom = decoratedBottom + child.translationY.roundToInt()
+                    val top = bottom - divider.intrinsicHeight
+                    divider.setBounds(left, top, right, bottom)
+                    divider.draw(canvas)
+                }
+            }
+            canvas.restore()
         }
-        val childCount = if (shownInLastItem) {
-            parent.childCount
-        } else {
-            parent.childCount - 1
-        }
-        for (i in 0 until childCount) {
-            val child = parent.getChildAt(i)
-            val decoratedBottom = parent.layoutManager!!.getDecoratedBottom(child)
-            val bottom = decoratedBottom + child.translationY.roundToInt()
-            val top = bottom - divider!!.intrinsicHeight
-            divider!!.setBounds(left, top, right, bottom)
-            divider!!.draw(canvas)
-        }
-        canvas.restore()
     }
 
-    private fun drawHorizontal(canvas: Canvas, parent: RecyclerView) {
-        canvas.save()
-        val top: Int
-        val bottom: Int
-        if (parent.clipToPadding) {
-            top = parent.paddingTop + offsetStart
-            bottom = parent.height - parent.paddingBottom - offsetEnd
-            canvas.clipRect(
-                parent.paddingLeft,
-                top,
-                parent.width - parent.paddingRight,
-                bottom
-            )
-        } else {
-            top = 0 + offsetStart
-            bottom = parent.height - offsetEnd
-        }
+    private fun drawHorizontal(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
+        divider?.let { divider ->
+            canvas.save()
+            val top: Int
+            val bottom: Int
+            if (parent.clipToPadding) {
+                top = parent.paddingTop + offsetStart
+                bottom = parent.height - parent.paddingBottom - offsetEnd
+                canvas.clipRect(
+                    parent.paddingLeft,
+                    top,
+                    parent.width - parent.paddingRight,
+                    bottom
+                )
+            } else {
+                top = 0 + offsetStart
+                bottom = parent.height - offsetEnd
+            }
 
-        val childCount = if (shownInLastItem) {
-            parent.childCount
-        } else {
-            parent.childCount - 1
+            for (i in 0 until parent.childCount) {
+                val child = parent.getChildAt(i)
+                val position = parent.getChildAdapterPosition(child)
+                if ((drawInFirstItem || position > 0) &&
+                    (drawInLastItem || position < state.itemCount - 1)
+                ) {
+                    val decoratedRight = parent.layoutManager?.getDecoratedRight(child) ?: 0
+                    val right = decoratedRight + child.translationX.roundToInt()
+                    val left = right - divider.intrinsicWidth
+                    divider.setBounds(left, top, right, bottom)
+                    divider.draw(canvas)
+                }
+            }
+            canvas.restore()
         }
-        for (i in 0 until childCount) {
-            val child = parent.getChildAt(i)
-            val decoratedRight = parent.layoutManager!!.getDecoratedRight(child)
-            val right = decoratedRight + child.translationX.roundToInt()
-            val left = right - divider!!.intrinsicWidth
-            divider!!.setBounds(left, top, right, bottom)
-            divider!!.draw(canvas)
-        }
-        canvas.restore()
     }
 
     override fun getItemOffsets(
@@ -136,21 +142,13 @@ class DividerItemDecoration(
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
-        if (divider == null) {
-            outRect.setEmpty()
-            return
-        }
-
-        val itemPosition = (view.layoutParams as RecyclerView.LayoutParams).viewLayoutPosition
-        val itemCount = state.itemCount
-        if (!shownInLastItem && itemPosition == itemCount - 1) {
-            outRect.setEmpty()
-        }
-        if (orientation == LinearLayout.VERTICAL) {
-            outRect.set(0, 0, 0, divider!!.intrinsicHeight)
-        } else {
-            outRect.set(0, 0, divider!!.intrinsicWidth, 0)
-        }
+        divider?.run {
+            if (orientation == LinearLayout.VERTICAL) {
+                outRect.set(0, 0, 0, intrinsicHeight)
+            } else {
+                outRect.set(0, 0, intrinsicWidth, 0)
+            }
+        } ?: outRect.setEmpty()
     }
 
 }
