@@ -34,15 +34,9 @@ class Repository(private val reminderDao: ReminderDao) {
         }
     }
 
-    suspend fun removeReminderById(reminderId: Long) {
+    suspend fun deleteReminderById(reminderId: Long) {
         withContext(Dispatchers.IO) {
             reminderDao.deleteById(reminderId)
-        }
-    }
-
-    suspend fun removeAllReminders() {
-        withContext(Dispatchers.IO) {
-            reminderDao.deleteAll()
         }
     }
 

@@ -10,12 +10,15 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
+import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
+import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 
 class RemindersFragment : Fragment() {
@@ -76,10 +79,22 @@ class RemindersFragment : Fragment() {
         reminderListView = view.findViewById(R.id.reminder_list)
         val layoutManager = LinearLayoutManager(context)
         reminderListView.layoutManager = layoutManager
-        reminderAdapter = ReminderAdapter {
-            viewModel.currentReminderId = it
-            onReminderClickListener?.onClickReminder()
-        }
+        reminderAdapter = ReminderAdapter(object : ReminderAdapter.OnReminderListener {
+            override fun onReminderClick(id: Long) {
+                viewModel.currentReminderId = id
+                onReminderClickListener?.onClickReminder()
+            }
+
+            override fun onReminderEdit(id: Long) {
+                viewModel.currentReminderId = id
+                onReminderClickListener?.onClickReminderEdit()
+            }
+
+            override fun onReminderDelete(reminder: Reminder) {
+                viewModel.currentReminderId = reminder.id
+                viewModel.deleteReminderSnackbar.callWithValue(reminder)
+            }
+        })
         reminderListView.adapter = reminderAdapter
         reminderListView.addItemDecoration(
             DividerItemDecoration(
@@ -91,6 +106,8 @@ class RemindersFragment : Fragment() {
                 drawInLastItem = false
             )
         )
+        ItemTouchHelper(SwipeToEditOrDeleteCallback(context, reminderAdapter))
+            .attachToRecyclerView(reminderListView)
     }
 
     private fun inflatePlaceholder(): View? {

@@ -52,7 +52,7 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
                 R.id.menu_reminder_edit -> listener?.onClickReminderEdit()
                 R.id.menu_reminder_notify -> viewModel.notifyCurrentReminder()
                 R.id.menu_reminder_done -> viewModel.setCurrentReminderStatusDone()
-                R.id.menu_reminder_delete -> viewModel.removeCurrentReminder()
+                R.id.menu_reminder_delete -> viewModel.deleteCurrentReminder()
             }
             dismiss()
             true

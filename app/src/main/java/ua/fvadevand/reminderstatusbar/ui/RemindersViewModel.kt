@@ -16,9 +16,11 @@ import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.data.models.SnackbarData
 import ua.fvadevand.reminderstatusbar.handlers.AppPref
 import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
 import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
+import ua.fvadevand.reminderstatusbar.utils.SingleLiveEvent
 import ua.fvadevand.reminderstatusbar.utils.SortUtils
 import java.util.Collections
 
@@ -30,7 +32,10 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     private val reminderSortOrderAscLive: MutableLiveData<Boolean> = MutableLiveData()
     private val reminderSortFieldLive: MutableLiveData<String> = MutableLiveData()
     private val remindersFromDb by lazy { repository.getAllLiveReminders() }
-    var currentReminderId = Const.NEW_REMINDER_ID
+    val showSnackbar = SingleLiveEvent<SnackbarData?>()
+    val deleteReminderSnackbar = SingleLiveEvent<Reminder?>()
+    var currentReminderId =
+        Const.NEW_REMINDER_ID // TODO: 13.02.20 forward id through args (Vladimir)
     var nightMode
         get() = appPref.nightMode
         set(value) {
@@ -75,12 +80,12 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun removeCurrentReminder() {
+    fun deleteCurrentReminder() {
         viewModelScope.launch {
             val context: Context = getApplication()
             NotificationUtils.cancel(context, currentReminderId.hashCode())
             AlarmUtils.cancelAlarm(context, currentReminderId)
-            repository.removeReminderById(currentReminderId)
+            repository.deleteReminderById(currentReminderId)
         }
     }
 

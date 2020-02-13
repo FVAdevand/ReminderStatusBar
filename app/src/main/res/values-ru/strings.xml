@@ -36,4 +36,6 @@
     <string name="night_mode_dark">Темная</string>
     <string name="night_mode_follow_system">Системные настройки по умолчанию</string>
     <string name="night_mode_dialog_title">Выберите тему</string>
+    <string name="reminders_reminder_deleted_message">Напоминание удалено</string>
+    <string name="action_undo">Отменить</string>
 </resources>

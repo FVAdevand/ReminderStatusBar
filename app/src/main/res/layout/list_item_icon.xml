@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="8dp"
-        android:background="@drawable/round_background"
+        android:background="@drawable/background_notif_icon"
         android:padding="8dp"
         tools:ignore="ContentDescription"
         tools:src="@drawable/ic_notif_agenda" />

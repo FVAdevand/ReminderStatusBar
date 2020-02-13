@@ -20,11 +20,11 @@
     </style>
 
     <style name="AppBottomSheetDialogStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/round_top_corner_background</item>
+        <item name="android:background">@drawable/background_bottom_sheet</item>
     </style>
 
     <style name="AppAlertDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:windowBackground">@drawable/round_all_corner_background</item>
+        <item name="android:windowBackground">@drawable/background_alert_diaolg</item>
         <item name="buttonBarPositiveButtonStyle">@style/AppDialogButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/AppDialogButtonStyle</item>
     </style>
