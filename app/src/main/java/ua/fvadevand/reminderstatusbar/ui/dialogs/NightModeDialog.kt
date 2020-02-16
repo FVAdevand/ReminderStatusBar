@@ -3,9 +3,9 @@ package ua.fvadevand.reminderstatusbar.ui.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ua.fvadevand.reminderstatusbar.R
 
 class NightModeDialog : DialogFragment() {
@@ -30,7 +30,7 @@ class NightModeDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(context!!)
+        return MaterialAlertDialogBuilder(context!!)
             .setTitle(R.string.night_mode_dialog_title)
             .setSingleChoiceItems(
                 resources.getStringArray(R.array.night_mode_settings),

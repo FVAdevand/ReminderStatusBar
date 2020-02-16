@@ -10,8 +10,8 @@ import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.PeriodTypesAdapter
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
@@ -32,7 +32,7 @@ class AlarmSetDialog : DialogFragment() {
     private var periodType = PeriodType.ONE_TIME
     private var listener: OnAlarmSetListener? = null
 
-    private var timeCallBack: TimePickerDialog.OnTimeSetListener =
+    private var timeListener: TimePickerDialog.OnTimeSetListener =
         TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
             with(calendar) {
                 set(Calendar.HOUR_OF_DAY, hourOfDay)
@@ -41,7 +41,7 @@ class AlarmSetDialog : DialogFragment() {
             timeTextView.text = context.formatTime(calendar)
         }
 
-    private var dateCallBack: DatePickerDialog.OnDateSetListener =
+    private var dateListener: DatePickerDialog.OnDateSetListener =
         DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
             with(calendar) {
                 set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -83,7 +83,7 @@ class AlarmSetDialog : DialogFragment() {
         timeTextView.setOnClickListener { v ->
             TimePickerDialog(
                 v.context,
-                timeCallBack,
+                timeListener,
                 calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE),
                 DateFormat.is24HourFormat(v.context)
@@ -95,18 +95,20 @@ class AlarmSetDialog : DialogFragment() {
         dateTextView.setOnClickListener { v ->
             DatePickerDialog(
                 v.context,
-                dateCallBack,
+                dateListener,
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            ).apply {
+                datePicker.minDate = System.currentTimeMillis()
+            }.show()
         }
         val spinner: Spinner = rootView.findViewById(R.id.spinner_alarm_dialog_repeat)
         val periodTypes = PeriodType.getPeriodTypes()
         val adapter = PeriodTypesAdapter(periodTypes)
         spinner.adapter = adapter
         spinner.setSelection(periodTypes.indexOf(periodType))
-        return AlertDialog.Builder(context!!)
+        return MaterialAlertDialogBuilder(context!!)
             .setView(rootView)
             .setTitle(R.string.alarm_dialog_title)
             .setPositiveButton(android.R.string.ok) { _, _ ->

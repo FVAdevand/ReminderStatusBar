@@ -71,13 +71,16 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
                 ReminderStatus.DONE -> {
                     menu.findItem(R.id.menu_reminder_notify).isVisible = true
                 }
+
                 ReminderStatus.NOTIFYING -> {
                     menu.findItem(R.id.menu_reminder_done).isVisible = true
                 }
+
                 ReminderStatus.DELAYED -> {
                     menu.findItem(R.id.menu_reminder_notify).isVisible = true
                     menu.findItem(R.id.menu_reminder_done).isVisible = true
                 }
+
                 ReminderStatus.PERIODIC -> {
                 }
             }
