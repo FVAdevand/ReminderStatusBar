@@ -7,4 +7,7 @@
     <color name="colorChipStroke">#BFBFBF</color>
     <color name="colorActiveElement">#EAEAEA</color>
     <color name="colorInactiveElement">#BBBBBB</color>
+    <color name="colorSwipeableItemDeleteBackground">#500000</color>
+    <color name="colorSwipeableItemEditBackground">#005000</color>
+    <color name="colorSwipeableItemIcon">#EAEAEA</color>
 </resources>

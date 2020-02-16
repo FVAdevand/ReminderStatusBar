@@ -155,7 +155,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         startTimeChip.setOnCloseIconClickListener {
             it.isVisible = false
             startTimeInMillis = System.currentTimeMillis()
-            notifyBtn.setText(R.string.edit_reminder_action_notify)
+            setActionText()
         }
         startTimeInMillis = System.currentTimeMillis()
     }
@@ -165,9 +165,9 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         textView.setText(reminder.text)
         iconResId = IconUtils.toResId(context!!, reminder.iconName)
         iconBtn.setImageResource(iconResId)
-        if (reminder.timestamp > System.currentTimeMillis()) {
+        startTimeInMillis = reminder.timestamp
+        if (startTimeInMillis > System.currentTimeMillis()) {
             startTimeChip.isVisible = true
-            startTimeInMillis = reminder.timestamp
             startTimeChip.text = context.getNotificationTime(startTimeInMillis)
         } else {
             startTimeChip.isVisible = false
@@ -179,6 +179,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
             repeatChip.text = getRepeatString()
             true
         }
+        setActionText()
     }
 
     override fun onClick(v: View) {
@@ -230,11 +231,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         startTimeInMillis = alarmTimeInMillis
         startTimeChip.isVisible = true
         startTimeChip.text = context.getNotificationTime(startTimeInMillis)
-        if (startTimeInMillis > System.currentTimeMillis()) {
-            notifyBtn.setText(R.string.edit_reminder_action_save)
-        } else {
-            notifyBtn.setText(R.string.edit_reminder_action_notify)
-        }
+        setActionText()
         this.periodType = periodType
         if (periodType > PeriodType.ONE_TIME) {
             repeatChip.isVisible = true
@@ -247,6 +244,14 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
             R.string.edit_reminder_repeat,
             getString(PeriodType.getPeriodTypeStringResId(periodType)).toLowerCase(Locale.getDefault())
         )
+    }
+
+    private fun setActionText() {
+        if (startTimeInMillis > System.currentTimeMillis()) {
+            notifyBtn.setText(R.string.edit_reminder_action_save)
+        } else {
+            notifyBtn.setText(R.string.edit_reminder_action_notify)
+        }
     }
 
 }

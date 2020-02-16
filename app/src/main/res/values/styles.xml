@@ -11,7 +11,8 @@
         <item name="android:datePickerDialogTheme">@style/AppTimeDateDialogTheme</item>
         <item name="android:timePickerDialogTheme">@style/AppTimeDateDialogTheme</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-        <item name="alertDialogTheme">@style/AppAlertDialogTheme</item>
+        <item name="materialAlertDialogTheme">@style/AppAlertDialogTheme</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.MediumComponent</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
@@ -20,13 +21,18 @@
     </style>
 
     <style name="AppBottomSheetDialogStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/round_top_corner_background</item>
+        <item name="android:background">@drawable/background_bottom_sheet</item>
     </style>
 
-    <style name="AppAlertDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.Dialog.Alert">
-        <item name="android:windowBackground">@drawable/round_all_corner_background</item>
+    <style name="AppAlertDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">@style/DialogTitleTextStyle</item>
+        <item name="android:backgroundTint">@color/colorBottomSheetBackground</item>
         <item name="buttonBarPositiveButtonStyle">@style/AppDialogButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/AppDialogButtonStyle</item>
+    </style>
+
+    <style name="DialogTitleTextStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="AppTimeDateDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.Dialog">
@@ -37,7 +43,7 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
-    <style name="editReminderImageButtonStyle">
+    <style name="ImageButtonStyle">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingTop">12dp</item>
@@ -50,6 +56,7 @@
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/colorChipStroke</item>
         <item name="chipBackgroundColor">@color/colorBottomSheetBackground</item>
+        <item name="chipSurfaceColor">@android:color/transparent</item>
         <item name="chipIconTint">@color/colorActiveElement</item>
         <item name="android:textColor">@color/colorActiveElement</item>
         <item name="android:checkable">false</item>
@@ -72,7 +79,12 @@
         <item name="android:paddingTop">@dimen/padding_top_bottom_dialog_item_value</item>
         <item name="android:paddingBottom">@dimen/padding_top_bottom_dialog_item_value</item>
         <item name="android:textColor">@color/colorActiveElement</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/background_dialog_corner_radius</item>
     </style>
 
 </resources>

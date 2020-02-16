@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuses
 
@@ -14,7 +15,7 @@ import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuse
 interface ReminderDao {
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME}")
-    fun getAllLive(): LiveData<List<Reminder>>
+    fun getAllLive(): LiveData<List<ReminderItem>>
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :id")
     fun getLiveById(id: Long): LiveData<Reminder>

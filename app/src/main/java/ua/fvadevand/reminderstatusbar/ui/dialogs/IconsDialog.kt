@@ -5,10 +5,10 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.IconAdapter
 import ua.fvadevand.reminderstatusbar.utils.IconUtils
@@ -39,7 +39,7 @@ class IconsDialog : DialogFragment() {
             dismiss()
         }
         iconsView.adapter = adapter
-        return AlertDialog.Builder(context)
+        return MaterialAlertDialogBuilder(context)
             .setView(rootView)
             .create()
     }

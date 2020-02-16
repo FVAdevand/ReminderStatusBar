@@ -3,12 +3,17 @@ package ua.fvadevand.reminderstatusbar.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_main.*
+import com.google.android.material.snackbar.Snackbar
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
+import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.NightModeDialog
 
@@ -17,15 +22,43 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener,
 
     private lateinit var viewModel: RemindersViewModel
     private lateinit var fab: FloatingActionButton
+    private lateinit var container: ViewGroup
+
+    private var recentlyDeletedReminder: Reminder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSupportActionBar(bottom_app_bar)
         viewModel = ViewModelProvider(this).get(RemindersViewModel::class.java)
         initView()
         if (savedInstanceState == null) {
             showRemindersFragment()
+        }
+
+        viewModel.showSnackbar.subscribe {
+            it?.let { data ->
+                val snackbar = Snackbar.make(container, data.messageResId, data.duration)
+                snackbar.anchorView = fab
+                snackbar.show()
+            }
+        }
+
+        viewModel.deleteReminderSnackbar.subscribe {
+            it?.let { reminder ->
+                recentlyDeletedReminder = reminder
+                viewModel.deleteCurrentReminder()
+                val snackbar = Snackbar.make(
+                    container,
+                    R.string.reminders_reminder_deleted_message,
+                    Snackbar.LENGTH_LONG
+                ).setAction(R.string.action_undo) {
+                    recentlyDeletedReminder?.let {
+                        viewModel.addReminder(reminder)
+                    }
+                }
+                snackbar.anchorView = fab
+                snackbar.show()
+            }
         }
     }
 
@@ -55,6 +88,11 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener,
     }
 
     private fun initView() {
+        container = findViewById(R.id.fragment_container)
+
+        val bottomBar = findViewById<BottomAppBar>(R.id.bottom_app_bar)
+        setSupportActionBar(bottomBar)
+
         fab = findViewById(R.id.fab)
         fab.setOnClickListener {
             viewModel.currentReminderId = Const.NEW_REMINDER_ID
@@ -94,5 +132,9 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener,
     private fun showThemeSettingsDialog() {
         NightModeDialog.newInstance(viewModel.nightMode)
             .show(supportFragmentManager, NightModeDialog.TAG)
+    }
+
+    private fun <T> LiveData<T>.subscribe(onChange: (T) -> Unit) {
+        observe(this@MainActivity, Observer { onChange(it) })
     }
 }

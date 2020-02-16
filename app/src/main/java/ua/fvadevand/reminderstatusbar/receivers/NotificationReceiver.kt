@@ -17,36 +17,43 @@ import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
 class NotificationReceiver : BroadcastReceiver() {
 
     companion object {
-        private const val ACTION_SHOW_REMINDER = "ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER"
+        private const val ACTION_SHOW_REMINDER =
+            "ua.fvadevand.reminderstatusbar.ACTION_SHOW_REMINDER"
         private const val ACTION_DONE = "ua.fvadevand.reminderstatusbar.ACTION_DONE"
         private const val ACTION_DELETE = "ua.fvadevand.reminderstatusbar.ACTION_DELETE"
         private const val EXTRA_REMINDER_ID = "REMINDER_ID"
 
         fun getNotifyIntent(context: Context, reminderId: Long): PendingIntent {
-            return PendingIntent.getBroadcast(context,
+            return PendingIntent.getBroadcast(
+                context,
                 reminderId.hashCode(),
                 Intent(ACTION_SHOW_REMINDER)
                     .setPackage(context.packageName)
                     .putExtra(EXTRA_REMINDER_ID, reminderId),
-                PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
 
         fun getDoneIntent(context: Context, reminderId: Long): PendingIntent {
-            return PendingIntent.getBroadcast(context,
+            return PendingIntent.getBroadcast(
+                context,
                 reminderId.hashCode(),
                 Intent(ACTION_DONE)
                     .setPackage(context.packageName)
                     .putExtra(EXTRA_REMINDER_ID, reminderId),
-                PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
 
         fun getDeleteIntent(context: Context, reminderId: Long): PendingIntent {
-            return PendingIntent.getBroadcast(context,
+            return PendingIntent.getBroadcast(
+                context,
                 reminderId.hashCode(),
                 Intent(ACTION_DELETE)
                     .setPackage(context.packageName)
                     .putExtra(EXTRA_REMINDER_ID, reminderId),
-                PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
         }
     }
 
@@ -60,7 +67,8 @@ class NotificationReceiver : BroadcastReceiver() {
                     reminder?.let {
                         NotificationUtils.showNotification(context, it)
                         if (it.status == ReminderStatus.PERIODIC) {
-                            val nextTimestamp = PeriodType.getNextAlarmTimeByType(it.periodType, it.timestamp)
+                            val nextTimestamp =
+                                PeriodType.getNextAlarmTimeByType(it.periodType, it.timestamp)
                             it.timestamp = nextTimestamp
                             if (nextTimestamp > System.currentTimeMillis()) {
                                 AlarmUtils.setAlarm(context, reminder)
@@ -72,22 +80,27 @@ class NotificationReceiver : BroadcastReceiver() {
                     }
                 }
             }
+
             ACTION_DONE -> {
                 NotificationUtils.cancel(context, reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
                     val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
                     reminder?.let {
                         if (it.status != ReminderStatus.PERIODIC) {
-                            ReminderApp.instance.repository.updateStatus(reminderId, ReminderStatus.DONE)
+                            ReminderApp.instance.repository.updateStatus(
+                                reminderId,
+                                ReminderStatus.DONE
+                            )
                         }
                     }
                 }
             }
+
             ACTION_DELETE -> {
                 NotificationUtils.cancel(context, reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
                     AlarmUtils.cancelAlarm(context, reminderId)
-                    ReminderApp.instance.repository.removeReminderById(reminderId)
+                    ReminderApp.instance.repository.deleteReminderById(reminderId)
                 }
             }
         }

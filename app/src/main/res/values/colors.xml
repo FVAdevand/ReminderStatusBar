@@ -11,5 +11,8 @@
     <color name="colorActiveElement">#151515</color>
     <color name="colorInactiveElement">#444444</color>
     <color name="colorDividerElement">@color/colorInactiveElement</color>
+    <color name="colorSwipeableItemDeleteBackground">#AE0000</color>
+    <color name="colorSwipeableItemEditBackground">#00AE00</color>
+    <color name="colorSwipeableItemIcon">#FAFAFA</color>
     <color name="ic_launcher_background">#0265EC</color>
 </resources>

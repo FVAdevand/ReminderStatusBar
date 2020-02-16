@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name" translatable="false">Reminders</string>
 
+    <string name="action_undo">Undo</string>
+
     <!--    reminders_fragment-->
     <string name="reminders_title">Reminders</string>
     <string name="reminders_placeholder">Add new reminders</string>
+    <string name="reminders_reminder_deleted_message">Reminder deleted</string>
 
     <!--main menu-->
     <string name="action_sort">Sorting</string>
