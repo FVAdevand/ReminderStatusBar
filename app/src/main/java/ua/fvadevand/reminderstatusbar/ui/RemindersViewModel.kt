@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
@@ -33,9 +32,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     private val reminderSortFieldLive: MutableLiveData<String> = MutableLiveData()
     private val remindersFromDb by lazy { repository.getAllLiveReminders() }
     val showSnackbar = SingleLiveEvent<SnackbarData?>()
-    val deleteReminderSnackbar = SingleLiveEvent<Reminder?>()
-    var currentReminderId =
-        Const.NEW_REMINDER_ID // TODO: 13.02.20 forward id through args (Vladimir)
+
     var nightMode
         get() = appPref.nightMode
         set(value) {
@@ -57,9 +54,9 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         _remindersSortedLive
     }
 
-    fun getCurrentReminder(onSuccess: (Reminder?) -> Unit) =
+    fun getReminder(id: Long, onSuccess: (Reminder?) -> Unit) =
         viewModelScope.launch {
-            onSuccess(repository.getReminderById(currentReminderId))
+            onSuccess(repository.getReminderById(id))
         }
 
     fun addReminder(reminder: Reminder) {
@@ -80,20 +77,20 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun deleteCurrentReminder() {
+    fun deleteReminder(id: Long) {
         viewModelScope.launch {
             val context: Context = getApplication()
-            NotificationUtils.cancel(context, currentReminderId.hashCode())
-            AlarmUtils.cancelAlarm(context, currentReminderId)
-            repository.deleteReminderById(currentReminderId)
+            NotificationUtils.cancel(context, id.hashCode())
+            AlarmUtils.cancelAlarm(context, id)
+            repository.deleteReminderById(id)
         }
     }
 
-    fun notifyCurrentReminder() {
+    fun notifyReminder(id: Long) {
         viewModelScope.launch {
             val context: Context = getApplication()
-            repository.getReminderById(currentReminderId)?.let {
-                AlarmUtils.cancelAlarm(context, currentReminderId)
+            repository.getReminderById(id)?.let {
+                AlarmUtils.cancelAlarm(context, id)
                 it.status = ReminderStatus.NOTIFYING
                 it.timestamp = System.currentTimeMillis()
                 repository.editReminder(it)
@@ -102,11 +99,11 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    fun setCurrentReminderStatusDone() {
+    fun setReminderStatusDone(id: Long) {
         viewModelScope.launch {
-            NotificationUtils.cancel(getApplication(), currentReminderId.hashCode())
-            AlarmUtils.cancelAlarm(getApplication(), currentReminderId)
-            repository.getReminderById(currentReminderId)?.let {
+            NotificationUtils.cancel(getApplication(), id.hashCode())
+            AlarmUtils.cancelAlarm(getApplication(), id)
+            repository.getReminderById(id)?.let {
                 it.status = ReminderStatus.DONE
                 it.timestamp = System.currentTimeMillis()
                 repository.editReminder(it)

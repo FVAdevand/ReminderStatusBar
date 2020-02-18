@@ -49,13 +49,19 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     private var periodType = PeriodType.ONE_TIME
     private var navBarHeight = -1
     private var behavior: BottomSheetBehavior<View>? = null
+    private val currentReminderId by lazy {
+        arguments?.getLong(ARG_REMINDER_ID) ?: Const.NEW_REMINDER_ID
+    }
 
     companion object {
         const val TAG = "ReminderEditFragment"
         private const val DELAY_UP_DIALOG = 100L
         private const val DELAY_DOWN_DIALOG = 50L
+        private const val ARG_REMINDER_ID = "REMINDER_ID"
 
-        fun newInstance() = ReminderEditFragment()
+        fun newInstance(reminderId: Long) = ReminderEditFragment().apply {
+            arguments = Bundle().apply { putLong(ARG_REMINDER_ID, reminderId) }
+        }
     }
 
     override fun onCreateView(
@@ -78,10 +84,10 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
             }
         }
         viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
-        editMode = viewModel.currentReminderId != Const.NEW_REMINDER_ID
+        editMode = currentReminderId != Const.NEW_REMINDER_ID
         initView(view)
         if (editMode) {
-            viewModel.getCurrentReminder {
+            viewModel.getReminder(currentReminderId) {
                 it?.let { populateData(it) }
             }
         }
@@ -220,7 +226,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
             periodType
         )
         if (editMode) {
-            reminder.id = viewModel.currentReminderId
+            reminder.id = currentReminderId
         }
         viewModel.addReminder(reminder)
         editMode = false
