@@ -9,15 +9,15 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
-import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
+import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
 
 class ReminderAdapter(
-    private val listener: OnReminderListener
+    private val listener: OnReminderInteractListener?
 ) : RecyclerView.Adapter<ReminderAdapter.BaseReminderViewHolder>(),
     SwipeToEditOrDeleteCallback.SwipeableAdapter {
 
@@ -60,13 +60,13 @@ class ReminderAdapter(
     override fun editItem(position: Int) {
         if (isValidPosition(position)) {
             notifyItemChanged(position)
-            listener.onReminderEdit(reminders[position].reminder.id)
+            listener?.onReminderEdit(reminders[position].reminder.id)
         }
     }
 
     override fun deleteItem(position: Int) {
         if (isValidPosition(position)) {
-            listener.onReminderDelete(reminders[position].reminder)
+            listener?.onReminderDelete(reminders[position].reminder)
         }
     }
 
@@ -128,7 +128,7 @@ class ReminderAdapter(
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (isValidPosition(position)) {
-                    listener.onReminderClick(reminders[position].reminder.id)
+                    listener?.onReminderClick(reminders[position].reminder.id)
                 }
             }
         }
@@ -157,11 +157,5 @@ class ReminderAdapter(
             }
             statusView.setImageResource(ReminderStatus.getIconResIdByStatus(reminderItem.reminder.status))
         }
-    }
-
-    interface OnReminderListener {
-        fun onReminderClick(id: Long)
-        fun onReminderEdit(id: Long)
-        fun onReminderDelete(reminder: Reminder)
     }
 }

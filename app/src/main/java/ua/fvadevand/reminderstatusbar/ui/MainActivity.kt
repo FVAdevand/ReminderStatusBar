@@ -14,10 +14,10 @@ import com.google.android.material.snackbar.Snackbar
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
-import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
+import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.NightModeDialog
 
-class MainActivity : AppCompatActivity(), OnReminderClickListener,
+class MainActivity : AppCompatActivity(), OnReminderInteractListener,
     NightModeDialog.OnNightModeSetListener {
 
     private lateinit var viewModel: RemindersViewModel
@@ -42,24 +42,6 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener,
                 snackbar.show()
             }
         }
-
-        viewModel.deleteReminderSnackbar.subscribe {
-            it?.let { reminder ->
-                recentlyDeletedReminder = reminder
-                viewModel.deleteCurrentReminder()
-                val snackbar = Snackbar.make(
-                    container,
-                    R.string.reminders_reminder_deleted_message,
-                    Snackbar.LENGTH_LONG
-                ).setAction(R.string.action_undo) {
-                    recentlyDeletedReminder?.let {
-                        viewModel.addReminder(reminder)
-                    }
-                }
-                snackbar.anchorView = fab
-                snackbar.show()
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -75,12 +57,28 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener,
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClickReminder() {
-        showReminderMenuFragment()
+    override fun onReminderClick(id: Long) {
+        showReminderMenuFragment(id)
     }
 
-    override fun onClickReminderEdit() {
-        showReminderEditFragment()
+    override fun onReminderEdit(id: Long) {
+        showReminderEditFragment(id)
+    }
+
+    override fun onReminderDelete(reminder: Reminder) {
+        recentlyDeletedReminder = reminder
+        viewModel.deleteReminder(reminder.id)
+        val snackbar = Snackbar.make(
+            container,
+            R.string.reminders_reminder_deleted_message,
+            Snackbar.LENGTH_LONG
+        ).setAction(R.string.action_undo) {
+            recentlyDeletedReminder?.let {
+                viewModel.addReminder(reminder)
+            }
+        }
+        snackbar.anchorView = fab
+        snackbar.show()
     }
 
     override fun onNightModeSet(nightMode: Int) {
@@ -95,8 +93,7 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener,
 
         fab = findViewById(R.id.fab)
         fab.setOnClickListener {
-            viewModel.currentReminderId = Const.NEW_REMINDER_ID
-            showReminderEditFragment()
+            showReminderEditFragment(Const.NEW_REMINDER_ID)
         }
     }
 
@@ -108,25 +105,19 @@ class MainActivity : AppCompatActivity(), OnReminderClickListener,
             .commit()
     }
 
-    private fun showReminderEditFragment() {
-        val fragment =
-            supportFragmentManager.findFragmentByTag(ReminderEditFragment.TAG) as? ReminderEditFragment
-                ?: ReminderEditFragment.newInstance()
-        fragment.show(supportFragmentManager, ReminderEditFragment.TAG)
+    private fun showReminderEditFragment(reminderId: Long) {
+        ReminderEditFragment.newInstance(reminderId)
+            .show(supportFragmentManager, ReminderEditFragment.TAG)
     }
 
-    private fun showReminderMenuFragment() {
-        val fragment =
-            supportFragmentManager.findFragmentByTag(ReminderMenuFragment.TAG) as? ReminderMenuFragment
-                ?: ReminderMenuFragment.newInstance()
-        fragment.show(supportFragmentManager, ReminderMenuFragment.TAG)
+    private fun showReminderMenuFragment(reminderId: Long) {
+        ReminderMenuFragment.newInstance(reminderId)
+            .show(supportFragmentManager, ReminderMenuFragment.TAG)
     }
 
     private fun showReminderSortMenuFragment() {
-        val fragment =
-            supportFragmentManager.findFragmentByTag(ReminderSortMenuFragment.TAG) as? ReminderSortMenuFragment
-                ?: ReminderSortMenuFragment.newInstance()
-        fragment.show(supportFragmentManager, ReminderSortMenuFragment.TAG)
+        ReminderSortMenuFragment.newInstance()
+            .show(supportFragmentManager, ReminderSortMenuFragment.TAG)
     }
 
     private fun showThemeSettingsDialog() {

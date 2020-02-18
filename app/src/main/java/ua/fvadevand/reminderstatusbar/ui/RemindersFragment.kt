@@ -15,11 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
-import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
-import ua.fvadevand.reminderstatusbar.listeners.OnReminderClickListener
+import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 
 class RemindersFragment : Fragment() {
 
@@ -27,7 +26,7 @@ class RemindersFragment : Fragment() {
     private lateinit var viewModel: RemindersViewModel
     private lateinit var reminderListView: RecyclerView
     private var placeholder: View? = null
-    private var onReminderClickListener: OnReminderClickListener? = null
+    private var onReminderInteractListener: OnReminderInteractListener? = null
 
     companion object {
         const val TAG = "RemindersFragment"
@@ -37,7 +36,7 @@ class RemindersFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        onReminderClickListener = context as OnReminderClickListener
+        onReminderInteractListener = context as OnReminderInteractListener
     }
 
     override fun onCreateView(
@@ -70,7 +69,7 @@ class RemindersFragment : Fragment() {
     }
 
     override fun onDetach() {
-        onReminderClickListener = null
+        onReminderInteractListener = null
         super.onDetach()
     }
 
@@ -79,22 +78,7 @@ class RemindersFragment : Fragment() {
         reminderListView = view.findViewById(R.id.reminder_list)
         val layoutManager = LinearLayoutManager(context)
         reminderListView.layoutManager = layoutManager
-        reminderAdapter = ReminderAdapter(object : ReminderAdapter.OnReminderListener {
-            override fun onReminderClick(id: Long) {
-                viewModel.currentReminderId = id
-                onReminderClickListener?.onClickReminder()
-            }
-
-            override fun onReminderEdit(id: Long) {
-                viewModel.currentReminderId = id
-                onReminderClickListener?.onClickReminderEdit()
-            }
-
-            override fun onReminderDelete(reminder: Reminder) {
-                viewModel.currentReminderId = reminder.id
-                viewModel.deleteReminderSnackbar.callWithValue(reminder)
-            }
-        })
+        reminderAdapter = ReminderAdapter(onReminderInteractListener)
         reminderListView.adapter = reminderAdapter
         reminderListView.addItemDecoration(
             DividerItemDecoration(
