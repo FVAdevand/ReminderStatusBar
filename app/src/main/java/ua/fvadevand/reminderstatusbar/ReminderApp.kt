@@ -4,34 +4,30 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import ua.fvadevand.reminderstatusbar.data.Repository
 import ua.fvadevand.reminderstatusbar.data.database.AppDatabase
-import ua.fvadevand.reminderstatusbar.handlers.AppPref
-import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
+import ua.fvadevand.reminderstatusbar.managers.NotificationManager
+import ua.fvadevand.reminderstatusbar.managers.PreferencesManager
 import ua.fvadevand.reminderstatusbar.utils.isAndroidO
 
 class ReminderApp : Application() {
 
-    lateinit var repository: Repository
-        private set
-
-    lateinit var appPref: AppPref
-        private set
+    private lateinit var repository: Repository
 
     companion object {
-        lateinit var instance: ReminderApp
-            private set
+        private lateinit var instance: ReminderApp
+
+        fun getRepository() = instance.repository
     }
 
     override fun onCreate() {
         super.onCreate()
         instance = this
-        appPref = AppPref(applicationContext)
         val db = AppDatabase.getDatabase(applicationContext)
         repository = Repository(db.reminderDao())
         if (isAndroidO()) {
-            NotificationUtils.registerNotificationChannels(applicationContext)
+            NotificationManager(applicationContext).registerNotificationChannels()
         }
 
-        AppCompatDelegate.setDefaultNightMode(appPref.nightMode)
+        AppCompatDelegate.setDefaultNightMode(PreferencesManager(applicationContext).nightMode)
     }
 
 }

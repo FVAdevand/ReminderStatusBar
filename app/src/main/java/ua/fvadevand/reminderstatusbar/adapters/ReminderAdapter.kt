@@ -13,8 +13,8 @@ import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
-import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
+import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 
 class ReminderAdapter(
     private val listener: OnReminderInteractListener?
@@ -134,12 +134,7 @@ class ReminderAdapter(
         }
 
         override fun bind(reminderItem: ReminderItem) {
-            iconView.setImageResource(
-                IconUtils.toResId(
-                    iconView.context,
-                    reminderItem.reminder.iconName
-                )
-            )
+            iconView.setImageResourceName(reminderItem.reminder.iconName)
             titleView.text = reminderItem.reminder.title
             val reminderText = reminderItem.reminder.text
             if (reminderText.isNullOrEmpty()) {

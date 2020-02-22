@@ -14,7 +14,7 @@ import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
-import ua.fvadevand.reminderstatusbar.utils.IconUtils
+import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 
 class ReminderMenuFragment : BottomSheetDialogFragment() {
 
@@ -66,12 +66,7 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
         }
         viewModel.getReminder(currentReminderId) {
             if (it == null) return@getReminder
-            reminderIconView.setImageResource(
-                IconUtils.toResId(
-                    reminderIconView.context,
-                    it.iconName
-                )
-            )
+            reminderIconView.setImageResourceName(it.iconName)
             reminderTitleView.text = it.title
             val menu = navigationView.menu
             when (it.status) {

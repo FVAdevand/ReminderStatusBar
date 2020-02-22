@@ -1,4 +1,4 @@
-package ua.fvadevand.reminderstatusbar.handlers
+package ua.fvadevand.reminderstatusbar.managers
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -7,7 +7,7 @@ import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
-class AppPref(context: Context) {
+class PreferencesManager(context: Context) {
 
     companion object {
         private const val PREF_NIGHT_MODE = "NIGHT_MODE"
@@ -20,11 +20,18 @@ class AppPref(context: Context) {
     private val sharedPref: SharedPreferences =
         PreferenceManager.getDefaultSharedPreferences(context)
 
-    @Reminder.SortFields
     var reminderSortField
-        get() = sharedPref.getString(PREF_REMINDER_SORT_FIELD, DEFAULT_REMINDER_SORT_FIELD)
+        @Reminder.SortFields get() = sharedPref.getString(
+            PREF_REMINDER_SORT_FIELD,
+            DEFAULT_REMINDER_SORT_FIELD
+        )
             ?: DEFAULT_REMINDER_SORT_FIELD
-        set(value) = sharedPref.edit { putString(PREF_REMINDER_SORT_FIELD, value) }
+        set(@Reminder.SortFields value) = sharedPref.edit {
+            putString(
+                PREF_REMINDER_SORT_FIELD,
+                value
+            )
+        }
 
 
     var reminderSortOrderAsc
