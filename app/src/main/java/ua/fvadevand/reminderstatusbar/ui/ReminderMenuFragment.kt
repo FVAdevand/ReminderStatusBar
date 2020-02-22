@@ -8,15 +8,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
-import ua.fvadevand.reminderstatusbar.utils.IconUtils
+import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 
-class ReminderMenuFragment : BottomSheetDialogFragment() {
+class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
 
     private lateinit var viewModel: RemindersViewModel
     private lateinit var reminderTitleView: TextView
@@ -66,12 +65,7 @@ class ReminderMenuFragment : BottomSheetDialogFragment() {
         }
         viewModel.getReminder(currentReminderId) {
             if (it == null) return@getReminder
-            reminderIconView.setImageResource(
-                IconUtils.toResId(
-                    reminderIconView.context,
-                    it.iconName
-                )
-            )
+            reminderIconView.setImageResourceName(it.iconName)
             reminderTitleView.text = it.title
             val menu = navigationView.menu
             when (it.status) {

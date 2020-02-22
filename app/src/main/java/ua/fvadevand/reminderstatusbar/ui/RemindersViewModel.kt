@@ -16,17 +16,20 @@ import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.data.models.SnackbarData
-import ua.fvadevand.reminderstatusbar.handlers.AppPref
-import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
-import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
+import ua.fvadevand.reminderstatusbar.managers.AlarmManager
+import ua.fvadevand.reminderstatusbar.managers.NotificationManager
+import ua.fvadevand.reminderstatusbar.managers.PreferencesManager
 import ua.fvadevand.reminderstatusbar.utils.SingleLiveEvent
 import ua.fvadevand.reminderstatusbar.utils.SortUtils
 import java.util.Collections
 
 class RemindersViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = ReminderApp.instance.repository
-    private val appPref = ReminderApp.instance.appPref
+    private val applicationContext: Context get() = getApplication()
+    private val repository = ReminderApp.getRepository()
+    private val prefManager = PreferencesManager(applicationContext)
+    private val alarmManager by lazy { AlarmManager(applicationContext) }
+    private val notificationManager by lazy { NotificationManager(applicationContext) }
     private val _remindersSortedLive: MediatorLiveData<List<ReminderItem>> = MediatorLiveData()
     private val reminderSortOrderAscLive: MutableLiveData<Boolean> = MutableLiveData()
     private val reminderSortFieldLive: MutableLiveData<String> = MutableLiveData()
@@ -34,14 +37,14 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     val showSnackbar = SingleLiveEvent<SnackbarData?>()
 
     var nightMode
-        get() = appPref.nightMode
+        get() = prefManager.nightMode
         set(value) {
-            appPref.nightMode = value
+            prefManager.nightMode = value
             AppCompatDelegate.setDefaultNightMode(value)
         }
     val remindersSortedLive: LiveData<List<ReminderItem>> by lazy {
-        reminderSortFieldLive.postValue(appPref.reminderSortField)
-        reminderSortOrderAscLive.postValue(appPref.reminderSortOrderAsc)
+        reminderSortFieldLive.postValue(prefManager.reminderSortField)
+        reminderSortOrderAscLive.postValue(prefManager.reminderSortOrderAsc)
         _remindersSortedLive.addSource(remindersFromDb) {
             sortAndPostReminders()
         }
@@ -63,14 +66,14 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         viewModelScope.launch {
             reminder.id = repository.addReminder(reminder)
             if (reminder.timestamp > System.currentTimeMillis()) {
-                NotificationUtils.cancel(getApplication(), reminder.id.hashCode())
-                AlarmUtils.setAlarm(getApplication(), reminder)
+                notificationManager.cancelNotification(reminder.id.hashCode())
+                alarmManager.setAlarm(reminder)
             } else {
-                NotificationUtils.showNotification(getApplication(), reminder)
+                notificationManager.showNotification(reminder)
                 if (reminder.periodType > PeriodType.ONE_TIME) {
                     reminder.timestamp =
                         PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
-                    AlarmUtils.setAlarm(getApplication(), reminder)
+                    alarmManager.setAlarm(reminder)
                     repository.editReminder(reminder)
                 }
             }
@@ -79,30 +82,28 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun deleteReminder(id: Long) {
         viewModelScope.launch {
-            val context: Context = getApplication()
-            NotificationUtils.cancel(context, id.hashCode())
-            AlarmUtils.cancelAlarm(context, id)
+            notificationManager.cancelNotification(id.hashCode())
+            alarmManager.cancelAlarm(id)
             repository.deleteReminderById(id)
         }
     }
 
     fun notifyReminder(id: Long) {
         viewModelScope.launch {
-            val context: Context = getApplication()
             repository.getReminderById(id)?.let {
-                AlarmUtils.cancelAlarm(context, id)
+                alarmManager.cancelAlarm(id)
                 it.status = ReminderStatus.NOTIFYING
                 it.timestamp = System.currentTimeMillis()
                 repository.editReminder(it)
-                NotificationUtils.showNotification(context, it)
+                notificationManager.showNotification(it)
             }
         }
     }
 
     fun setReminderStatusDone(id: Long) {
         viewModelScope.launch {
-            NotificationUtils.cancel(getApplication(), id.hashCode())
-            AlarmUtils.cancelAlarm(getApplication(), id)
+            notificationManager.cancelNotification(id.hashCode())
+            alarmManager.cancelAlarm(id)
             repository.getReminderById(id)?.let {
                 it.status = ReminderStatus.DONE
                 it.timestamp = System.currentTimeMillis()
@@ -113,22 +114,22 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun setSortField(@Reminder.SortFields sortField: String) {
         if (sortField != reminderSortFieldLive.value) {
-            appPref.reminderSortField = sortField
+            prefManager.reminderSortField = sortField
             reminderSortFieldLive.postValue(sortField)
         } else {
             val sortOrderAsc = reminderSortOrderAscLive.value
-                ?: AppPref.DEFAULT_REMINDER_SORT_ORDER_ASC
-            appPref.reminderSortOrderAsc = !sortOrderAsc
+                ?: PreferencesManager.DEFAULT_REMINDER_SORT_ORDER_ASC
+            prefManager.reminderSortOrderAsc = !sortOrderAsc
             reminderSortOrderAscLive.postValue(!sortOrderAsc)
         }
     }
 
     private fun sortAndPostReminders() {
         viewModelScope.launch(Dispatchers.IO) {
-            val reminders = remindersFromDb.value ?: return@launch
-            val sortField = reminderSortFieldLive.value ?: return@launch
+            val reminders = ArrayList<ReminderItem>(remindersFromDb.value ?: listOf())
+            val sortField = reminderSortFieldLive.value ?: Reminder.COLUMN_TIMESTAMP
             val sortOrderAsc = reminderSortOrderAscLive.value
-                ?: AppPref.DEFAULT_REMINDER_SORT_ORDER_ASC
+                ?: PreferencesManager.DEFAULT_REMINDER_SORT_ORDER_ASC
             val comparator = when (sortField) {
                 Reminder.COLUMN_TITLE -> SortUtils.ReminderTitleComparator(sortOrderAsc)
                 Reminder.COLUMN_STATUS -> SortUtils.ReminderStatusComparator(sortOrderAsc)
@@ -142,4 +143,5 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             _remindersSortedLive.postValue(reminders)
         }
     }
+
 }

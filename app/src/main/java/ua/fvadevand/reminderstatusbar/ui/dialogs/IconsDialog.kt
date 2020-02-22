@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.IconAdapter
-import ua.fvadevand.reminderstatusbar.utils.IconUtils
+import ua.fvadevand.reminderstatusbar.utils.iconsIds
 
 class IconsDialog : DialogFragment() {
     private var listener: OnIconClickListener? = null
@@ -34,7 +34,7 @@ class IconsDialog : DialogFragment() {
         val rootView = LayoutInflater.from(context).inflate(R.layout.dialog_icons, null)
         val iconsView = rootView.findViewById<RecyclerView>(R.id.icons_grid)
         iconsView.layoutManager = GridLayoutManager(context, SPAN_COUNT)
-        val adapter = IconAdapter(IconUtils.iconsIds) { iconId ->
+        val adapter = IconAdapter(iconsIds) { iconId ->
             listener?.onIconClick(iconId)
             dismiss()
         }

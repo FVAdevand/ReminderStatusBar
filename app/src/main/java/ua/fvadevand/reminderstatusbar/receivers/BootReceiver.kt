@@ -9,29 +9,34 @@ import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
-import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
-import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
+import ua.fvadevand.reminderstatusbar.managers.AlarmManager
+import ua.fvadevand.reminderstatusbar.managers.NotificationManager
 
 class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         val action = intent?.action
         if (Intent.ACTION_BOOT_COMPLETED != action && Intent.ACTION_MY_PACKAGE_REPLACED != action) return
-        val currentTimeInMillis = System.currentTimeMillis()
+        val now = System.currentTimeMillis()
         GlobalScope.launch(Dispatchers.IO) {
-            val reminders = ReminderApp.instance.repository.getRemindersForNotify()
+            val alarmManager = AlarmManager(context)
+            val repository = ReminderApp.getRepository()
+            val reminders = repository.getRemindersForNotify()
             reminders.forEach { reminder ->
-                if (reminder.timestamp > currentTimeInMillis) {
-                    AlarmUtils.setAlarm(context, reminder)
+                if (reminder.timestamp > now) {
+                    alarmManager.setAlarm(reminder)
                 } else {
-                    NotificationUtils.showNotification(context, reminder)
+                    NotificationManager(context).showNotification(reminder)
                     if (reminder.status == ReminderStatus.PERIODIC) {
-                        reminder.timestamp = PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
-                        AlarmUtils.setAlarm(context, reminder)
+                        reminder.timestamp = PeriodType.getNextAlarmTimeByType(
+                            reminder.periodType,
+                            reminder.timestamp
+                        )
+                        alarmManager.setAlarm(reminder)
                     } else {
                         reminder.status = ReminderStatus.NOTIFYING
                     }
-                    ReminderApp.instance.repository.editReminder(reminder)
+                    repository.editReminder(reminder)
                 }
             }
         }

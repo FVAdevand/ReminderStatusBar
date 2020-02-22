@@ -16,7 +16,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
@@ -27,12 +26,14 @@ import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.IconsDialog
-import ua.fvadevand.reminderstatusbar.utils.IconUtils
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
+import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 import ua.fvadevand.reminderstatusbar.utils.showKeyboard
+import ua.fvadevand.reminderstatusbar.utils.toResName
 import java.util.Locale
 
-class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, OnAlarmSetListener,
+class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListener,
+    OnAlarmSetListener,
     IconsDialog.OnIconClickListener {
 
     private lateinit var titleView: EditText
@@ -169,8 +170,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
     private fun populateData(reminder: Reminder) {
         titleView.setText(reminder.title)
         textView.setText(reminder.text)
-        iconResId = IconUtils.toResId(context!!, reminder.iconName)
-        iconBtn.setImageResource(iconResId)
+        iconBtn.setImageResourceName(reminder.iconName)
         startTimeInMillis = reminder.timestamp
         if (startTimeInMillis > System.currentTimeMillis()) {
             startTimeChip.isVisible = true
@@ -220,7 +220,7 @@ class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, 
         val reminder = Reminder(
             title,
             text,
-            IconUtils.toResName(context!!, iconResId),
+            context!!.toResName(iconResId),
             startTimeInMillis,
             status,
             periodType

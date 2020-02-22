@@ -5,12 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.navigation.NavigationView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
-class ReminderSortMenuFragment : BottomSheetDialogFragment() {
+class ReminderSortMenuFragment : BaseBottomSheetDialogFragment() {
 
     private lateinit var viewModel: RemindersViewModel
 

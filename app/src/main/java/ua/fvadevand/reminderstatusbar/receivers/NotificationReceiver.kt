@@ -11,8 +11,8 @@ import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
-import ua.fvadevand.reminderstatusbar.utils.AlarmUtils
-import ua.fvadevand.reminderstatusbar.utils.NotificationUtils
+import ua.fvadevand.reminderstatusbar.managers.AlarmManager
+import ua.fvadevand.reminderstatusbar.managers.NotificationManager
 
 class NotificationReceiver : BroadcastReceiver() {
 
@@ -58,36 +58,39 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent?) {
-        val action = intent?.action ?: return
-        val reminderId = intent.getLongExtra(EXTRA_REMINDER_ID, Const.NEW_REMINDER_ID)
-        when (action) {
+        val reminderId =
+            intent?.getLongExtra(EXTRA_REMINDER_ID, Const.NEW_REMINDER_ID) ?: Const.NEW_REMINDER_ID
+        val alarmManager = AlarmManager(context)
+        val notificationManager = NotificationManager(context)
+        val repository = ReminderApp.getRepository()
+        when (intent?.action) {
             ACTION_SHOW_REMINDER -> {
                 GlobalScope.launch(Dispatchers.Main) {
-                    val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
+                    val reminder = repository.getReminderById(reminderId)
                     reminder?.let {
-                        NotificationUtils.showNotification(context, it)
+                        notificationManager.showNotification(it)
                         if (it.status == ReminderStatus.PERIODIC) {
-                            val nextTimestamp =
+                            val nextAlarmTime =
                                 PeriodType.getNextAlarmTimeByType(it.periodType, it.timestamp)
-                            it.timestamp = nextTimestamp
-                            if (nextTimestamp > System.currentTimeMillis()) {
-                                AlarmUtils.setAlarm(context, reminder)
+                            it.timestamp = nextAlarmTime
+                            if (nextAlarmTime > System.currentTimeMillis()) {
+                                alarmManager.setAlarm(reminder)
                             }
                         } else {
                             it.status = ReminderStatus.NOTIFYING
                         }
-                        ReminderApp.instance.repository.editReminder(it)
+                        repository.editReminder(it)
                     }
                 }
             }
 
             ACTION_DONE -> {
-                NotificationUtils.cancel(context, reminderId.hashCode())
+                notificationManager.cancelNotification(reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
-                    val reminder = ReminderApp.instance.repository.getReminderById(reminderId)
+                    val reminder = repository.getReminderById(reminderId)
                     reminder?.let {
                         if (it.status != ReminderStatus.PERIODIC) {
-                            ReminderApp.instance.repository.updateStatus(
+                            repository.updateStatus(
                                 reminderId,
                                 ReminderStatus.DONE
                             )
@@ -97,10 +100,10 @@ class NotificationReceiver : BroadcastReceiver() {
             }
 
             ACTION_DELETE -> {
-                NotificationUtils.cancel(context, reminderId.hashCode())
+                notificationManager.cancelNotification(reminderId.hashCode())
+                alarmManager.cancelAlarm(reminderId)
                 GlobalScope.launch(Dispatchers.IO) {
-                    AlarmUtils.cancelAlarm(context, reminderId)
-                    ReminderApp.instance.repository.deleteReminderById(reminderId)
+                    repository.deleteReminderById(reminderId)
                 }
             }
         }
