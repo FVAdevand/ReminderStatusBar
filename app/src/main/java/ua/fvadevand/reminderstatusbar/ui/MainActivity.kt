@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.updatePadding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,6 +17,8 @@ import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.NightModeDialog
+import ua.fvadevand.reminderstatusbar.utils.doOnApplyWindowInsets
+import ua.fvadevand.reminderstatusbar.utils.updateSystemWindowInsets
 
 class MainActivity : AppCompatActivity(), OnReminderInteractListener,
     NightModeDialog.OnNightModeSetListener {
@@ -94,6 +97,21 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
         fab = findViewById(R.id.fab)
         fab.setOnClickListener {
             showReminderEditFragment(Const.NEW_REMINDER_ID)
+        }
+
+        window?.decorView?.doOnApplyWindowInsets { view, insets, initialPadding ->
+            view.updatePadding(top = initialPadding.top + insets.systemWindowInsetTop)
+            insets.updateSystemWindowInsets(top = 0)
+        }
+
+        bottomBar.doOnApplyWindowInsets { view, insets, initialPadding ->
+            view.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
+            insets.updateSystemWindowInsets(bottom = 0)
+        }
+
+        container.doOnApplyWindowInsets { view, insets, initialPadding ->
+            view.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
+            insets
         }
     }
 

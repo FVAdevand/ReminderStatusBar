@@ -16,7 +16,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
@@ -33,7 +32,8 @@ import ua.fvadevand.reminderstatusbar.utils.showKeyboard
 import ua.fvadevand.reminderstatusbar.utils.toResName
 import java.util.Locale
 
-class ReminderEditFragment : BottomSheetDialogFragment(), View.OnClickListener, OnAlarmSetListener,
+class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListener,
+    OnAlarmSetListener,
     IconsDialog.OnIconClickListener {
 
     private lateinit var titleView: EditText

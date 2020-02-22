@@ -126,8 +126,8 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun sortAndPostReminders() {
         viewModelScope.launch(Dispatchers.IO) {
-            val reminders = remindersFromDb.value ?: return@launch
-            val sortField = reminderSortFieldLive.value ?: return@launch
+            val reminders = ArrayList<ReminderItem>(remindersFromDb.value ?: listOf())
+            val sortField = reminderSortFieldLive.value ?: Reminder.COLUMN_TIMESTAMP
             val sortOrderAsc = reminderSortOrderAscLive.value
                 ?: PreferencesManager.DEFAULT_REMINDER_SORT_ORDER_ASC
             val comparator = when (sortField) {
@@ -143,4 +143,5 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             _remindersSortedLive.postValue(reminders)
         }
     }
+
 }
