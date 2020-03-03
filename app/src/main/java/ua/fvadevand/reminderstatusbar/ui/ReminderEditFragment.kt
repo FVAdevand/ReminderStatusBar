@@ -29,6 +29,7 @@ import ua.fvadevand.reminderstatusbar.ui.dialogs.IconsDialog
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
 import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 import ua.fvadevand.reminderstatusbar.utils.showKeyboard
+import ua.fvadevand.reminderstatusbar.utils.toResId
 import ua.fvadevand.reminderstatusbar.utils.toResName
 import java.util.Locale
 
@@ -170,6 +171,10 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
     private fun populateData(reminder: Reminder) {
         titleView.setText(reminder.title)
         textView.setText(reminder.text)
+        iconBtn.run {
+            iconResId = context.toResId(reminder.iconName)
+            setImageResource(iconResId)
+        }
         iconBtn.setImageResourceName(reminder.iconName)
         startTimeInMillis = reminder.timestamp
         if (startTimeInMillis > System.currentTimeMillis()) {

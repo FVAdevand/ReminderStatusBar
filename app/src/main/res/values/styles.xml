@@ -10,8 +10,10 @@
         <item name="android:listDivider">@drawable/list_divider</item>
         <item name="android:datePickerDialogTheme">@style/AppTimeDateDialogTheme</item>
         <item name="android:timePickerDialogTheme">@style/AppTimeDateDialogTheme</item>
+        <item name="android:spinnerItemStyle">@style/AppSpinnerItemStyle</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="materialAlertDialogTheme">@style/AppAlertDialogTheme</item>
+        <item name="navigationViewStyle">@style/AppNavigationViewStyle</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.MediumComponent</item>
     </style>
 
@@ -32,7 +34,7 @@
     </style>
 
     <style name="DialogTitleTextStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AppTimeDateDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.Dialog">
@@ -57,19 +59,20 @@
         <item name="chipStrokeColor">@color/colorChipStroke</item>
         <item name="chipBackgroundColor">@color/colorBottomSheetBackground</item>
         <item name="chipSurfaceColor">@android:color/transparent</item>
-        <item name="chipIconTint">@color/colorActiveElement</item>
-        <item name="android:textColor">@color/colorActiveElement</item>
+        <item name="chipIconTint">@color/color_dialog_body_text</item>
+        <item name="android:textColor">@color/color_dialog_title_text</item>
         <item name="android:checkable">false</item>
         <item name="android:clickable">false</item>
     </style>
 
     <style name="DialogItemTitleStyle">
         <item name="android:drawablePadding">@dimen/drawable_padding</item>
-        <item name="android:drawableTint">@color/colorInactiveElement</item>
+        <item name="android:drawableTint">@color/color_dialog_body_text</item>
         <item name="android:paddingStart">@dimen/padding_edge_dialog_item</item>
         <item name="android:paddingEnd">@dimen/padding_edge_dialog_item</item>
-        <item name="android:textColor">@color/colorInactiveElement</item>
+        <item name="android:textColor">@color/color_dialog_body_text</item>
         <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="DialogItemValueStyle">
@@ -78,8 +81,19 @@
         <item name="android:paddingEnd">@dimen/padding_edge_dialog_item</item>
         <item name="android:paddingTop">@dimen/padding_top_bottom_dialog_item_value</item>
         <item name="android:paddingBottom">@dimen/padding_top_bottom_dialog_item_value</item>
-        <item name="android:textColor">@color/colorActiveElement</item>
+        <item name="android:textColor">@color/color_dialog_body_text</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AppSpinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textColor">@color/color_dialog_body_text</item>
+    </style>
+
+    <style name="AppNavigationViewStyle" parent="Widget.MaterialComponents.NavigationView">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="elevation">0dp</item>
+        <item name="itemIconTint">@color/color_dialog_body_text</item>
+        <item name="itemTextColor">@color/color_dialog_title_text</item>
     </style>
 
     <style name="ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
