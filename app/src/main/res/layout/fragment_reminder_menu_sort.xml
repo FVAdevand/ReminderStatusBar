@@ -8,8 +8,6 @@
         android:id="@+id/reminder_menu_sort"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp"
         app:menu="@menu/menu_reminder_sort" />
 
 </FrameLayout>

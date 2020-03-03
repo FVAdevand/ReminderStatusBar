@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="4dp"
-            android:textColor="@color/colorTextDefault"
+            android:textColor="@color/color_dialog_title_text"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:text="Reminder" />
@@ -49,8 +49,6 @@
         android:id="@+id/reminder_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp"
         app:menu="@menu/menu_reminder" />
 
 </LinearLayout>

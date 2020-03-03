@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_reminder_sort_title"
-        android:title="@string/reminders_menu_sort_title"
-        app:iconTint="@color/colorActiveElement" />
+        android:title="@string/reminders_menu_sort_title" />
 
     <item
         android:id="@+id/menu_reminder_sort_status"
-        android:title="@string/reminders_menu_sort_status"
-        app:iconTint="@color/colorActiveElement" />
+        android:title="@string/reminders_menu_sort_status" />
 
     <item
         android:id="@+id/menu_reminder_sort_timestamp"
-        android:title="@string/reminders_menu_sort_time"
-        app:iconTint="@color/colorActiveElement" />
+        android:title="@string/reminders_menu_sort_time" />
 
 </menu>
