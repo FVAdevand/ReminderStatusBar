@@ -44,7 +44,6 @@ class NightModeDialog : DialogFragment() {
                 listener?.onNightModeSet(selectedNightMode)
                 dismiss()
             }
-            .setNegativeButton(android.R.string.cancel, null)
             .create()
     }
 
