@@ -3,10 +3,8 @@
     <color name="colorAccent">#8AB4F8</color>
     <color name="colorWindowBackground">#11171A</color>
     <color name="colorBottomSheetBackground">#1A2326</color>
-    <color name="colorTextDefault">#EAEAEA</color>
     <color name="colorChipStroke">#BFBFBF</color>
-    <color name="colorActiveElement">#EAEAEA</color>
-    <color name="colorInactiveElement">#BBBBBB</color>
+    <color name="colorDividerElement">#BBBBBB</color>
     <color name="colorSwipeableItemDeleteBackground">#500000</color>
     <color name="colorSwipeableItemEditBackground">#005000</color>
     <color name="colorSwipeableItemIcon">#EAEAEA</color>

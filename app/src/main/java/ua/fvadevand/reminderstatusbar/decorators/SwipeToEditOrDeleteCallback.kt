@@ -8,8 +8,6 @@ import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
-import ua.fvadevand.reminderstatusbar.utils.logW
-
 
 class SwipeToEditOrDeleteCallback(context: Context, private val adapter: SwipeableAdapter) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -112,7 +110,6 @@ class SwipeToEditOrDeleteCallback(context: Context, private val adapter: Swipeab
 
         when {
             dX > 0 -> { // Swiping to the right
-                logW("drawIcon: ${view.left}")
                 val iconLeft: Int = view.left + iconOffset
                 val iconRight: Int = iconLeft + icon.intrinsicWidth
                 icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
