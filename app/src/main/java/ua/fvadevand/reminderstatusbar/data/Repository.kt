@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ua.fvadevand.reminderstatusbar.data.database.ReminderDao
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
-import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuses
 
 class Repository(private val reminderDao: ReminderDao) {
 
@@ -40,9 +39,4 @@ class Repository(private val reminderDao: ReminderDao) {
         }
     }
 
-    suspend fun updateStatus(reminderId: Long, @ReminderStatuses status: Int) {
-        withContext(Dispatchers.IO) {
-            reminderDao.updateStatus(reminderId, status)
-        }
-    }
 }

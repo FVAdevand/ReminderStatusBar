@@ -83,6 +83,11 @@ class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
                 }
 
                 ReminderStatus.PERIODIC -> {
+                    if (it.periodAccepted) {
+                        menu.findItem(R.id.menu_reminder_notify).isVisible = true
+                    } else {
+                        menu.findItem(R.id.menu_reminder_done).isVisible = true
+                    }
                 }
             }
         }

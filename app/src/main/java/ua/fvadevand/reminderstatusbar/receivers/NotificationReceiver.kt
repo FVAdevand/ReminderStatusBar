@@ -66,20 +66,23 @@ class NotificationReceiver : BroadcastReceiver() {
         when (intent?.action) {
             ACTION_SHOW_REMINDER -> {
                 GlobalScope.launch(Dispatchers.Main) {
-                    val reminder = repository.getReminderById(reminderId)
-                    reminder?.let {
-                        notificationManager.showNotification(it)
-                        if (it.status == ReminderStatus.PERIODIC) {
+                    repository.getReminderById(reminderId)?.let { reminder ->
+                        notificationManager.showNotification(reminder)
+                        if (reminder.status == ReminderStatus.PERIODIC) {
                             val nextAlarmTime =
-                                PeriodType.getNextAlarmTimeByType(it.periodType, it.timestamp)
-                            it.timestamp = nextAlarmTime
+                                PeriodType.getNextAlarmTimeByType(
+                                    reminder.periodType,
+                                    reminder.timestamp
+                                )
+                            reminder.timestamp = nextAlarmTime
+                            reminder.periodAccepted = false
                             if (nextAlarmTime > System.currentTimeMillis()) {
                                 alarmManager.setAlarm(reminder)
                             }
                         } else {
-                            it.status = ReminderStatus.NOTIFYING
+                            reminder.status = ReminderStatus.NOTIFYING
                         }
-                        repository.editReminder(it)
+                        repository.editReminder(reminder)
                     }
                 }
             }
@@ -87,14 +90,13 @@ class NotificationReceiver : BroadcastReceiver() {
             ACTION_DONE -> {
                 notificationManager.cancelNotification(reminderId.hashCode())
                 GlobalScope.launch(Dispatchers.IO) {
-                    val reminder = repository.getReminderById(reminderId)
-                    reminder?.let {
-                        if (it.status != ReminderStatus.PERIODIC) {
-                            repository.updateStatus(
-                                reminderId,
-                                ReminderStatus.DONE
-                            )
+                    repository.getReminderById(reminderId)?.let { reminder ->
+                        if (reminder.status == ReminderStatus.PERIODIC) {
+                            reminder.periodAccepted = true
+                        } else {
+                            reminder.status = ReminderStatus.DONE
                         }
+                        repository.editReminder(reminder)
                     }
                 }
             }

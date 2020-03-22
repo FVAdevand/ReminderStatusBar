@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.receivers.NotificationReceiver
 import ua.fvadevand.reminderstatusbar.utils.toResId
 
@@ -48,10 +49,12 @@ class NotificationManager(private val context: Context) {
             .setShowWhen(true)
             .setAutoCancel(true)
             .addAction(getDoneAction(reminderId))
-            .addAction(getDeleteAction(reminderId))
         reminder.text?.let {
             nBuilder.setContentText(it)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(it))
+        }
+        if (reminder.status != ReminderStatus.PERIODIC) {
+            nBuilder.addAction(getDeleteAction(reminderId))
         }
         val iconDrawable = context.getDrawable(iconResId)
         iconDrawable?.let {

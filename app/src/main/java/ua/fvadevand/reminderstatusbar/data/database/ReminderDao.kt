@@ -9,7 +9,6 @@ import androidx.room.Update
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
-import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus.ReminderStatuses
 
 @Dao
 interface ReminderDao {
@@ -31,9 +30,6 @@ interface ReminderDao {
 
     @Update
     fun update(reminder: Reminder)
-
-    @Query("UPDATE ${Reminder.TABLE_NAME} SET ${Reminder.COLUMN_STATUS} = :status WHERE ${Reminder.COLUMN_ID} = :reminderId ")
-    fun updateStatus(reminderId: Long, @ReminderStatuses status: Int)
 
     @Query("DELETE FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :reminderId")
     fun deleteById(reminderId: Long)
