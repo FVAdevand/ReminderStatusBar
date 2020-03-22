@@ -77,6 +77,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun addReminder(reminder: Reminder) {
         viewModelScope.launch {
+            reminder.periodAccepted = true
             reminder.id = repository.addReminder(reminder)
             if (reminder.timestamp > System.currentTimeMillis()) {
                 notificationManager.cancelNotification(reminder.id.hashCode())
@@ -87,6 +88,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
                     reminder.timestamp =
                         PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
                     alarmManager.setAlarm(reminder)
+                    reminder.periodAccepted = false
                     repository.editReminder(reminder)
                 }
             }
@@ -103,12 +105,16 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun notifyReminder(id: Long) {
         viewModelScope.launch {
-            repository.getReminderById(id)?.let {
-                alarmManager.cancelAlarm(id)
-                it.status = ReminderStatus.NOTIFYING
-                it.timestamp = System.currentTimeMillis()
-                repository.editReminder(it)
-                notificationManager.showNotification(it)
+            repository.getReminderById(id)?.let { reminder ->
+                if (reminder.status == ReminderStatus.PERIODIC) {
+                    reminder.periodAccepted = false
+                } else {
+                    alarmManager.cancelAlarm(id)
+                    reminder.status = ReminderStatus.NOTIFYING
+                    reminder.timestamp = System.currentTimeMillis()
+                }
+                repository.editReminder(reminder)
+                notificationManager.showNotification(reminder)
             }
         }
     }
@@ -116,11 +122,15 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     fun setReminderStatusDone(id: Long) {
         viewModelScope.launch {
             notificationManager.cancelNotification(id.hashCode())
-            alarmManager.cancelAlarm(id)
-            repository.getReminderById(id)?.let {
-                it.status = ReminderStatus.DONE
-                it.timestamp = System.currentTimeMillis()
-                repository.editReminder(it)
+            repository.getReminderById(id)?.let { reminder ->
+                if (reminder.status == ReminderStatus.PERIODIC) {
+                    reminder.periodAccepted = true
+                } else {
+                    alarmManager.cancelAlarm(id)
+                    reminder.status = ReminderStatus.DONE
+                    reminder.timestamp = System.currentTimeMillis()
+                }
+                repository.editReminder(reminder)
             }
         }
     }

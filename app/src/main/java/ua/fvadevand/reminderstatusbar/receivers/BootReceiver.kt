@@ -21,17 +21,22 @@ class BootReceiver : BroadcastReceiver() {
         GlobalScope.launch(Dispatchers.IO) {
             val alarmManager = AlarmManager(context)
             val repository = ReminderApp.getRepository()
+            val notificationManager = NotificationManager(context)
             val reminders = repository.getRemindersForNotify()
             reminders.forEach { reminder ->
+                if (!reminder.periodAccepted) {
+                    notificationManager.showNotification(reminder)
+                }
                 if (reminder.timestamp > now) {
                     alarmManager.setAlarm(reminder)
                 } else {
-                    NotificationManager(context).showNotification(reminder)
+                    notificationManager.showNotification(reminder)
                     if (reminder.status == ReminderStatus.PERIODIC) {
                         reminder.timestamp = PeriodType.getNextAlarmTimeByType(
                             reminder.periodType,
                             reminder.timestamp
                         )
+                        reminder.periodAccepted = false
                         alarmManager.setAlarm(reminder)
                     } else {
                         reminder.status = ReminderStatus.NOTIFYING
