@@ -135,6 +135,38 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    fun pausePeriodicReminder(id: Long) {
+        viewModelScope.launch {
+            notificationManager.cancelNotification(id.hashCode())
+            repository.getReminderById(id)?.let { reminder ->
+                if (reminder.status == ReminderStatus.PERIODIC) {
+                    reminder.periodAccepted = true
+                    alarmManager.cancelAlarm(id)
+                    reminder.status = ReminderStatus.PAUSED
+                    repository.editReminder(reminder)
+                }
+            }
+        }
+    }
+
+    fun restorePeriodicReminder(id: Long) {
+        viewModelScope.launch {
+            repository.getReminderById(id)?.let { reminder ->
+                if (reminder.status == ReminderStatus.PAUSED) {
+                    if (System.currentTimeMillis() > reminder.timestamp) {
+                        reminder.timestamp = PeriodType.getNextAlarmTimeByType(
+                            reminder.periodType,
+                            reminder.timestamp
+                        )
+                    }
+                    alarmManager.setAlarm(reminder)
+                    reminder.status = ReminderStatus.PERIODIC
+                    repository.editReminder(reminder)
+                }
+            }
+        }
+    }
+
     fun setSortField(@Reminder.SortFields sortField: String) {
         if (sortField != reminderSortFieldLive.value) {
             prefManager.reminderSortField = sortField

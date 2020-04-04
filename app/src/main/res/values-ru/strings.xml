@@ -38,4 +38,6 @@
     <string name="night_mode_dialog_title">Выберите тему</string>
     <string name="reminders_reminder_deleted_message">Напоминание удалено</string>
     <string name="action_undo">Отменить</string>
+    <string name="reminders_menu_pause">Приостановить</string>
+    <string name="reminders_menu_restore">Возобновить</string>
 </resources>

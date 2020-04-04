@@ -176,8 +176,14 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
             setImageResource(iconResId)
         }
         iconBtn.setImageResourceName(reminder.iconName)
-        startTimeInMillis = reminder.timestamp
-        if (startTimeInMillis > System.currentTimeMillis()) {
+        val now = System.currentTimeMillis()
+        startTimeInMillis =
+            if (reminder.status == ReminderStatus.PAUSED && now > reminder.timestamp) {
+                PeriodType.getNextAlarmTimeByType(reminder.periodType, reminder.timestamp)
+            } else {
+                reminder.timestamp
+            }
+        if (startTimeInMillis > now) {
             startTimeChip.isVisible = true
             startTimeChip.text = context.getNotificationTime(startTimeInMillis)
         } else {

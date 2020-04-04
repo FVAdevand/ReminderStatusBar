@@ -7,14 +7,16 @@ import ua.fvadevand.reminderstatusbar.R
 object ReminderStatus {
 
     @IntDef(
-            DONE,
-            NOTIFYING,
-            DELAYED,
-            PERIODIC
+        DONE,
+        NOTIFYING,
+        DELAYED,
+        PERIODIC,
+        PAUSED
     )
     @Retention(AnnotationRetention.SOURCE)
     annotation class ReminderStatuses
 
+    const val PAUSED = -1
     const val DONE = 1
     const val NOTIFYING = 2
     const val DELAYED = 3
@@ -27,6 +29,7 @@ object ReminderStatus {
             NOTIFYING -> R.drawable.ic_status_notifying
             DELAYED -> R.drawable.ic_status_delayed
             PERIODIC -> R.drawable.ic_status_periodic
+            PAUSED -> R.drawable.ic_status_paused
             else -> throw IllegalArgumentException("Status must be from @ReminderStatuses, current status = $status")
         }
     }

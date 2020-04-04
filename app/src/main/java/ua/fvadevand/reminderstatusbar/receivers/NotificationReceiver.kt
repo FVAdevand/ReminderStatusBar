@@ -76,9 +76,7 @@ class NotificationReceiver : BroadcastReceiver() {
                                 )
                             reminder.timestamp = nextAlarmTime
                             reminder.periodAccepted = false
-                            if (nextAlarmTime > System.currentTimeMillis()) {
-                                alarmManager.setAlarm(reminder)
-                            }
+                            alarmManager.setAlarm(reminder)
                         } else {
                             reminder.status = ReminderStatus.NOTIFYING
                         }

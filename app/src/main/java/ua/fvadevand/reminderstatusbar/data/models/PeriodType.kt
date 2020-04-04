@@ -53,6 +53,11 @@ object PeriodType {
             YEARLY -> calendar.add(Calendar.YEAR, 1)
             else -> throw IllegalArgumentException("Type must be from @PeriodTypes, current type = $type")
         }
-        return calendar.timeInMillis
+        val nextAlarmTime = calendar.timeInMillis
+        return if (nextAlarmTime > System.currentTimeMillis()) {
+            nextAlarmTime
+        } else {
+            getNextAlarmTimeByType(type, nextAlarmTime)
+        }
     }
 }

@@ -51,6 +51,8 @@
     <string name="reminders_menu_edit">Edit</string>
     <string name="reminders_menu_notify">Notify</string>
     <string name="reminders_menu_done" translatable="false">@string/notification_action_done</string>
+    <string name="reminders_menu_pause">Pause</string>
+    <string name="reminders_menu_restore">Restore</string>
     <string name="reminders_menu_delete" translatable="false">@string/notification_action_delete</string>
 
     <!--bottom bar reminders sort-->
