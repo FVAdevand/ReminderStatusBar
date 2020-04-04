@@ -18,6 +18,18 @@
         android:visible="false" />
 
     <item
+        android:id="@+id/menu_reminder_pause"
+        android:icon="@drawable/ic_action_pause"
+        android:title="@string/reminders_menu_pause"
+        android:visible="false" />
+
+    <item
+        android:id="@+id/menu_reminder_restore"
+        android:icon="@drawable/ic_action_restore"
+        android:title="@string/reminders_menu_restore"
+        android:visible="false" />
+
+    <item
         android:id="@+id/menu_reminder_delete"
         android:icon="@drawable/ic_action_delete"
         android:title="@string/reminders_menu_delete" />

@@ -58,6 +58,8 @@ class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
                 R.id.menu_reminder_edit -> listener?.onReminderEdit(currentReminderId)
                 R.id.menu_reminder_notify -> viewModel.notifyReminder(currentReminderId)
                 R.id.menu_reminder_done -> viewModel.setReminderStatusDone(currentReminderId)
+                R.id.menu_reminder_pause -> viewModel.pausePeriodicReminder(currentReminderId)
+                R.id.menu_reminder_restore -> viewModel.restorePeriodicReminder(currentReminderId)
                 R.id.menu_reminder_delete -> viewModel.deleteReminder(currentReminderId)
             }
             dismiss()
@@ -88,6 +90,11 @@ class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
                     } else {
                         menu.findItem(R.id.menu_reminder_done).isVisible = true
                     }
+                    menu.findItem(R.id.menu_reminder_pause).isVisible = true
+                }
+
+                ReminderStatus.PAUSED -> {
+                    menu.findItem(R.id.menu_reminder_restore).isVisible = true
                 }
             }
         }

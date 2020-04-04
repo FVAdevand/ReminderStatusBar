@@ -143,7 +143,9 @@ class ReminderAdapter(
                 textView.isVisible = true
                 textView.text = reminderText
             }
-            if (reminderItem.reminder.timestamp > System.currentTimeMillis()) {
+            if (reminderItem.reminder.timestamp > System.currentTimeMillis() &&
+                reminderItem.reminder.status != ReminderStatus.PAUSED
+            ) {
                 dateView.isVisible = true
                 dateView.text =
                     itemView.context.getNotificationTime(reminderItem.reminder.timestamp)
