@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
@@ -24,6 +25,7 @@ import ua.fvadevand.reminderstatusbar.managers.PreferencesManager
 import ua.fvadevand.reminderstatusbar.utils.SingleLiveEvent
 import ua.fvadevand.reminderstatusbar.utils.SortUtils
 import java.util.Collections
+import java.util.LinkedList
 
 class RemindersViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -46,25 +48,27 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             AppCompatDelegate.setDefaultNightMode(value)
         }
     val remindersSortedLive: LiveData<List<ReminderItem>> by lazy {
-        reminderSortFieldLive.postValue(prefManager.reminderSortField)
-        reminderSortOrderAscLive.postValue(prefManager.reminderSortOrderAsc)
+        reminderSortFieldLive.value = prefManager.reminderSortField
+        reminderSortOrderAscLive.value = prefManager.reminderSortOrderAsc
         _remindersSortedLive.addSource(remindersFromDb) {
             if (it.isEmpty()) {
-                _remindersSortedLive.postValue(it)
+                _remindersSortedLive.value = listOf()
             } else {
                 sortAndPostReminders(it)
             }
         }
         _remindersSortedLive.addSource(reminderSortFieldLive) {
-            if (!remindersFromDb.value.isNullOrEmpty()) {
-                val reminders = ArrayList<ReminderItem>(remindersFromDb.value ?: listOf())
-                sortAndPostReminders(reminders)
+            remindersFromDb.value?.let {
+                if (it.isNotEmpty()) {
+                    sortAndPostReminders(LinkedList(it))
+                }
             }
         }
         _remindersSortedLive.addSource(reminderSortOrderAscLive) {
-            if (!remindersFromDb.value.isNullOrEmpty()) {
-                val reminders = ArrayList<ReminderItem>(remindersFromDb.value ?: listOf())
-                sortAndPostReminders(reminders)
+            remindersFromDb.value?.let {
+                if (it.isNotEmpty()) {
+                    sortAndPostReminders(LinkedList(it))
+                }
             }
         }
         _remindersSortedLive
@@ -179,7 +183,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private fun sortAndPostReminders(reminders: List<ReminderItem>) {
+    private fun sortAndPostReminders(reminders: List<Reminder>) {
         sortJob?.cancel()
         sortJob = viewModelScope.launch(Dispatchers.IO) {
             val sortField = reminderSortFieldLive.value ?: Reminder.COLUMN_TIMESTAMP
@@ -195,9 +199,12 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             }
             Collections.sort(reminders, comparator)
             if (isActive) {
-                _remindersSortedLive.postValue(reminders)
+                val items =
+                    mutableListOf<ReminderItem>(ReminderItem.Header(applicationContext.getString(R.string.reminders_title)))
+                items.addAll(reminders.map { ReminderItem.Data(it) })
+                _remindersSortedLive.postValue(items)
+                sortJob = null
             }
-            sortJob = null
         }
     }
 

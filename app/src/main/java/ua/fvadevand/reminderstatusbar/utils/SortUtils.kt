@@ -1,51 +1,39 @@
 package ua.fvadevand.reminderstatusbar.utils
 
-import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
+import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
 class SortUtils {
 
-    abstract class BaseReminderComparator : Comparator<ReminderItem> {
-        override fun compare(o1: ReminderItem, o2: ReminderItem): Int {
-            if (o1.type == ReminderItem.TYPE_HEADER) return 1
-            if (o2.type == ReminderItem.TYPE_HEADER) return -1
-            return compareDetail(o1, o2)
-        }
-
-        abstract fun compareDetail(o1: ReminderItem, o2: ReminderItem): Int
-    }
-
-    class ReminderTitleComparator(
-        private val sortOrderAsc: Boolean
-    ) : BaseReminderComparator() {
-        override fun compareDetail(o1: ReminderItem, o2: ReminderItem): Int {
+    class ReminderTitleComparator(private val sortOrderAsc: Boolean) : Comparator<Reminder> {
+        override fun compare(o1: Reminder, o2: Reminder): Int {
             return if (sortOrderAsc) {
-                o1.reminder.title.toLowerCase().compareTo(o2.reminder.title.toLowerCase())
+                o1.title.toLowerCase().compareTo(o2.title.toLowerCase())
             } else {
-                o2.reminder.title.toLowerCase().compareTo(o1.reminder.title.toLowerCase())
+                o2.title.toLowerCase().compareTo(o1.title.toLowerCase())
             }
         }
     }
 
-    class ReminderStatusComparator(
-        private val sortOrderAsc: Boolean
-    ) : BaseReminderComparator() {
-        override fun compareDetail(o1: ReminderItem, o2: ReminderItem): Int {
+    class ReminderStatusComparator(private val sortOrderAsc: Boolean) : Comparator<Reminder> {
+        override fun compare(o1: Reminder, o2: Reminder): Int {
             return if (sortOrderAsc) {
-                o1.reminder.status.compareTo(o2.reminder.status)
+                o1.status.compareTo(o2.status)
             } else {
-                o2.reminder.status.compareTo(o1.reminder.status)
+                o2.status.compareTo(o1.status)
             }
         }
     }
 
-    class ReminderTimeComparator(
-        private val sortOrderAsc: Boolean
-    ) : BaseReminderComparator() {
-        override fun compareDetail(o1: ReminderItem, o2: ReminderItem): Int {
+    class ReminderTimeComparator(private val sortOrderAsc: Boolean) : Comparator<Reminder> {
+        private val now = System.currentTimeMillis()
+
+        override fun compare(o1: Reminder, o2: Reminder): Int {
+            if (o1.timestamp >= now && o2.timestamp < now) return 1
+            if (o1.timestamp < now && o2.timestamp >= now) return -1
             return if (sortOrderAsc) {
-                o1.reminder.timestamp.compareTo(o2.reminder.timestamp)
+                o1.timestamp.compareTo(o2.timestamp)
             } else {
-                o2.reminder.timestamp.compareTo(o1.reminder.timestamp)
+                o2.timestamp.compareTo(o1.timestamp)
             }
         }
     }

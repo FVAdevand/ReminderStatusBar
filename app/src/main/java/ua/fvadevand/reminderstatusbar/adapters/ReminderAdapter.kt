@@ -60,13 +60,13 @@ class ReminderAdapter(
     override fun editItem(position: Int) {
         if (isValidPosition(position)) {
             notifyItemChanged(position)
-            listener?.onReminderEdit(reminders[position].reminder.id)
+            listener?.onReminderEdit(getReminderByPosition(position).id)
         }
     }
 
     override fun deleteItem(position: Int) {
         if (isValidPosition(position)) {
-            listener?.onReminderDelete(reminders[position].reminder)
+            listener?.onReminderDelete(getReminderByPosition(position))
         }
     }
 
@@ -79,6 +79,8 @@ class ReminderAdapter(
     }
 
     private fun isValidPosition(position: Int) = position in 0 until itemCount
+
+    private fun getReminderByPosition(position: Int) = (reminders[position] as ReminderItem.Data).reminder
 
     inner class ReminderDiffUtilCallback(
         private val oldList: List<ReminderItem>,
@@ -96,13 +98,15 @@ class ReminderAdapter(
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             if (oldList[oldItemPosition].type != newList[newItemPosition].type) return false
             if (oldList[oldItemPosition].type == ReminderItem.TYPE_HEADER) return true
-            return oldList[oldItemPosition].reminder.id == newList[newItemPosition].reminder.id
+            return (oldList[oldItemPosition] as ReminderItem.Data).reminder.id ==
+                    (newList[newItemPosition] as ReminderItem.Data).reminder.id
         }
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             if (oldList[oldItemPosition].type != newList[newItemPosition].type) return false
             if (oldList[oldItemPosition].type == ReminderItem.TYPE_HEADER) return true
-            return oldList[oldItemPosition].reminder == newList[newItemPosition].reminder
+            return (oldList[oldItemPosition] as ReminderItem.Data).reminder ==
+                    (newList[newItemPosition] as ReminderItem.Data).reminder
         }
     }
 
@@ -113,7 +117,8 @@ class ReminderAdapter(
     class HeaderViewHolder(itemView: View) : BaseReminderViewHolder(itemView) {
         private val headerView: TextView = itemView.findViewById(R.id.tv_reminders_header)
         override fun bind(reminderItem: ReminderItem) {
-            headerView.text = reminderItem.header
+            reminderItem as ReminderItem.Header
+            headerView.text = reminderItem.text
         }
     }
 
@@ -128,12 +133,13 @@ class ReminderAdapter(
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (isValidPosition(position)) {
-                    listener?.onReminderClick(reminders[position].reminder.id)
+                    listener?.onReminderClick(getReminderByPosition(position).id)
                 }
             }
         }
 
         override fun bind(reminderItem: ReminderItem) {
+            reminderItem as ReminderItem.Data
             iconView.setImageResourceName(reminderItem.reminder.iconName)
             titleView.text = reminderItem.reminder.title
             val reminderText = reminderItem.reminder.text

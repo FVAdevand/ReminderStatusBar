@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
@@ -21,10 +22,10 @@ class SwipeToEditOrDeleteCallback(context: Context, private val adapter: Swipeab
 
     init {
         with(context) {
-            iconEdit = getDrawable(R.drawable.ic_swipe_edit)?.apply {
+            iconEdit = ContextCompat.getDrawable(this, R.drawable.ic_swipe_edit)?.apply {
                 setTint(getColor(R.color.colorSwipeableItemIcon))
             }
-            iconDelete = getDrawable(R.drawable.ic_swipe_delete)?.apply {
+            iconDelete = ContextCompat.getDrawable(this, R.drawable.ic_swipe_delete)?.apply {
                 setTint(getColor(R.color.colorSwipeableItemIcon))
             }
             backgroundDelete = ColorDrawable(getColor(R.color.colorSwipeableItemDeleteBackground))

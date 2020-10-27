@@ -10,7 +10,7 @@ android {
         applicationId "ua.fvadevand.reminderstatusbar"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 15
+        versionCode 16
         versionName "1.0.0"
         applicationVariants.all { variant ->
             variant.outputs.all { output ->

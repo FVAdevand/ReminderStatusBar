@@ -7,14 +7,13 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
-import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 
 @Dao
 interface ReminderDao {
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME}")
-    fun getAllLive(): LiveData<List<ReminderItem>>
+    fun getAllLive(): LiveData<List<Reminder>>
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :id")
     fun getLiveById(id: Long): LiveData<Reminder>

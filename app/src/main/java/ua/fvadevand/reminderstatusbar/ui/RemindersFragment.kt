@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
-import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
@@ -48,7 +47,7 @@ class RemindersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(RemindersViewModel::class.java)
         setupRecyclerView(view)
         viewModel.remindersSortedLive.observe(viewLifecycleOwner,
             Observer { reminders ->
@@ -58,12 +57,7 @@ class RemindersFragment : Fragment() {
                     } else {
                         placeholder?.isVisible = false
                     }
-                    val remindersWithHeader = it.toMutableList().apply {
-                        add(0, ReminderItem(ReminderItem.TYPE_HEADER).apply {
-                            header = getString(R.string.reminders_title)
-                        })
-                    }
-                    reminderAdapter.setReminders(remindersWithHeader)
+                    reminderAdapter.setReminders(it)
                 }
             })
     }
