@@ -57,7 +57,7 @@ class RemindersFragment : Fragment() {
                 } else {
                     placeholder?.isVisible = false
                 }
-                reminderAdapter.setReminders(reminders)
+                reminderAdapter.submitReminders(reminders)
             }.observeInLifecycle(viewLifecycleOwner)
     }
 
