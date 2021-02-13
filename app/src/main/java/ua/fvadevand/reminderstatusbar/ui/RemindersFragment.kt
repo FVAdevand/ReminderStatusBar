@@ -8,16 +8,17 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.onEach
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
+import ua.fvadevand.reminderstatusbar.utils.observeInLifecycle
 
 class RemindersFragment : Fragment() {
 
@@ -49,17 +50,15 @@ class RemindersFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(RemindersViewModel::class.java)
         setupRecyclerView(view)
-        viewModel.remindersSortedLive.observe(viewLifecycleOwner,
-            Observer { reminders ->
-                reminders?.let {
-                    if (it.isEmpty()) {
-                        (placeholder ?: inflatePlaceholder())?.isVisible = true
-                    } else {
-                        placeholder?.isVisible = false
-                    }
-                    reminderAdapter.setReminders(it)
+        viewModel.getRemindersSortedFlow()
+            .onEach { reminders ->
+                if (reminders.isEmpty()) {
+                    (placeholder ?: inflatePlaceholder())?.isVisible = true
+                } else {
+                    placeholder?.isVisible = false
                 }
-            })
+                reminderAdapter.setReminders(reminders)
+            }.observeInLifecycle(viewLifecycleOwner)
     }
 
     override fun onDetach() {

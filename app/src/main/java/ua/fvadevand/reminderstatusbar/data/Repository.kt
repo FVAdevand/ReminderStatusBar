@@ -7,7 +7,7 @@ import ua.fvadevand.reminderstatusbar.data.models.Reminder
 
 class Repository(private val reminderDao: ReminderDao) {
 
-    fun getAllLiveReminders() = reminderDao.getAllLive()
+    fun getAllRemindersFlow() = reminderDao.getAllFlow()
 
     suspend fun getRemindersForNotify(): List<Reminder> {
         return withContext(Dispatchers.IO) {

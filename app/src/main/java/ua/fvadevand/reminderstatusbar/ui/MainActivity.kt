@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -36,14 +35,6 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
         initView()
         if (savedInstanceState == null) {
             showRemindersFragment()
-        }
-
-        viewModel.showSnackbar.subscribe {
-            it?.let { data ->
-                val snackbar = Snackbar.make(container, data.messageResId, data.duration)
-                snackbar.anchorView = fab
-                snackbar.show()
-            }
         }
     }
 
@@ -143,7 +134,4 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
             .show(supportFragmentManager, NightModeDialog.TAG)
     }
 
-    private fun <T> LiveData<T>.subscribe(onChange: (T) -> Unit) {
-        observe(this@MainActivity, Observer { onChange(it) })
-    }
 }

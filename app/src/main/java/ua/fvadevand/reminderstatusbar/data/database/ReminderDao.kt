@@ -1,11 +1,11 @@
 package ua.fvadevand.reminderstatusbar.data.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 
@@ -13,10 +13,7 @@ import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 interface ReminderDao {
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME}")
-    fun getAllLive(): LiveData<List<Reminder>>
-
-    @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :id")
-    fun getLiveById(id: Long): LiveData<Reminder>
+    fun getAllFlow(): Flow<List<Reminder>>
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :id")
     fun getById(id: Long): Reminder

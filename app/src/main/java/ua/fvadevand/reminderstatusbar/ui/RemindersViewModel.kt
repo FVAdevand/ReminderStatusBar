@@ -4,13 +4,15 @@ import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.ReminderApp
@@ -18,14 +20,11 @@ import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
-import ua.fvadevand.reminderstatusbar.data.models.SnackbarData
 import ua.fvadevand.reminderstatusbar.managers.AlarmManager
 import ua.fvadevand.reminderstatusbar.managers.NotificationManager
 import ua.fvadevand.reminderstatusbar.managers.PreferencesManager
-import ua.fvadevand.reminderstatusbar.utils.SingleLiveEvent
 import ua.fvadevand.reminderstatusbar.utils.SortUtils
 import java.util.Collections
-import java.util.LinkedList
 
 class RemindersViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -34,12 +33,9 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     private val prefManager = PreferencesManager(applicationContext)
     private val alarmManager by lazy { AlarmManager(applicationContext) }
     private val notificationManager by lazy { NotificationManager(applicationContext) }
-    private val _remindersSortedLive: MediatorLiveData<List<ReminderItem>> = MediatorLiveData()
-    private val reminderSortOrderAscLive: MutableLiveData<Boolean> = MutableLiveData()
-    private val reminderSortFieldLive: MutableLiveData<String> = MutableLiveData()
-    private val remindersFromDb by lazy { repository.getAllLiveReminders() }
-    private var sortJob: Job? = null
-    val showSnackbar = SingleLiveEvent<SnackbarData?>()
+    private val reminderSortOrderAscFlow = MutableStateFlow(true)
+    private val reminderSortFieldFlow = MutableStateFlow(Reminder.COLUMN_TIMESTAMP)
+    private val remindersFromDb by lazy { repository.getAllRemindersFlow() }
 
     var nightMode
         get() = prefManager.nightMode
@@ -47,31 +43,32 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             prefManager.nightMode = value
             AppCompatDelegate.setDefaultNightMode(value)
         }
-    val remindersSortedLive: LiveData<List<ReminderItem>> by lazy {
-        reminderSortFieldLive.value = prefManager.reminderSortField
-        reminderSortOrderAscLive.value = prefManager.reminderSortOrderAsc
-        _remindersSortedLive.addSource(remindersFromDb) {
-            if (it.isEmpty()) {
-                _remindersSortedLive.value = listOf()
+
+    fun getRemindersSortedFlow(): SharedFlow<List<ReminderItem>> {
+        val sortConditionFlow = reminderSortOrderAscFlow.combine(reminderSortFieldFlow, ::Pair)
+        return remindersFromDb.combine(sortConditionFlow) { reminders, condition ->
+            val (sortOrderAsc, sortField) = condition
+            val comparator = when (sortField) {
+                Reminder.COLUMN_TITLE -> SortUtils.ReminderTitleComparator(sortOrderAsc)
+                Reminder.COLUMN_STATUS -> SortUtils.ReminderStatusComparator(sortOrderAsc)
+                Reminder.COLUMN_TIMESTAMP -> SortUtils.ReminderTimeComparator(sortOrderAsc)
+                else -> throw IllegalArgumentException(
+                    "SortField must be in @Reminder.SortFields, current value = $sortField "
+                )
+            }
+            Collections.sort(reminders, comparator)
+            reminders
+        }.transform { reminders ->
+            if (reminders.isEmpty()) {
+                emit(listOf<ReminderItem>())
             } else {
-                sortAndPostReminders(it)
+                val result =
+                    mutableListOf<ReminderItem>(ReminderItem.Header(applicationContext.getString(R.string.reminders_title)))
+                result.addAll(reminders.map(ReminderItem::Data))
+                emit(result)
             }
-        }
-        _remindersSortedLive.addSource(reminderSortFieldLive) {
-            remindersFromDb.value?.let {
-                if (it.isNotEmpty()) {
-                    sortAndPostReminders(LinkedList(it))
-                }
-            }
-        }
-        _remindersSortedLive.addSource(reminderSortOrderAscLive) {
-            remindersFromDb.value?.let {
-                if (it.isNotEmpty()) {
-                    sortAndPostReminders(LinkedList(it))
-                }
-            }
-        }
-        _remindersSortedLive
+        }.flowOn(Dispatchers.IO)
+            .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     }
 
     fun getReminder(id: Long, onSuccess: (Reminder?) -> Unit) =
@@ -172,39 +169,13 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun setSortField(@Reminder.SortFields sortField: String) {
-        if (sortField != reminderSortFieldLive.value) {
+        if (sortField != reminderSortFieldFlow.value) {
             prefManager.reminderSortField = sortField
-            reminderSortFieldLive.postValue(sortField)
+            reminderSortFieldFlow.value = sortField
         } else {
-            val sortOrderAsc = reminderSortOrderAscLive.value
-                ?: PreferencesManager.DEFAULT_REMINDER_SORT_ORDER_ASC
+            val sortOrderAsc = reminderSortOrderAscFlow.value
             prefManager.reminderSortOrderAsc = !sortOrderAsc
-            reminderSortOrderAscLive.postValue(!sortOrderAsc)
-        }
-    }
-
-    private fun sortAndPostReminders(reminders: List<Reminder>) {
-        sortJob?.cancel()
-        sortJob = viewModelScope.launch(Dispatchers.IO) {
-            val sortField = reminderSortFieldLive.value ?: Reminder.COLUMN_TIMESTAMP
-            val sortOrderAsc = reminderSortOrderAscLive.value
-                ?: PreferencesManager.DEFAULT_REMINDER_SORT_ORDER_ASC
-            val comparator = when (sortField) {
-                Reminder.COLUMN_TITLE -> SortUtils.ReminderTitleComparator(sortOrderAsc)
-                Reminder.COLUMN_STATUS -> SortUtils.ReminderStatusComparator(sortOrderAsc)
-                Reminder.COLUMN_TIMESTAMP -> SortUtils.ReminderTimeComparator(sortOrderAsc)
-                else -> throw IllegalArgumentException(
-                    "SortField must be in @Reminder.SortFields, current value = $sortField "
-                )
-            }
-            Collections.sort(reminders, comparator)
-            if (isActive) {
-                val items =
-                    mutableListOf<ReminderItem>(ReminderItem.Header(applicationContext.getString(R.string.reminders_title)))
-                items.addAll(reminders.map { ReminderItem.Data(it) })
-                _remindersSortedLive.postValue(items)
-                sortJob = null
-            }
+            reminderSortOrderAscFlow.value = !sortOrderAsc
         }
     }
 

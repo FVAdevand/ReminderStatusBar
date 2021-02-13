@@ -85,7 +85,7 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
                 }
             }
         }
-        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(RemindersViewModel::class.java)
         editMode = currentReminderId != Const.NEW_REMINDER_ID
         initView(view)
         if (editMode) {
@@ -231,7 +231,7 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
         val reminder = Reminder(
             title,
             text,
-            context!!.toResName(iconResId),
+            requireContext().toResName(iconResId),
             startTimeInMillis,
             status,
             periodType
