@@ -3,17 +3,14 @@ package ua.fvadevand.reminderstatusbar.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.updatePadding
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.bottomappbar.BottomAppBar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
+import ua.fvadevand.reminderstatusbar.databinding.ActivityMainBinding
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.NightModeDialog
 import ua.fvadevand.reminderstatusbar.utils.doOnApplyWindowInsets
@@ -22,16 +19,13 @@ import ua.fvadevand.reminderstatusbar.utils.updateSystemWindowInsets
 class MainActivity : AppCompatActivity(), OnReminderInteractListener,
     NightModeDialog.OnNightModeSetListener {
 
-    private lateinit var viewModel: RemindersViewModel
-    private lateinit var fab: FloatingActionButton
-    private lateinit var container: ViewGroup
-
+    private val viewModel: RemindersViewModel by viewModels()
     private var recentlyDeletedReminder: Reminder? = null
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(RemindersViewModel::class.java)
+        setContentView(binding.root)
         initView()
         if (savedInstanceState == null) {
             showRemindersFragment()
@@ -62,17 +56,18 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
     override fun onReminderDelete(reminder: Reminder) {
         recentlyDeletedReminder = reminder
         viewModel.deleteReminder(reminder.id)
-        val snackbar = Snackbar.make(
-            container,
+        Snackbar.make(
+            binding.fragmentContainer,
             R.string.reminders_reminder_deleted_message,
             Snackbar.LENGTH_LONG
-        ).setAction(R.string.action_undo) {
-            recentlyDeletedReminder?.let {
-                viewModel.addReminder(reminder)
+        )
+            .setAction(R.string.action_undo) {
+                recentlyDeletedReminder?.let {
+                    viewModel.addReminder(reminder)
+                }
             }
-        }
-        snackbar.anchorView = fab
-        snackbar.show()
+            .setAnchorView(binding.fab)
+            .show()
     }
 
     override fun onNightModeSet(nightMode: Int) {
@@ -80,13 +75,8 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
     }
 
     private fun initView() {
-        container = findViewById(R.id.fragment_container)
-
-        val bottomBar = findViewById<BottomAppBar>(R.id.bottom_app_bar)
-        setSupportActionBar(bottomBar)
-
-        fab = findViewById(R.id.fab)
-        fab.setOnClickListener {
+        setSupportActionBar(binding.bottomAppBar)
+        binding.fab.setOnClickListener {
             showReminderEditFragment(Const.NEW_REMINDER_ID)
         }
 
@@ -95,12 +85,12 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
             insets.updateSystemWindowInsets(top = 0)
         }
 
-        bottomBar.doOnApplyWindowInsets { view, insets, initialPadding ->
+        binding.bottomAppBar.doOnApplyWindowInsets { view, insets, initialPadding ->
             view.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
             insets.updateSystemWindowInsets(bottom = 0)
         }
 
-        container.doOnApplyWindowInsets { view, insets, initialPadding ->
+        binding.fragmentContainer.doOnApplyWindowInsets { view, insets, initialPadding ->
             view.updatePadding(bottom = initialPadding.bottom + insets.systemWindowInsetBottom)
             insets
         }

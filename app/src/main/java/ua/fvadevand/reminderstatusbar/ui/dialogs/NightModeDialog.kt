@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import ua.fvadevand.reminderstatusbar.R
+import ua.fvadevand.reminderstatusbar.utils.fragmentProperty
 
 class NightModeDialog : DialogFragment() {
 
-    private var listener: OnNightModeSetListener? = null
+    private val fragmentProperty by fragmentProperty()
+    private var listener: OnNightModeSetListener? by fragmentProperty.delegateFragmentLifecycle()
     private val nightMode by lazy {
         arguments?.getInt(ARG_NIGHT_MODE) ?: AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
     }
@@ -30,7 +32,7 @@ class NightModeDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return MaterialAlertDialogBuilder(context!!)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.night_mode_dialog_title)
             .setSingleChoiceItems(
                 resources.getStringArray(R.array.night_mode_settings),
@@ -45,11 +47,6 @@ class NightModeDialog : DialogFragment() {
                 dismiss()
             }
             .create()
-    }
-
-    override fun onDetach() {
-        listener = null
-        super.onDetach()
     }
 
     private fun getNightModePosition() = when (nightMode) {

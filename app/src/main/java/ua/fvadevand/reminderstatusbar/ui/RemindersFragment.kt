@@ -2,31 +2,32 @@ package ua.fvadevand.reminderstatusbar.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewStub
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.onEach
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
+import ua.fvadevand.reminderstatusbar.databinding.FragmentRemindersBinding
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
+import ua.fvadevand.reminderstatusbar.utils.fragmentProperty
 import ua.fvadevand.reminderstatusbar.utils.observeInLifecycle
 
-class RemindersFragment : Fragment() {
+class RemindersFragment : Fragment(R.layout.fragment_reminders) {
 
-    private lateinit var reminderAdapter: ReminderAdapter
-    private lateinit var viewModel: RemindersViewModel
-    private lateinit var reminderListView: RecyclerView
+    private val fragmentProperty by fragmentProperty()
+    private val viewModel: RemindersViewModel by activityViewModels()
+    private val binding by fragmentProperty.fragmentLateinitViewBindingByView(
+        FragmentRemindersBinding::bind
+    )
+    private var reminderAdapter: ReminderAdapter? by fragmentProperty.delegateViewLifecycle()
     private var placeholder: View? = null
-    private var onReminderInteractListener: OnReminderInteractListener? = null
+    private var onReminderInteractListener: OnReminderInteractListener? by fragmentProperty.delegateFragmentLifecycle()
 
     companion object {
         const val TAG = "RemindersFragment"
@@ -39,17 +40,9 @@ class RemindersFragment : Fragment() {
         onReminderInteractListener = context as OnReminderInteractListener
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_reminders, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(RemindersViewModel::class.java)
-        setupRecyclerView(view)
+        setupRecyclerView()
         viewModel.getRemindersSortedFlow()
             .onEach { reminders ->
                 if (reminders.isEmpty()) {
@@ -57,39 +50,32 @@ class RemindersFragment : Fragment() {
                 } else {
                     placeholder?.isVisible = false
                 }
-                reminderAdapter.submitReminders(reminders)
+                reminderAdapter?.submitReminders(reminders)
             }.observeInLifecycle(viewLifecycleOwner)
     }
 
-    override fun onDetach() {
-        onReminderInteractListener = null
-        super.onDetach()
-    }
-
-    private fun setupRecyclerView(view: View) {
-        val context = view.context
-        reminderListView = view.findViewById(R.id.reminder_list)
+    private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(context)
-        reminderListView.layoutManager = layoutManager
-        reminderAdapter = ReminderAdapter(onReminderInteractListener)
-        reminderListView.adapter = reminderAdapter
-        reminderListView.addItemDecoration(
+        binding.reminderList.layoutManager = layoutManager
+        val adapter = ReminderAdapter(onReminderInteractListener)
+        binding.reminderList.adapter = adapter
+        binding.reminderList.addItemDecoration(
             DividerItemDecoration(
-                context,
+                requireContext(),
                 layoutManager.orientation,
-                context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_start),
-                context.resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_end),
+                requireContext().resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_start),
+                requireContext().resources.getDimensionPixelOffset(R.dimen.item_reminder_divider_offset_end),
                 drawInFirstItem = false,
                 drawInLastItem = false
             )
         )
-        ItemTouchHelper(SwipeToEditOrDeleteCallback(context, reminderAdapter))
-            .attachToRecyclerView(reminderListView)
+        ItemTouchHelper(SwipeToEditOrDeleteCallback(requireContext(), adapter))
+            .attachToRecyclerView(binding.reminderList)
+        reminderAdapter = adapter
     }
 
     private fun inflatePlaceholder(): View? {
-        val viewStub = view?.findViewById<ViewStub>(R.id.view_stub_reminders)
-        placeholder = viewStub?.inflate()
+        placeholder = binding.viewStubReminders.inflate()
         return placeholder
     }
 

@@ -2,27 +2,23 @@ package ua.fvadevand.reminderstatusbar.ui
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.chip.Chip
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType.PeriodTypes
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.databinding.FragmentReminderEditBinding
 import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.IconsDialog
@@ -33,20 +29,19 @@ import ua.fvadevand.reminderstatusbar.utils.toResId
 import ua.fvadevand.reminderstatusbar.utils.toResName
 import java.util.Locale
 
-class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListener,
+class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_reminder_edit),
+    View.OnClickListener,
     OnAlarmSetListener,
     IconsDialog.OnIconClickListener {
 
-    private lateinit var titleView: EditText
-    private lateinit var textView: EditText
-    private lateinit var iconBtn: ImageButton
-    private lateinit var notifyBtn: Button
-    private lateinit var repeatChip: Chip
-    private lateinit var startTimeChip: Chip
-    private lateinit var viewModel: RemindersViewModel
+    private val binding by fragmentProperty.fragmentLateinitViewBindingByView(
+        FragmentReminderEditBinding::bind
+    )
+    private val viewModel: RemindersViewModel by activityViewModels()
     private var startTimeInMillis = System.currentTimeMillis()
     private var editMode = false
     private var iconResId = R.drawable.ic_notif_edit
+
     @PeriodTypes
     private var periodType = PeriodType.ONE_TIME
     private var navBarHeight = -1
@@ -67,12 +62,13 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-        return inflater.inflate(R.layout.fragment_reminder_edit, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,9 +81,8 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
                 }
             }
         }
-        viewModel = ViewModelProvider(requireActivity()).get(RemindersViewModel::class.java)
         editMode = currentReminderId != Const.NEW_REMINDER_ID
-        initView(view)
+        initView()
         if (editMode) {
             viewModel.getReminder(currentReminderId) {
                 it?.let { populateData(it) }
@@ -121,7 +116,7 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
 
     override fun onIconClick(iconId: Int) {
         iconResId = iconId
-        iconBtn.setImageResource(iconResId)
+        binding.btnEditReminderIcon.setImageResource(iconResId)
     }
 
     override fun onDestroyView() {
@@ -129,53 +124,49 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
         super.onDestroyView()
     }
 
-    private fun initView(view: View) {
-        titleView = view.findViewById(R.id.et_edit_reminder_title)
-        titleView.showKeyboard()
-        textView = view.findViewById(R.id.et_edit_reminder_text)
-        textView.setHorizontallyScrolling(false)
-        textView.maxLines = 20
-        textView.setOnEditorActionListener { _, actionId, _ ->
-            when (actionId) {
-                EditorInfo.IME_ACTION_DONE -> {
-                    if (TextUtils.isEmpty(titleView.text)) {
-                        titleView.requestFocus()
-                    } else {
-                        saveAndNotifyReminder()
+    private fun initView() {
+        binding.apply {
+            etEditReminderTitle.showKeyboard()
+            etEditReminderText.setHorizontallyScrolling(false)
+            etEditReminderText.maxLines = 20
+            etEditReminderText.setOnEditorActionListener { _, actionId, _ ->
+                when (actionId) {
+                    EditorInfo.IME_ACTION_DONE -> {
+                        if (etEditReminderTitle.text.isNullOrEmpty()) {
+                            etEditReminderTitle.requestFocus()
+                        } else {
+                            saveAndNotifyReminder()
+                        }
+                        true
                     }
-                    true
+                    else -> false
                 }
-                else -> false
             }
-        }
-        iconBtn = view.findViewById(R.id.btn_edit_reminder_icon)
-        iconBtn.setOnClickListener(this)
-        iconBtn.setImageResource(R.drawable.ic_grid)
-        view.findViewById<View>(R.id.btn_edit_reminder_time).setOnClickListener(this)
-        notifyBtn = view.findViewById(R.id.btn_edit_reminder_notify)
-        notifyBtn.setOnClickListener(this)
-        repeatChip = view.findViewById(R.id.chip_edit_reminder_repeat)
-        repeatChip.setOnCloseIconClickListener {
-            it.isVisible = false
-            periodType = PeriodType.ONE_TIME
-        }
-        startTimeChip = view.findViewById(R.id.chip_edit_reminder_time)
-        startTimeChip.setOnCloseIconClickListener {
-            it.isVisible = false
+            btnEditReminderIcon.setOnClickListener(this@ReminderEditFragment)
+            btnEditReminderIcon.setImageResource(R.drawable.ic_grid)
+            btnEditReminderTime.setOnClickListener(this@ReminderEditFragment)
+            btnEditReminderNotify.setOnClickListener(this@ReminderEditFragment)
+            chipEditReminderRepeat.setOnCloseIconClickListener {
+                it.isVisible = false
+                periodType = PeriodType.ONE_TIME
+            }
+            chipEditReminderTime.setOnCloseIconClickListener {
+                it.isVisible = false
+                startTimeInMillis = System.currentTimeMillis()
+                setActionText()
+            }
             startTimeInMillis = System.currentTimeMillis()
-            setActionText()
         }
-        startTimeInMillis = System.currentTimeMillis()
     }
 
     private fun populateData(reminder: Reminder) {
-        titleView.setText(reminder.title)
-        textView.setText(reminder.text)
-        iconBtn.run {
+        binding.etEditReminderTitle.setText(reminder.title)
+        binding.etEditReminderText.setText(reminder.text)
+        binding.btnEditReminderIcon.run {
             iconResId = context.toResId(reminder.iconName)
             setImageResource(iconResId)
+            setImageResourceName(reminder.iconName)
         }
-        iconBtn.setImageResourceName(reminder.iconName)
         val now = System.currentTimeMillis()
         startTimeInMillis =
             if (reminder.status == ReminderStatus.PAUSED && now > reminder.timestamp) {
@@ -184,16 +175,16 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
                 reminder.timestamp
             }
         if (startTimeInMillis > now) {
-            startTimeChip.isVisible = true
-            startTimeChip.text = context.getNotificationTime(startTimeInMillis)
+            binding.chipEditReminderTime.isVisible = true
+            binding.chipEditReminderTime.text = context.getNotificationTime(startTimeInMillis)
         } else {
-            startTimeChip.isVisible = false
+            binding.chipEditReminderTime.isVisible = false
         }
         periodType = reminder.periodType
-        repeatChip.isVisible = if (periodType == PeriodType.ONE_TIME) {
+        binding.chipEditReminderRepeat.isVisible = if (periodType == PeriodType.ONE_TIME) {
             false
         } else {
-            repeatChip.text = getRepeatString()
+            binding.chipEditReminderRepeat.text = getRepeatString()
             true
         }
         setActionText()
@@ -217,12 +208,13 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
     }
 
     private fun saveAndNotifyReminder() {
-        val title = titleView.text.toString().trim()
-        if (TextUtils.isEmpty(title)) {
-            titleView.error = getString(R.string.edit_reminder_error_empty_title)
+        val title = binding.etEditReminderTitle.text.toString().trim()
+        if (title.isEmpty()) {
+            binding.etEditReminderTitle.error =
+                getString(R.string.edit_reminder_error_empty_title)
             return
         }
-        val text = textView.text.toString().trim()
+        val text = binding.etEditReminderText.text.toString().trim()
         val status = when {
             periodType > PeriodType.ONE_TIME -> ReminderStatus.PERIODIC
             startTimeInMillis > System.currentTimeMillis() -> ReminderStatus.DELAYED
@@ -246,13 +238,13 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
 
     override fun onAlarmSet(alarmTimeInMillis: Long, @PeriodTypes periodType: Int) {
         startTimeInMillis = alarmTimeInMillis
-        startTimeChip.isVisible = true
-        startTimeChip.text = context.getNotificationTime(startTimeInMillis)
+        binding.chipEditReminderTime.isVisible = true
+        binding.chipEditReminderTime.text = context.getNotificationTime(startTimeInMillis)
         setActionText()
         this.periodType = periodType
         if (periodType > PeriodType.ONE_TIME) {
-            repeatChip.isVisible = true
-            repeatChip.text = getRepeatString()
+            binding.chipEditReminderRepeat.isVisible = true
+            binding.chipEditReminderRepeat.text = getRepeatString()
         }
     }
 
@@ -264,11 +256,10 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(), View.OnClickListen
     }
 
     private fun setActionText() {
-        if (startTimeInMillis > System.currentTimeMillis()) {
-            notifyBtn.setText(R.string.edit_reminder_action_save)
-        } else {
-            notifyBtn.setText(R.string.edit_reminder_action_notify)
-        }
+        val textResId =
+            if (startTimeInMillis > System.currentTimeMillis()) R.string.edit_reminder_action_save
+            else R.string.edit_reminder_action_notify
+        binding.btnEditReminderNotify.setText(textResId)
     }
 
 }

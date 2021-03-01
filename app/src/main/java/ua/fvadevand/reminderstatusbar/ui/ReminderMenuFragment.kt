@@ -2,25 +2,22 @@ package ua.fvadevand.reminderstatusbar.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.navigation.NavigationView
+import androidx.fragment.app.activityViewModels
 import ua.fvadevand.reminderstatusbar.Const
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.databinding.FragmentReminderMenuBinding
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 
-class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
+class ReminderMenuFragment : BaseBottomSheetDialogFragment(R.layout.fragment_reminder_menu) {
 
-    private lateinit var viewModel: RemindersViewModel
-    private lateinit var reminderTitleView: TextView
-    private lateinit var reminderIconView: ImageView
-    private var listener: OnReminderInteractListener? = null
+    private val viewModel: RemindersViewModel by activityViewModels()
+    private val binding by fragmentProperty.fragmentLateinitViewBindingByView(
+        FragmentReminderMenuBinding::bind
+    )
+    private var listener: OnReminderInteractListener? by fragmentProperty.delegateFragmentLifecycle()
     private val currentReminderId by lazy {
         arguments?.getLong(ARG_REMINDER_ID) ?: Const.NEW_REMINDER_ID
     }
@@ -39,21 +36,9 @@ class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
         listener = context as OnReminderInteractListener
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_reminder_menu, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(activity!!).get(RemindersViewModel::class.java)
-        reminderTitleView = view.findViewById(R.id.tv_menu_reminder_title)
-        reminderIconView = view.findViewById(R.id.iv_menu_reminder_icon)
-        val navigationView: NavigationView = view.findViewById(R.id.reminder_menu)
-        navigationView.setNavigationItemSelectedListener {
+        binding.reminderMenu.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.menu_reminder_edit -> listener?.onReminderEdit(currentReminderId)
                 R.id.menu_reminder_notify -> viewModel.notifyReminder(currentReminderId)
@@ -67,9 +52,9 @@ class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
         }
         viewModel.getReminder(currentReminderId) {
             if (it == null) return@getReminder
-            reminderIconView.setImageResourceName(it.iconName)
-            reminderTitleView.text = it.title
-            val menu = navigationView.menu
+            binding.ivMenuReminderIcon.setImageResourceName(it.iconName)
+            binding.tvMenuReminderTitle.text = it.title
+            val menu = binding.reminderMenu.menu
             when (it.status) {
                 ReminderStatus.DONE -> {
                     menu.findItem(R.id.menu_reminder_notify).isVisible = true
@@ -100,8 +85,4 @@ class ReminderMenuFragment : BaseBottomSheetDialogFragment() {
         }
     }
 
-    override fun onDetach() {
-        listener = null
-        super.onDetach()
-    }
 }

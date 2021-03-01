@@ -24,6 +24,9 @@ android {
             }
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -63,6 +66,7 @@ dependencies {
 
     // lifecycle
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
     // coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
