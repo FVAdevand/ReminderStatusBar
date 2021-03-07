@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="12dp"
-            android:tint="@color/colorAccent"
+            app:tint="@color/colorSecondary"
             tools:ignore="ContentDescription"
             tools:src="@drawable/ic_notif_battery" />
 
@@ -32,9 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="4dp"
-            android:textColor="@color/color_dialog_title_text"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextTitleStyle.Medium"
             tools:text="Reminder" />
 
     </LinearLayout>
@@ -49,6 +47,6 @@
         android:id="@+id/reminder_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/menu_reminder" />
+        app:menu="@menu/reminder" />
 
 </LinearLayout>

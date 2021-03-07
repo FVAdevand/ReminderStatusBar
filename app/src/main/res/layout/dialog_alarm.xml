@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,16 +12,17 @@
         android:layout_marginTop="@dimen/margin_top_dialog_item"
         android:layout_marginEnd="@dimen/margin_edge_dialog_item"
         android:layout_marginBottom="@dimen/margin_bottom_dialog_item"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/tv_alarm_dialog_time_label"
             style="@style/DialogItemTitleStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_access_time"
             android:gravity="center_vertical"
-            android:text="@string/alarm_dialog_time_label" />
+            android:text="@string/alarm_dialog_time_label"
+            app:drawableStartCompat="@drawable/ic_access_time" />
 
         <TextView
             android:id="@+id/tv_alarm_dialog_time"
@@ -35,8 +37,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top_dialog_item"
-            android:drawableStart="@drawable/ic_insert_invitation"
-            android:text="@string/alarm_dialog_date_label" />
+            android:text="@string/alarm_dialog_date_label"
+            app:drawableStartCompat="@drawable/ic_insert_invitation" />
 
         <TextView
             android:id="@+id/tv_alarm_dialog_date"
@@ -51,8 +53,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_top_dialog_item"
-            android:drawableStart="@drawable/ic_loop"
-            android:text="@string/alarm_dialog_period_label" />
+            android:text="@string/alarm_dialog_period_label"
+            app:drawableStartCompat="@drawable/ic_loop" />
 
         <Spinner
             android:id="@+id/spinner_alarm_dialog_repeat"

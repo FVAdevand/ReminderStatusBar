@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
@@ -44,7 +45,7 @@ class NotificationManager(private val context: Context) {
         val nBuilder = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
             .setContentTitle(reminder.title)
             .setSmallIcon(iconResId)
-            .setColor(context.getColor(R.color.colorAccent))
+            .setColor(context.getColor(R.color.colorSecondary))
             .setOngoing(true)
             .setShowWhen(true)
             .setAutoCancel(true)
@@ -56,7 +57,7 @@ class NotificationManager(private val context: Context) {
         if (reminder.status != ReminderStatus.PERIODIC) {
             nBuilder.addAction(getDeleteAction(reminderId))
         }
-        val iconDrawable = context.getDrawable(iconResId)
+        val iconDrawable = ContextCompat.getDrawable(context, iconResId)
         iconDrawable?.let {
             it.setTint(context.getColor(R.color.colorReminderIcons))
             val largeIcon = getBitmap(it)

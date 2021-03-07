@@ -3,15 +3,14 @@ package ua.fvadevand.reminderstatusbar.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
-import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.utils.ReminderItemDiffUtil
 import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
+import ua.fvadevand.reminderstatusbar.databinding.ListItemReminderBinding
+import ua.fvadevand.reminderstatusbar.databinding.ListItemReminderHeaderBinding
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
@@ -28,15 +27,21 @@ class ReminderAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseReminderViewHolder {
         return when (viewType) {
             ReminderItem.TYPE_HEADER -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_reminder_header, parent, false)
-                HeaderViewHolder(view)
+                val itemBinding = ListItemReminderHeaderBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                HeaderViewHolder(itemBinding)
             }
 
             ReminderItem.TYPE_REMINDER -> {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_reminder, parent, false)
-                ReminderViewHolder(view)
+                val itemBinding = ListItemReminderBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                ReminderViewHolder(itemBinding)
             }
 
             else -> throw IllegalArgumentException("Invalid item type $viewType, type must be one from ReminderItem.TYPE")
@@ -85,23 +90,20 @@ class ReminderAdapter(
         abstract fun bind(reminderItem: ReminderItem)
     }
 
-    class HeaderViewHolder(itemView: View) : BaseReminderViewHolder(itemView) {
-        private val headerView: TextView = itemView.findViewById(R.id.tv_reminders_header)
+    class HeaderViewHolder(
+        private val itemBinding: ListItemReminderHeaderBinding
+    ) : BaseReminderViewHolder(itemBinding.root) {
         override fun bind(reminderItem: ReminderItem) {
             reminderItem as ReminderItem.Header
-            headerView.text = reminderItem.text
+            itemBinding.tvRemindersHeader.text = reminderItem.text
         }
     }
 
-    inner class ReminderViewHolder(itemView: View) : BaseReminderViewHolder(itemView) {
-        private val iconView: ImageView = itemView.findViewById(R.id.iv_item_reminder_icon)
-        private val titleView: TextView = itemView.findViewById(R.id.tv_item_reminder_title)
-        private val textView: TextView = itemView.findViewById(R.id.tv_item_reminder_text)
-        private val dateView: TextView = itemView.findViewById(R.id.tv_item_reminder_date)
-        private val statusView: ImageView = itemView.findViewById(R.id.iv_item_reminder_status)
-
+    inner class ReminderViewHolder(
+        private val itemBinding: ListItemReminderBinding
+    ) : BaseReminderViewHolder(itemBinding.root) {
         init {
-            itemView.setOnClickListener {
+            itemBinding.root.setOnClickListener {
                 val position = adapterPosition
                 if (isValidPosition(position)) {
                     listener?.onReminderClick(getReminderByPosition(position).id)
@@ -111,25 +113,27 @@ class ReminderAdapter(
 
         override fun bind(reminderItem: ReminderItem) {
             reminderItem as ReminderItem.Data
-            iconView.setImageResourceName(reminderItem.reminder.iconName)
-            titleView.text = reminderItem.reminder.title
+            itemBinding.ivItemReminderIcon.setImageResourceName(reminderItem.reminder.iconName)
+            itemBinding.tvItemReminderTitle.text = reminderItem.reminder.title
             val reminderText = reminderItem.reminder.text
             if (reminderText.isNullOrEmpty()) {
-                textView.isVisible = false
+                itemBinding.tvItemReminderText.isVisible = false
             } else {
-                textView.isVisible = true
-                textView.text = reminderText
+                itemBinding.tvItemReminderText.isVisible = true
+                itemBinding.tvItemReminderText.text = reminderText
             }
             if (reminderItem.reminder.timestamp > System.currentTimeMillis() &&
                 reminderItem.reminder.status != ReminderStatus.PAUSED
             ) {
-                dateView.isVisible = true
-                dateView.text =
+                itemBinding.tvItemReminderDate.isVisible = true
+                itemBinding.tvItemReminderDate.text =
                     itemView.context.getNotificationTime(reminderItem.reminder.timestamp)
             } else {
-                dateView.isVisible = false
+                itemBinding.tvItemReminderDate.isVisible = false
             }
-            statusView.setImageResource(ReminderStatus.getIconResIdByStatus(reminderItem.reminder.status))
+            itemBinding.ivItemReminderStatus.setImageResource(
+                ReminderStatus.getIconResIdByStatus(reminderItem.reminder.status)
+            )
         }
     }
 }

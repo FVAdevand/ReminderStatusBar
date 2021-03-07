@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseTextStyle">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:letterSpacing">0.009375</item>
+    </style>
+
+    <style name="TextTitleStyle" parent="BaseTextStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/color_on_surface_primary_selector</item>
+    </style>
+
+    <style name="TextTitleStyle.Small">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextTitleStyle.Medium">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextTitleStyle.Large">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextDefaultStyle" parent="BaseTextStyle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/color_on_surface_primary_selector</item>
+    </style>
+
+    <style name="TextDefaultStyle.Small">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextDefaultStyle.Medium">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextDefaultStyle.Large">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextDefaultLightStyle" parent="BaseTextStyle">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/color_on_surface_secondary_selector</item>
+    </style>
+
+    <style name="TextDefaultLightStyle.Small">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextDefaultLightStyle.Medium">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextDefaultLightStyle.Large">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+</resources>

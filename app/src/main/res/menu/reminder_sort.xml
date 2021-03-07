@@ -2,14 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_reminder_sort_title"
+        android:icon="@drawable/ic_sort_by_alpha"
         android:title="@string/reminders_menu_sort_title" />
 
     <item
         android:id="@+id/menu_reminder_sort_status"
+        android:icon="@drawable/ic_sort_by_status"
         android:title="@string/reminders_menu_sort_status" />
 
     <item
         android:id="@+id/menu_reminder_sort_timestamp"
+        android:icon="@drawable/ic_access_time"
         android:title="@string/reminders_menu_sort_time" />
 
 </menu>

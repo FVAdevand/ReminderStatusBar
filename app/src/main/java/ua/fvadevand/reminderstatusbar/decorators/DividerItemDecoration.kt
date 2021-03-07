@@ -16,7 +16,7 @@ import kotlin.math.roundToInt
  * [LinearLayoutManager].
  *
  * @param context          Current context, it will be used to access resources.
- * @param orientation      Divider orientation. Should be [.HORIZONTAL] or [.VERTICAL].
+ * @param orientation      Divider orientation. Should be [LinearLayout.HORIZONTAL] or [LinearLayout.VERTICAL].
  * @param offsetStart      Offset divider left in LinearLayout.VERTICAL or top in LinearLayout.HORIZONTAL
  * @param offsetEnd        Offset divider right in LinearLayout.VERTICAL or bottom in LinearLayout.HORIZONTAL
  * @param drawInFirstItem  Whether show the divider in first item.

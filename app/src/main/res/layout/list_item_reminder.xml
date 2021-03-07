@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_reminder_container"
     android:layout_width="match_parent"
@@ -20,7 +21,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="16dp"
         android:padding="8dp"
-        android:tint="@color/colorAccent"
+        app:tint="@color/colorSecondary"
         tools:ignore="ContentDescription"
         tools:src="@drawable/ic_notif_database" />
 
@@ -40,17 +41,14 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textColor="@color/color_dialog_title_text"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextTitleStyle.Small"
             tools:text="Title" />
 
         <TextView
             android:id="@+id/tv_item_reminder_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/color_dialog_body_text"
-            android:textSize="14sp"
+            android:textAppearance="@style/TextDefaultStyle.Small"
             tools:text="text" />
 
         <TextView
@@ -58,13 +56,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:drawableStart="@drawable/ic_notifications_16dp"
             android:drawablePadding="4dp"
-            android:drawableTint="@color/color_dialog_body_text"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/color_dialog_body_text"
-            android:textSize="14sp"
+            android:textAppearance="@style/TextDefaultStyle.Small"
+            app:drawableStartCompat="@drawable/ic_notifications_16dp"
+            app:drawableTint="@color/color_on_surface_secondary_selector"
             tools:text="16:00" />
 
     </LinearLayout>
@@ -77,8 +74,8 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_status_done"
-        android:tint="@color/color_dialog_body_text"
         android:tintMode="src_in"
+        app:tint="@color/color_on_surface_secondary_selector"
         tools:ignore="ContentDescription" />
 
 </RelativeLayout>

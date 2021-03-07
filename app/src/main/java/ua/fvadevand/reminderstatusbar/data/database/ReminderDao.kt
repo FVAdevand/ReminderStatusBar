@@ -16,7 +16,7 @@ interface ReminderDao {
     fun getAllFlow(): Flow<List<Reminder>>
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_ID} = :id")
-    fun getById(id: Long): Reminder
+    fun getById(id: Long): Reminder?
 
     @Query("SELECT * FROM ${Reminder.TABLE_NAME} WHERE ${Reminder.COLUMN_STATUS} > ${ReminderStatus.DONE}")
     fun getRemindersForNotify(): List<Reminder>

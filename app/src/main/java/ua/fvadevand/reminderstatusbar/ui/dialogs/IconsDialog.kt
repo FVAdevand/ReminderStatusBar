@@ -1,6 +1,5 @@
 package ua.fvadevand.reminderstatusbar.ui.dialogs
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -30,7 +29,6 @@ class IconsDialog : DialogFragment() {
         listener = parentFragment as OnIconClickListener?
     }
 
-    @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding.iconsGrid.layoutManager = GridLayoutManager(context, SPAN_COUNT)
         val adapter = IconAdapter(iconsIds) { iconId ->

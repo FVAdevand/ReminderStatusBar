@@ -26,5 +26,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
         android:text="@string/reminders_placeholder"
-        android:textSize="18sp" />
+        android:textAppearance="@style/TextDefaultLightStyle.Medium" />
 </RelativeLayout>

@@ -10,8 +10,9 @@ import ua.fvadevand.reminderstatusbar.utils.fragmentProperty
 import ua.fvadevand.reminderstatusbar.utils.isAndroidO
 import ua.fvadevand.reminderstatusbar.utils.isNightMode
 
-abstract class BaseBottomSheetDialogFragment(private val layoutResId: Int) :
-    BottomSheetDialogFragment() {
+abstract class BaseBottomSheetDialogFragment(
+    private val layoutResId: Int
+) : BottomSheetDialogFragment() {
 
     val fragmentProperty by fragmentProperty()
 
@@ -27,7 +28,7 @@ abstract class BaseBottomSheetDialogFragment(private val layoutResId: Int) :
         super.onViewCreated(view, savedInstanceState)
         if (isAndroidO()) {
             dialog?.window?.apply {
-                navigationBarColor = view.context.getColor(R.color.colorBottomSheetBackground)
+                navigationBarColor = view.context.getColor(R.color.colorSurface)
                 if (!view.context.isNightMode()) {
                     decorView.systemUiVisibility =
                         decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR

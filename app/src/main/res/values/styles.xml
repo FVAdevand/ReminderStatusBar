@@ -2,19 +2,36 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/colorWindowBackground</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowLightStatusBar">@bool/lightStatusBar</item>
         <item name="android:listDivider">@drawable/list_divider</item>
-        <item name="android:datePickerDialogTheme">@style/AppTimeDateDialogTheme</item>
-        <item name="android:timePickerDialogTheme">@style/AppTimeDateDialogTheme</item>
         <item name="android:spinnerItemStyle">@style/AppSpinnerItemStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/AppSpinnerDropDownItemStyle</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="materialAlertDialogTheme">@style/AppAlertDialogTheme</item>
+        <item name="materialCalendarTheme">@style/AppCalendarStyle</item>
+        <item name="materialTimePickerTheme">@style/AppTimePickerStyle</item>
         <item name="navigationViewStyle">@style/AppNavigationViewStyle</item>
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.MediumComponent</item>
+    </style>
+
+    <style name="AppCalendarStyle" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="buttonBarPositiveButtonStyle">@style/AppDialogButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AppDialogButtonStyle</item>
+    </style>
+
+    <style name="AppTimePickerStyle" parent="@style/ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="materialButtonStyle">@style/AppDialogButtonStyle</item>
+    </style>
+
+    <style name="AppDialogButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.OverlayColorPrimaryToSecondary
+        </item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="ThemeOverlay.MaterialComponents.Light.BottomSheetDialog">
@@ -22,27 +39,19 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
-    <style name="AppBottomSheetDialogStyle" parent="Widget.Design.BottomSheet.Modal">
+    <style name="AppBottomSheetDialogStyle" parent="Widget.MaterialComponents.BottomSheet.Modal">
         <item name="android:background">@drawable/background_bottom_sheet</item>
+        <item name="shapeAppearance">@null</item>
     </style>
 
     <style name="AppAlertDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="materialAlertDialogTitleTextStyle">@style/DialogTitleTextStyle</item>
-        <item name="android:backgroundTint">@color/colorBottomSheetBackground</item>
-        <item name="buttonBarPositiveButtonStyle">@style/AppDialogButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">@style/AppDialogButtonStyle</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.OverlayColorPrimaryToSecondary
+        </item>
     </style>
 
     <style name="DialogTitleTextStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textSize">18sp</item>
-    </style>
-
-    <style name="AppTimeDateDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.Dialog">
-        <item name="materialButtonStyle">@style/AppDialogButtonStyle</item>
-    </style>
-
-    <style name="AppDialogButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textAppearance">@style/TextTitleStyle.Medium</item>
     </style>
 
     <style name="ImageButtonStyle">
@@ -51,28 +60,26 @@
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingEnd">12dp</item>
         <item name="android:paddingBottom">20dp</item>
-        <item name="android:tint">@color/colorAccent</item>
+        <item name="android:tint">@color/colorSecondary</item>
     </style>
 
     <style name="AppChip.Entry" parent="Widget.MaterialComponents.Chip.Entry">
         <item name="chipStrokeWidth">1dp</item>
         <item name="chipStrokeColor">@color/colorChipStroke</item>
-        <item name="chipBackgroundColor">@color/colorBottomSheetBackground</item>
-        <item name="chipSurfaceColor">@android:color/transparent</item>
-        <item name="chipIconTint">@color/color_dialog_body_text</item>
-        <item name="android:textColor">@color/color_dialog_title_text</item>
+        <item name="chipBackgroundColor">?attr/colorSurface</item>
+        <item name="chipIconTint">@color/color_on_surface_secondary_selector</item>
+        <item name="closeIconTint">@color/color_on_surface_secondary_selector</item>
+        <item name="android:textAppearance">@style/TextDefaultStyle.Medium</item>
         <item name="android:checkable">false</item>
         <item name="android:clickable">false</item>
     </style>
 
     <style name="DialogItemTitleStyle">
         <item name="android:drawablePadding">@dimen/drawable_padding</item>
-        <item name="android:drawableTint">@color/color_dialog_body_text</item>
+        <item name="android:drawableTint">@color/color_on_surface_primary_selector</item>
         <item name="android:paddingStart">@dimen/padding_edge_dialog_item</item>
         <item name="android:paddingEnd">@dimen/padding_edge_dialog_item</item>
-        <item name="android:textColor">@color/color_dialog_body_text</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">@style/TextTitleStyle.Small</item>
     </style>
 
     <style name="DialogItemValueStyle">
@@ -81,24 +88,31 @@
         <item name="android:paddingEnd">@dimen/padding_edge_dialog_item</item>
         <item name="android:paddingTop">@dimen/padding_top_bottom_dialog_item_value</item>
         <item name="android:paddingBottom">@dimen/padding_top_bottom_dialog_item_value</item>
-        <item name="android:textColor">@color/color_dialog_body_text</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textAppearance">@style/TextDefaultStyle.Large</item>
     </style>
 
     <style name="AppSpinnerItemStyle" parent="Widget.AppCompat.TextView.SpinnerItem">
-        <item name="android:textColor">@color/color_dialog_body_text</item>
+        <item name="android:textAppearance">@style/TextDefaultStyle.Medium</item>
+    </style>
+
+    <style name="AppSpinnerDropDownItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textAppearance">@style/TextDefaultStyle.Medium</item>
     </style>
 
     <style name="AppNavigationViewStyle" parent="Widget.MaterialComponents.NavigationView">
         <item name="android:background">@android:color/transparent</item>
         <item name="elevation">0dp</item>
-        <item name="itemIconTint">@color/color_dialog_body_text</item>
-        <item name="itemTextColor">@color/color_dialog_title_text</item>
+        <item name="itemIconTint">@color/color_on_surface_secondary_selector</item>
+        <item name="itemTextAppearance">@style/TextDefaultStyle.Medium</item>
     </style>
 
     <style name="ShapeAppearance.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/background_dialog_corner_radius</item>
+    </style>
+
+    <style name="ThemeOverlay.App.OverlayColorPrimaryToSecondary" parent="">
+        <item name="colorPrimary">@color/colorSecondary</item>
     </style>
 
 </resources>

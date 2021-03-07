@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -19,7 +20,13 @@ fun Context.isNightMode(): Boolean {
     }
 }
 
-fun View.showKeyboard() {
+fun View.hideSoftKeyboard() {
+    this.clearFocus()
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    imm?.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+}
+
+fun View.showSoftKeyboard() {
     requestFocus()
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
     imm?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
@@ -38,7 +45,9 @@ fun WindowInsetsCompat.updateSystemWindowInsets(
     top: Int = systemWindowInsetTop,
     right: Int = systemWindowInsetRight,
     bottom: Int = systemWindowInsetBottom
-): WindowInsetsCompat = replaceSystemWindowInsets(left, top, right, bottom)
+): WindowInsetsCompat = WindowInsetsCompat.Builder(this)
+    .setSystemWindowInsets(Insets.of(left, top, right, bottom))
+    .build()
 
 private fun recordInitialPaddingForView(view: View) =
     Rect(view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom)

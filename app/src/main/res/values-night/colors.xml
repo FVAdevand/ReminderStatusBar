@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#8AB4F8</color>
-    <color name="colorWindowBackground">#11171A</color>
-    <color name="colorBottomSheetBackground">#1A2326</color>
+    <color name="colorSecondary">#8AB4F8</color>
+    <color name="colorBackground">#11171A</color>
+    <color name="colorSurface">#1A2326</color>
     <color name="colorChipStroke">#BFBFBF</color>
     <color name="colorDividerElement">#BBBBBB</color>
     <color name="colorSwipeableItemDeleteBackground">#500000</color>

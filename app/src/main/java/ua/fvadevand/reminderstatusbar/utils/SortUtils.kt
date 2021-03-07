@@ -7,9 +7,9 @@ class SortUtils {
     class ReminderTitleComparator(private val sortOrderAsc: Boolean) : Comparator<Reminder> {
         override fun compare(o1: Reminder, o2: Reminder): Int {
             return if (sortOrderAsc) {
-                o1.title.toLowerCase().compareTo(o2.title.toLowerCase())
+                o1.title.compareTo(o2.title, true)
             } else {
-                o2.title.toLowerCase().compareTo(o1.title.toLowerCase())
+                o2.title.compareTo(o1.title, true)
             }
         }
     }
