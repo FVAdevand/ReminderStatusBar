@@ -38,7 +38,7 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_rem
     OnAlarmSetListener,
     IconsDialog.OnIconClickListener {
 
-    private val binding by fragmentProperty.fragmentLateinitViewBindingByView(
+    private val binding by fragmentProperty.bindingByView(
         FragmentReminderEditBinding::bind
     )
     private val viewModel: RemindersViewModel by activityViewModels()

@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import ua.fvadevand.lifecycledelegates.fragmentProperty
 import ua.fvadevand.reminderstatusbar.R
-import ua.fvadevand.reminderstatusbar.utils.fragmentProperty
 
 class NightModeDialog : DialogFragment() {
 

@@ -11,7 +11,7 @@ class ReminderSortMenuFragment :
     BaseBottomSheetDialogFragment(R.layout.fragment_reminder_menu_sort) {
 
     private val viewModel: RemindersViewModel by activityViewModels()
-    private val binding by fragmentProperty.fragmentLateinitViewBindingByView(
+    private val binding by fragmentProperty.bindingByView(
         FragmentReminderMenuSortBinding::bind
     )
 

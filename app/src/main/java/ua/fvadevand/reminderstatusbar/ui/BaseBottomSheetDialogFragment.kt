@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import ua.fvadevand.lifecycledelegates.fragmentProperty
 import ua.fvadevand.reminderstatusbar.R
-import ua.fvadevand.reminderstatusbar.utils.fragmentProperty
 import ua.fvadevand.reminderstatusbar.utils.isAndroidO
 import ua.fvadevand.reminderstatusbar.utils.isNightMode
 

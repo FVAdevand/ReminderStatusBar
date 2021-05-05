@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.Log
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -13,6 +12,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import ua.fvadevand.lifecycledelegates.fragmentProperty
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.PeriodTypesAdapter
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
@@ -20,13 +20,12 @@ import ua.fvadevand.reminderstatusbar.data.models.PeriodType.PeriodTypes
 import ua.fvadevand.reminderstatusbar.databinding.DialogAlarmBinding
 import ua.fvadevand.reminderstatusbar.utils.formatFullDate
 import ua.fvadevand.reminderstatusbar.utils.formatTime
-import ua.fvadevand.reminderstatusbar.utils.fragmentProperty
 import java.util.Calendar
 
 class AlarmSetDialog : DialogFragment() {
 
     private val fragmentProperty by fragmentProperty()
-    private val binding by fragmentProperty.fragmentLateinitViewBindingByInflater(DialogAlarmBinding::inflate)
+    private val binding by fragmentProperty.bindingByInflater(DialogAlarmBinding::inflate)
     private val calendar by lazy {
         Calendar.getInstance().apply {
             timeInMillis = arguments?.getLong(ARG_CALENDAR) ?: System.currentTimeMillis()

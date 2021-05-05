@@ -14,7 +14,7 @@ import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 class ReminderMenuFragment : BaseBottomSheetDialogFragment(R.layout.fragment_reminder_menu) {
 
     private val viewModel: RemindersViewModel by activityViewModels()
-    private val binding by fragmentProperty.fragmentLateinitViewBindingByView(
+    private val binding by fragmentProperty.bindingByView(
         FragmentReminderMenuBinding::bind
     )
     private var listener: OnReminderInteractListener? by fragmentProperty.delegateFragmentLifecycle()

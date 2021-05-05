@@ -1,0 +1,3 @@
+[submodule "lifecycledelegates"]
+	path = lifecycledelegates
+	url = git@github.com:FVAdevand/LifecycleDelegates.git

@@ -9,20 +9,20 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.onEach
+import ua.fvadevand.lifecycledelegates.fragmentProperty
+import ua.fvadevand.lifecycledelegates.observeInLifecycle
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
 import ua.fvadevand.reminderstatusbar.databinding.FragmentRemindersBinding
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
-import ua.fvadevand.reminderstatusbar.utils.fragmentProperty
-import ua.fvadevand.reminderstatusbar.utils.observeInLifecycle
 
 class RemindersFragment : Fragment(R.layout.fragment_reminders) {
 
     private val fragmentProperty by fragmentProperty()
     private val viewModel: RemindersViewModel by activityViewModels()
-    private val binding by fragmentProperty.fragmentLateinitViewBindingByView(
+    private val binding by fragmentProperty.bindingByView(
         FragmentRemindersBinding::bind
     )
     private var reminderAdapter: ReminderAdapter? by fragmentProperty.delegateViewLifecycle()
