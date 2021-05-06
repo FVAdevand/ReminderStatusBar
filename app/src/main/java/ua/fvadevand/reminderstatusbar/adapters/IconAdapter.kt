@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
-import ua.fvadevand.reminderstatusbar.databinding.ListItemIconBinding
+import ua.fvadevand.reminderstatusbar.databinding.ItemIconBinding
 
 class IconAdapter(
     private val iconIds: List<Int>,
@@ -12,7 +12,7 @@ class IconAdapter(
 ) : RecyclerView.Adapter<IconAdapter.IconViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconViewHolder {
-        val itemBinding = ListItemIconBinding.inflate(
+        val itemBinding = ItemIconBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -29,12 +29,12 @@ class IconAdapter(
     }
 
     inner class IconViewHolder(
-        private val itemBinding: ListItemIconBinding
+        private val itemBinding: ItemIconBinding
     ) : RecyclerView.ViewHolder(itemBinding.root) {
 
         init {
             itemBinding.root.setOnClickListener {
-                val position = adapterPosition
+                val position = bindingAdapterPosition
                 if (position in 0 until itemCount) {
                     onClickListener(iconIds[position])
                 }

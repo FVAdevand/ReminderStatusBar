@@ -1,16 +1,15 @@
 package ua.fvadevand.reminderstatusbar.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
-import ua.fvadevand.reminderstatusbar.adapters.utils.ReminderItemDiffUtil
-import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
+import ua.fvadevand.reminderstatusbar.R
+import ua.fvadevand.reminderstatusbar.adapters.utils.ReminderDiffUtil
+import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
-import ua.fvadevand.reminderstatusbar.databinding.ListItemReminderBinding
-import ua.fvadevand.reminderstatusbar.databinding.ListItemReminderHeaderBinding
+import ua.fvadevand.reminderstatusbar.databinding.ItemReminderBinding
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
 import ua.fvadevand.reminderstatusbar.listeners.OnReminderInteractListener
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
@@ -18,50 +17,35 @@ import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 
 class ReminderAdapter(
     private val listener: OnReminderInteractListener?
-) : RecyclerView.Adapter<ReminderAdapter.BaseReminderViewHolder>(),
+) : RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder>(),
     SwipeToEditOrDeleteCallback.SwipeableAdapter {
 
-    private val differ = AsyncListDiffer(this, ReminderItemDiffUtil())
+    private val differ = AsyncListDiffer(this, ReminderDiffUtil())
     private val reminders get() = differ.currentList
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseReminderViewHolder {
-        return when (viewType) {
-            ReminderItem.TYPE_HEADER -> {
-                val itemBinding = ListItemReminderHeaderBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                HeaderViewHolder(itemBinding)
-            }
-
-            ReminderItem.TYPE_REMINDER -> {
-                val itemBinding = ListItemReminderBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-                ReminderViewHolder(itemBinding)
-            }
-
-            else -> throw IllegalArgumentException("Invalid item type $viewType, type must be one from ReminderItem.TYPE")
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReminderViewHolder {
+        val itemBinding = ItemReminderBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ReminderViewHolder(itemBinding)
     }
 
-    override fun onBindViewHolder(holder: BaseReminderViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ReminderViewHolder, position: Int) {
         holder.bind(reminders[position])
     }
 
     override fun getItemViewType(position: Int): Int {
-        return reminders[position].type
+        return R.layout.item_reminder
     }
 
     override fun getItemCount(): Int {
         return reminders.size
     }
 
-    override fun isItemSwipeable(position: Int): Boolean {
-        return getItemViewType(position) != ReminderItem.TYPE_HEADER
+    override fun allowSwipe(position: Int): Boolean {
+        return true
     }
 
     override fun editItem(position: Int) {
@@ -77,63 +61,50 @@ class ReminderAdapter(
         }
     }
 
-    fun submitReminders(newList: List<ReminderItem>) {
+    fun submitReminders(newList: List<Reminder>) {
         differ.submitList(newList)
     }
 
     private fun isValidPosition(position: Int) = position in 0 until itemCount
 
-    private fun getReminderByPosition(position: Int) =
-        (reminders[position] as ReminderItem.Data).reminder
-
-    abstract class BaseReminderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(reminderItem: ReminderItem)
-    }
-
-    class HeaderViewHolder(
-        private val itemBinding: ListItemReminderHeaderBinding
-    ) : BaseReminderViewHolder(itemBinding.root) {
-        override fun bind(reminderItem: ReminderItem) {
-            reminderItem as ReminderItem.Header
-            itemBinding.tvRemindersHeader.text = reminderItem.text
-        }
-    }
+    private fun getReminderByPosition(position: Int) = reminders[position]
 
     inner class ReminderViewHolder(
-        private val itemBinding: ListItemReminderBinding
-    ) : BaseReminderViewHolder(itemBinding.root) {
+        private val itemBinding: ItemReminderBinding
+    ) : RecyclerView.ViewHolder(itemBinding.root) {
+
         init {
             itemBinding.root.setOnClickListener {
-                val position = adapterPosition
+                val position = bindingAdapterPosition
                 if (isValidPosition(position)) {
                     listener?.onReminderClick(getReminderByPosition(position).id)
                 }
             }
         }
 
-        override fun bind(reminderItem: ReminderItem) {
-            reminderItem as ReminderItem.Data
-            itemBinding.ivItemReminderIcon.setImageResourceName(reminderItem.reminder.iconName)
-            itemBinding.tvItemReminderTitle.text = reminderItem.reminder.title
-            val reminderText = reminderItem.reminder.text
+        fun bind(reminder: Reminder) {
+            itemBinding.ivItemReminderIcon.setImageResourceName(reminder.iconName)
+            itemBinding.tvItemReminderTitle.text = reminder.title
+            val reminderText = reminder.text
             if (reminderText.isNullOrEmpty()) {
                 itemBinding.tvItemReminderText.isVisible = false
             } else {
                 itemBinding.tvItemReminderText.isVisible = true
                 itemBinding.tvItemReminderText.text = reminderText
             }
-            if (reminderItem.reminder.timestamp > System.currentTimeMillis() &&
-                reminderItem.reminder.status != ReminderStatus.PAUSED
+            if (reminder.timestamp > System.currentTimeMillis() &&
+                reminder.status != ReminderStatus.PAUSED
             ) {
                 itemBinding.tvItemReminderDate.isVisible = true
                 itemBinding.tvItemReminderDate.text =
-                    itemView.context.getNotificationTime(reminderItem.reminder.timestamp)
+                    itemView.context.getNotificationTime(reminder.timestamp)
             } else {
                 itemBinding.tvItemReminderDate.isVisible = false
             }
             itemBinding.ivItemReminderStatus.setImageResource(
-                ReminderStatus.getIconResIdByStatus(reminderItem.reminder.status)
+                ReminderStatus.getIconResIdByStatus(reminder.status)
             )
         }
     }
+
 }

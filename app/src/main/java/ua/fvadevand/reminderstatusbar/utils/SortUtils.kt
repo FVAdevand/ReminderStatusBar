@@ -25,11 +25,7 @@ class SortUtils {
     }
 
     class ReminderTimeComparator(private val sortOrderAsc: Boolean) : Comparator<Reminder> {
-        private val now = System.currentTimeMillis()
-
         override fun compare(o1: Reminder, o2: Reminder): Int {
-            if (o1.timestamp >= now && o2.timestamp < now) return 1
-            if (o1.timestamp < now && o2.timestamp >= now) return -1
             return if (sortOrderAsc) {
                 o1.timestamp.compareTo(o2.timestamp)
             } else {
@@ -37,4 +33,5 @@ class SortUtils {
             }
         }
     }
+
 }

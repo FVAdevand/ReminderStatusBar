@@ -12,19 +12,15 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
-import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
-import ua.fvadevand.reminderstatusbar.data.models.ReminderItem
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.managers.AlarmManager
 import ua.fvadevand.reminderstatusbar.managers.NotificationManager
 import ua.fvadevand.reminderstatusbar.managers.PreferencesManager
 import ua.fvadevand.reminderstatusbar.utils.SortUtils
-import java.util.Collections
 
 class RemindersViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -44,7 +40,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             AppCompatDelegate.setDefaultNightMode(value)
         }
 
-    fun getRemindersSortedFlow(): SharedFlow<List<ReminderItem>> {
+    fun getRemindersSortedFlow(): SharedFlow<List<Reminder>> {
         val sortConditionFlow = reminderSortOrderAscFlow.combine(reminderSortFieldFlow, ::Pair)
         return remindersFromDb.combine(sortConditionFlow) { reminders, condition ->
             val (sortOrderAsc, sortField) = condition
@@ -56,17 +52,7 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
                     "SortField must be in @Reminder.SortFields, current value = $sortField "
                 )
             }
-            Collections.sort(reminders, comparator)
-            reminders
-        }.transform { reminders ->
-            if (reminders.isEmpty()) {
-                emit(listOf<ReminderItem>())
-            } else {
-                val result =
-                    mutableListOf<ReminderItem>(ReminderItem.Header(applicationContext.getString(R.string.reminders_title)))
-                result.addAll(reminders.map(ReminderItem::Data))
-                emit(result)
-            }
+            reminders.sortedWith(comparator)
         }.flowOn(Dispatchers.IO)
             .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     }

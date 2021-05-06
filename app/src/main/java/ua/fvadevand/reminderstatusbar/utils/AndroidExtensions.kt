@@ -32,6 +32,15 @@ fun View.showSoftKeyboard() {
     imm?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
 }
 
+fun View.toggleSoftKeyboard() {
+    requestFocus()
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    imm?.toggleSoftInput(
+        InputMethodManager.SHOW_IMPLICIT,
+        InputMethodManager.HIDE_NOT_ALWAYS
+    )
+}
+
 fun View.doOnApplyWindowInsets(block: (View, insets: WindowInsetsCompat, initialPadding: Rect) -> WindowInsetsCompat) {
     val initialPadding = recordInitialPaddingForView(this)
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->

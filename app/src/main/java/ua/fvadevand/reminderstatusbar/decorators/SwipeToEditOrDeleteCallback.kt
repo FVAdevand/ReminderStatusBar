@@ -41,7 +41,7 @@ class SwipeToEditOrDeleteCallback(context: Context, private val adapter: Swipeab
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        return if (adapter.isItemSwipeable(viewHolder.adapterPosition)) {
+        return if (adapter.allowSwipe(viewHolder.bindingAdapterPosition)) {
             super.getSwipeDirs(recyclerView, viewHolder)
         } else {
             0
@@ -58,9 +58,9 @@ class SwipeToEditOrDeleteCallback(context: Context, private val adapter: Swipeab
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         if (direction == ItemTouchHelper.RIGHT) {
-            adapter.editItem(viewHolder.adapterPosition)
+            adapter.editItem(viewHolder.bindingAdapterPosition)
         } else {
-            adapter.deleteItem(viewHolder.adapterPosition)
+            adapter.deleteItem(viewHolder.bindingAdapterPosition)
         }
     }
 
@@ -127,6 +127,6 @@ class SwipeToEditOrDeleteCallback(context: Context, private val adapter: Swipeab
     interface SwipeableAdapter {
         fun editItem(position: Int)
         fun deleteItem(position: Int)
-        fun isItemSwipeable(position: Int): Boolean
+        fun allowSwipe(position: Int): Boolean
     }
 }

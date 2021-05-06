@@ -11,7 +11,7 @@ import android.widget.EditText
 import androidx.core.animation.doOnEnd
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import ua.fvadevand.reminderstatusbar.Const
@@ -25,18 +25,16 @@ import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog
 import ua.fvadevand.reminderstatusbar.ui.dialogs.AlarmSetDialog.OnAlarmSetListener
 import ua.fvadevand.reminderstatusbar.ui.dialogs.IconsDialog
 import ua.fvadevand.reminderstatusbar.utils.getNotificationTime
-import ua.fvadevand.reminderstatusbar.utils.hideSoftKeyboard
 import ua.fvadevand.reminderstatusbar.utils.setImageResourceName
 import ua.fvadevand.reminderstatusbar.utils.showSoftKeyboard
 import ua.fvadevand.reminderstatusbar.utils.toResId
 import ua.fvadevand.reminderstatusbar.utils.toResName
+import ua.fvadevand.reminderstatusbar.utils.toggleSoftKeyboard
 import ua.fvadevand.reminderstatusbar.utils.updateSystemWindowInsets
 import java.util.Locale
 
 class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_reminder_edit),
-    View.OnClickListener,
-    OnAlarmSetListener,
-    IconsDialog.OnIconClickListener {
+    OnAlarmSetListener, IconsDialog.OnIconClickListener {
 
     private val binding by fragmentProperty.bindingByView(
         FragmentReminderEditBinding::bind
@@ -127,7 +125,7 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_rem
     }
 
     private fun initView() {
-        binding.apply {
+        with(binding) {
             val editTextFocusChangeListener = View.OnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) currentFocus = v
             }
@@ -150,13 +148,13 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_rem
                 }
             }
             btnEditReminderNotify.isEnabled = false
-            etEditReminderTitle.addTextChangedListener(afterTextChanged = {
+            etEditReminderTitle.doAfterTextChanged {
                 btnEditReminderNotify.isEnabled = it.toString().trim().isNotEmpty()
-            })
-            btnEditReminderIcon.setOnClickListener(this@ReminderEditFragment)
+            }
+            btnEditReminderIcon.setOnClickListener { showIconsDialog() }
             btnEditReminderIcon.setImageResource(R.drawable.ic_grid)
-            btnEditReminderTime.setOnClickListener(this@ReminderEditFragment)
-            btnEditReminderNotify.setOnClickListener(this@ReminderEditFragment)
+            btnEditReminderTime.setOnClickListener { showSetAlarmDialog() }
+            btnEditReminderNotify.setOnClickListener { saveAndNotifyReminder() }
             chipEditReminderRepeat.setOnCloseIconClickListener {
                 it.isVisible = false
                 periodType = PeriodType.ONE_TIME
@@ -201,17 +199,9 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_rem
         setActionText()
     }
 
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.btn_edit_reminder_icon -> showIconsDialog()
-            R.id.btn_edit_reminder_time -> showSetAlarmDialog()
-            R.id.btn_edit_reminder_notify -> saveAndNotifyReminder()
-        }
-    }
-
     private fun showSetAlarmDialog() {
         hasKeyboard = binding.root.paddingBottom != 0
-        currentFocus?.hideSoftKeyboard()
+        currentFocus?.toggleSoftKeyboard()
         AlarmSetDialog.newInstance(startTimeInMillis, periodType)
             .show(childFragmentManager, AlarmSetDialog.TAG)
     }
@@ -269,7 +259,7 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_rem
     private fun restoreKeyboard() {
         if (hasKeyboard) {
             currentFocus?.run {
-                showSoftKeyboard()
+                toggleSoftKeyboard()
                 if (this is EditText) setSelection(text.length)
             }
         }
@@ -278,7 +268,7 @@ class ReminderEditFragment : BaseBottomSheetDialogFragment(R.layout.fragment_rem
     private fun getRepeatString(): String {
         return getString(
             R.string.edit_reminder_repeat,
-            getString(PeriodType.getPeriodTypeStringResId(periodType)).toLowerCase(Locale.getDefault())
+            getString(PeriodType.getPeriodTypeStringResId(periodType)).lowercase(Locale.getDefault())
         )
     }
 

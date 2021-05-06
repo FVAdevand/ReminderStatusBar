@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.onEach
@@ -13,6 +14,7 @@ import ua.fvadevand.lifecycledelegates.fragmentProperty
 import ua.fvadevand.lifecycledelegates.observeInLifecycle
 import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.adapters.ReminderAdapter
+import ua.fvadevand.reminderstatusbar.adapters.ReminderHeaderAdapter
 import ua.fvadevand.reminderstatusbar.databinding.FragmentRemindersBinding
 import ua.fvadevand.reminderstatusbar.decorators.DividerItemDecoration
 import ua.fvadevand.reminderstatusbar.decorators.SwipeToEditOrDeleteCallback
@@ -58,7 +60,8 @@ class RemindersFragment : Fragment(R.layout.fragment_reminders) {
         val layoutManager = LinearLayoutManager(context)
         binding.reminderList.layoutManager = layoutManager
         val adapter = ReminderAdapter(onReminderInteractListener)
-        binding.reminderList.adapter = adapter
+        val concatAdapter = ConcatAdapter(ReminderHeaderAdapter(R.string.reminders_title), adapter)
+        binding.reminderList.adapter = concatAdapter
         binding.reminderList.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),
@@ -71,6 +74,7 @@ class RemindersFragment : Fragment(R.layout.fragment_reminders) {
         )
         ItemTouchHelper(SwipeToEditOrDeleteCallback(requireContext(), adapter))
             .attachToRecyclerView(binding.reminderList)
+
         reminderAdapter = adapter
     }
 
