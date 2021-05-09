@@ -16,6 +16,7 @@ import ua.fvadevand.reminderstatusbar.R
 import ua.fvadevand.reminderstatusbar.data.models.Reminder
 import ua.fvadevand.reminderstatusbar.data.models.ReminderStatus
 import ua.fvadevand.reminderstatusbar.receivers.NotificationReceiver
+import ua.fvadevand.reminderstatusbar.ui.MainActivity
 import ua.fvadevand.reminderstatusbar.utils.toResId
 
 class NotificationManager(private val context: Context) {
@@ -48,7 +49,7 @@ class NotificationManager(private val context: Context) {
             .setColor(context.getColor(R.color.colorSecondary))
             .setOngoing(true)
             .setShowWhen(true)
-            .setAutoCancel(true)
+            .setContentIntent(MainActivity.getOpenIntent(context, reminderId))
             .addAction(getDoneAction(reminderId))
         reminder.text?.let {
             nBuilder.setContentText(it)

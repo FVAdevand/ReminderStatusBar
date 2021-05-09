@@ -1,5 +1,8 @@
 package ua.fvadevand.reminderstatusbar.ui
 
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -23,13 +26,34 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
     private var recentlyDeletedReminder: Reminder? = null
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+    companion object {
+        private const val EXTRA_REMINDER_ID = "REMINDER_ID"
+
+        fun getOpenIntent(context: Context, reminderId: Long): PendingIntent {
+            return PendingIntent.getActivity(
+                context,
+                reminderId.hashCode(),
+                Intent(context, MainActivity::class.java)
+                    .putExtra(EXTRA_REMINDER_ID, reminderId),
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initView()
         if (savedInstanceState == null) {
             showRemindersFragment()
+            handleIntent(intent)
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleIntent(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -60,14 +84,15 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
             binding.fragmentContainer,
             R.string.reminders_reminder_deleted_message,
             Snackbar.LENGTH_LONG
-        )
-            .setAction(R.string.action_undo) {
+        ).apply {
+            setAction(R.string.action_undo) {
                 recentlyDeletedReminder?.let {
                     viewModel.addReminder(reminder)
                 }
             }
-            .setAnchorView(binding.fab)
-            .show()
+            anchorView = binding.fab
+            show()
+        }
     }
 
     override fun onNightModeSet(nightMode: Int) {
@@ -122,6 +147,13 @@ class MainActivity : AppCompatActivity(), OnReminderInteractListener,
     private fun showThemeSettingsDialog() {
         NightModeDialog.newInstance(viewModel.nightMode)
             .show(supportFragmentManager, NightModeDialog.TAG)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        intent?.getLongExtra(EXTRA_REMINDER_ID, Const.NEW_REMINDER_ID)?.let { reminderId ->
+            if (reminderId != Const.NEW_REMINDER_ID)
+                viewModel.openReminder(reminderId)
+        }
     }
 
 }

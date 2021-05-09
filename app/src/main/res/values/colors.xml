@@ -6,11 +6,12 @@
     <color name="colorOnPrimary">@android:color/white</color>
     <color name="colorReminderIcons">@color/colorSecondary</color>
     <color name="colorBackground">#F0F0F0</color>
+    <color name="colorBackgroundHighlight">#BFBFBF</color>
     <color name="colorSurface">#FFFFFF</color>
     <color name="colorChipStroke">#404040</color>
     <color name="colorDividerElement">#444444</color>
-    <color name="colorSwipeableItemDeleteBackground">#AE0000</color>
-    <color name="colorSwipeableItemEditBackground">#00AE00</color>
+    <color name="colorSwipeableItemDeleteBackground">#80AE0000</color>
+    <color name="colorSwipeableItemEditBackground">#8000AE00</color>
     <color name="colorSwipeableItemIcon">#FAFAFA</color>
     <color name="ic_launcher_background">#0265EC</color>
 </resources>

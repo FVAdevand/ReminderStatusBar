@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.ReminderApp
@@ -32,6 +35,8 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
     private val reminderSortOrderAscFlow = MutableStateFlow(true)
     private val reminderSortFieldFlow = MutableStateFlow(Reminder.COLUMN_TIMESTAMP)
     private val remindersFromDb by lazy { repository.getAllRemindersFlow() }
+    private val reminderEventChannel = Channel<Long>(1, BufferOverflow.DROP_OLDEST)
+    val reminderEvents = reminderEventChannel.receiveAsFlow()
 
     var nightMode
         get() = prefManager.nightMode
@@ -163,6 +168,10 @@ class RemindersViewModel(application: Application) : AndroidViewModel(applicatio
             prefManager.reminderSortOrderAsc = !sortOrderAsc
             reminderSortOrderAscFlow.value = !sortOrderAsc
         }
+    }
+
+    fun openReminder(reminderId: Long) {
+        reminderEventChannel.offer(reminderId)
     }
 
 }

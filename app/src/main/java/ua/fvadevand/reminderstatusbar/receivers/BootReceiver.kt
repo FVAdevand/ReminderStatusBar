@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import ua.fvadevand.reminderstatusbar.ReminderApp
 import ua.fvadevand.reminderstatusbar.data.models.PeriodType
@@ -18,7 +17,7 @@ class BootReceiver : BroadcastReceiver() {
         val action = intent?.action
         if (Intent.ACTION_BOOT_COMPLETED != action && Intent.ACTION_MY_PACKAGE_REPLACED != action) return
         val now = System.currentTimeMillis()
-        GlobalScope.launch(Dispatchers.IO) {
+        ReminderApp.applicationScope.launch(Dispatchers.IO) {
             val alarmManager = AlarmManager(context)
             val repository = ReminderApp.getRepository()
             val notificationManager = NotificationManager(context)
